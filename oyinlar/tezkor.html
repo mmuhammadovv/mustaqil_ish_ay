@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tezkor tugma</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 18px; padding: 20px; }
+  .stage .big { margin: 0; }
+  .progress { width: min(700px, 100%); height: 8px; border-radius: 99px; background: rgba(255,255,255,.08); overflow: hidden; }
+  .progress i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .status { font-family: var(--display); font-size: clamp(18px, 2.6vw, 30px); min-height: 1.4em; margin: 6px 0; }
+  .status.go { color: var(--ok); animation: pulse .4s infinite alternate; }
+  .buzzers { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 14px; }
+  .bz { position: relative; padding: 18px 10px; border-radius: 20px; border: 2px solid var(--c); background: color-mix(in srgb, var(--c) 18%, transparent); font-weight: 800; font-size: 18px; transition: transform .1s, opacity .2s, box-shadow .2s; }
+  .bz .kk { display: inline-block; margin-top: 6px; font-family: var(--display); font-size: 13px; padding: 2px 10px; border-radius: 8px; background: rgba(0,0,0,.35); }
+  .bz:active { transform: scale(.96); }
+  .bz.lock { opacity: .25; cursor: not-allowed; }
+  .bz.win { background: var(--c); color: #0a0a1a; box-shadow: 0 0 50px var(--c); transform: scale(1.04); }
+  .who { font-family: var(--display); font-size: clamp(26px, 4.5vw, 52px); color: var(--c); margin: 8px 0; animation: rise .25s ease; }
+  .finals { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 14px; }
+  .fin { padding: 12px; border-radius: 16px; border: 1px solid var(--c); background: var(--glass); }
+  .fin .nm { font-weight: 800; color: var(--c); }
+  .fin .row-btns { margin-top: 8px; }
+  .fin .row-btns .btn { padding: 8px 12px; }
+  .fin .btn.sel { outline: 3px solid #fff; }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar.js"></script>
+<script src="assets/oyin.js"></script>
+<script>
+const { $, $$, esc, store, topic, VALUES, sound } = G;
+const SK = G.saveKey("tezkor");
+const KEYS = ["Q", "P", "Z", "M"];
+const READ = 2500, BUZZ = 15, ANSWER = 15;
+let S = store.get(SK);
+let st = null; // joriy savol holati (saqlanmaydi)
+
+G.header("Tezkor tugma", reset);
+S && S.teams ? home() : setup();
+
+function setup() {
+  let count = 15;
+  G.setup($("#app"), {
+    title: "⚡ Tezkor tugma",
+    desc: "Savol hammaga birdan koʻrinadi. Javobni bilgan jamoa birinchi boʻlib oʻz tugmasini bosadi!",
+    keys: KEYS,
+    extra: `<label class="l">Savollar soni</label>
+      <div class="seg" id="cnt">${[10, 15, 20, 30].map(n => `<button type="button" data-c="${n}" class="${n === count ? "on" : ""}">${n}</button>`).join("")}</div>
+      <label class="l">Savol turi</label><label class="check"><input type="checkbox" id="mc"> Test rejimi (tugma bosgan jamoa 4 ta variantdan tanlaydi)</label>`,
+    rules: [
+      `Har bir jamoaning klaviaturadagi tugmasi bor: <b>${KEYS.join(", ")}</b> (yoki ekrandagi katta tugmalar).`,
+      "Savol chiqqach bir oz kuting — <b>“BOSING!”</b> yozuvi chiqqanda tugmani bosing.",
+      "Birinchi bosgan jamoa javob beradi: toʻgʻri — <b>+narx</b>, xato — <b>−narx</b>, va savol boshqa jamoalarga oʻtadi.",
+      "Savollar osondan qiyinga qarab boradi (100 → 500).",
+      "Oxirida <b>Final raund</b>: har bir jamoa yashirincha tikadi va bitta savolga javob beradi."
+    ],
+    onStart(teams) {
+      const all = []; topic.kategoriyalar.forEach((_, c) => VALUES.forEach((_, v) => all.push([c, v])));
+      const list = G.shuffle(all).slice(0, count).sort((a, b) => a[1] - b[1]);
+      S = { teams, list, idx: 0, mc: $("#mc").checked, phase: "play" };
+      save(); home();
+    }
+  });
+  $$("#cnt button").forEach(b => b.onclick = () => { count = +b.dataset.c; $$("#cnt button").forEach(x => x.classList.toggle("on", x === b)); });
+}
+function save() { store.set(SK, S); }
+function reset() { stopAll(); store.del(SK); S = null; G.modal.close(); setup(); }
+function stopAll() { if (st) { clearTimeout(st.to); st.t && st.t.stop(); } st = null; }
+
+function home() {
+  const done = S.idx >= S.list.length;
+  $("#app").innerHTML = `
+    <div class="stage glass">
+      <div class="progress"><i style="width:${S.idx / S.list.length * 100}%"></i></div>
+      <div style="color:var(--muted)">${done ? "Asosiy savollar tugadi" : `Savol ${S.idx + 1} / ${S.list.length}`}</div>
+      <div class="big">${done ? "🏁 Final raund" : "⚡ Tayyormisiz?"}</div>
+      <button class="btn primary lg" id="next" type="button">${done ? "Finalni boshlash" : S.idx ? "Keyingi savol ▶" : "Birinchi savol ▶"}</button>
+      <div class="hint">Jamoa tugmalari: ${S.teams.map((t, i) => `<b style="color:${t.color}">${KEYS[i]}</b> — ${esc(t.name)}`).join(" · ")}</div>
+    </div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { onAdjust: (i, d) => { S.teams[i].score += d; save(); home(); } });
+  $("#next").onclick = () => done ? finalBets() : question();
+  if (S.phase === "over") G.winner(S.teams, reset);
+}
+
+/* ---------- Asosiy savol ---------- */
+function question() {
+  const [ci, vi] = S.list[S.idx], item = topic.kategoriyalar[ci].savollar[vi], value = VALUES[vi];
+  st = { item, value, locked: [], state: "read", who: -1 };
+  const c = G.modal(`
+    <div class="meta"><span class="pill">${S.idx + 1} / ${S.list.length}</span><span class="pill">${topic.kategoriyalar[ci].nomi}</span><span class="pill gold">${value}</span></div>
+    <div class="q-text">${item.s}</div>
+    <div class="status" id="status">Savolni oʻqing…</div>
+    <div id="tm"></div>
+    <div id="zone"></div>
+    <div class="buzzers" id="bzs">${S.teams.map((t, i) => `<button class="bz" type="button" data-i="${i}" style="--c:${t.color}">${esc(t.name)}<br><span class="kk">${KEYS[i]}</span></button>`).join("")}</div>
+    <div class="row-btns"><button class="btn" id="skip" type="button">Javobni koʻrsatish va oʻtkazib yuborish</button></div>`);
+  $$(".bz", c).forEach(b => b.onclick = () => buzz(+b.dataset.i));
+  $("#skip", c).onclick = () => endQuestion(null);
+  st.to = setTimeout(openBuzz, READ);
+}
+
+function openBuzz() {
+  if (!st) return;
+  st.state = "open"; st.who = -1;
+  $("#status").textContent = "BOSING!"; $("#status").className = "status go";
+  $("#zone").innerHTML = "";
+  $$(".bz").forEach(b => b.classList.remove("win"));
+  st.t = G.timer($("#tm"), BUZZ, () => endQuestion(null));
+}
+
+function buzz(i) {
+  if (!st || st.state !== "open" || st.locked.includes(i) || !S.teams[i]) return;
+  st.state = "answer"; st.who = i; st.t.stop(); sound.buzz();
+  const t = S.teams[i];
+  $$(".bz").forEach(b => b.classList.toggle("win", +b.dataset.i === i));
+  $("#status").className = "status"; $("#status").textContent = "";
+  const opts = S.mc ? G.shuffle([st.item.j, ...st.item.x]) : [];
+  $("#zone").innerHTML = `<div class="who" style="--c:${t.color}">${esc(t.name)} javob beradi!</div>
+    ${S.mc ? `<div class="opts">${opts.map((o, k) => `<button type="button" class="opt" data-o="${esc(o)}" ${st.wrongOpts && st.wrongOpts.includes(o) ? "disabled style='opacity:.25'" : ""}><span class="k">${"ABCD"[k]}</span><span>${o}</span></button>`).join("")}</div>`
+      : `<div class="row-btns"><button class="btn ok lg" id="yes" type="button">✓ Toʻgʻri</button><button class="btn bad lg" id="no" type="button">✗ Xato</button></div>`}`;
+  st.t = G.timer($("#tm"), ANSWER, () => judge(false));
+  if (S.mc) $$("#zone .opt").forEach(b => b.onclick = () => { if (b.dataset.o !== st.item.j) { (st.wrongOpts = st.wrongOpts || []).push(b.dataset.o); b.classList.add("wrong"); } else b.classList.add("right"); judge(b.dataset.o === st.item.j); });
+  else { $("#yes").onclick = () => judge(true); $("#no").onclick = () => judge(false); }
+}
+
+function judge(ok) {
+  if (!st || st.state !== "answer") return;
+  st.state = "judged"; st.t.stop();
+  const i = st.who;
+  S.teams[i].score += ok ? st.value : -st.value; save();
+  G.scores($("#sc"), S.teams);
+  if (ok) { sound.ok(); return endQuestion(i); }
+  sound.bad(); st.locked.push(i);
+  $$(".bz").forEach(b => b.classList.toggle("lock", st.locked.includes(+b.dataset.i)));
+  G.toast(`${esc(S.teams[i].name)}: <b style="color:var(--bad)">−${st.value}</b>`);
+  if (st.locked.length >= S.teams.length) return endQuestion(null);
+  $("#status").textContent = "Boshqa jamoalar…";
+  st.to = setTimeout(openBuzz, 1200);
+}
+
+function endQuestion(winnerIdx) {
+  if (!st) return;
+  clearTimeout(st.to); st.t && st.t.stop();
+  const { item, value } = st; st = null;
+  S.idx++; save();
+  const c = G.modal(`
+    <div class="meta"><span class="pill gold">${value}</span></div>
+    ${winnerIdx !== null ? `<div class="result-flash ok">${esc(S.teams[winnerIdx].name)}: +${value}</div>` : `<div class="result-flash bad">Hech kim topa olmadi</div>`}
+    <div class="q-text" style="font-size:clamp(18px,2.2vw,26px)">${item.s}</div>
+    <div class="answer">${item.j}</div>${item.izoh ? `<div class="izoh">${item.izoh}</div>` : ""}
+    <div class="row-btns"><button class="btn primary lg" id="go" type="button">${S.idx >= S.list.length ? "Finalga ▶" : "Keyingi savol ▶"}</button></div>`);
+  $("#go", c).onclick = () => { G.modal.close(); S.idx >= S.list.length ? home() : question(); };
+  home();
+}
+
+/* ---------- Final ---------- */
+function finalBets() {
+  const bets = [];
+  const ask = i => {
+    if (i >= S.teams.length) return finalQuestion(bets);
+    const t = S.teams[i], max = Math.max(t.score, 0);
+    const c = G.modal(`
+      <div class="meta"><span class="pill gold">Final raund</span><span class="pill team-pill" style="--c:${t.color}">${esc(t.name)}</span></div>
+      <h2>Yashirin tikish</h2>
+      <p style="color:var(--muted)">Boshqa jamoalar ekranga qaramasin! Balingiz: <b>${t.score}</b>. 0 dan ${max} gacha tikishingiz mumkin.</p>
+      <input class="inp" id="bet" type="password" inputmode="numeric" placeholder="Tikish miqdori" style="max-width:320px;text-align:center;font-size:22px">
+      <div class="row-btns"><button class="btn primary lg" id="ok" type="button">Tasdiqlash</button></div>
+      <div class="hint">Raqam yashirin koʻrinadi</div>`);
+    const inp = $("#bet", c); inp.focus();
+    const go = () => { const v = Math.max(0, Math.min(max, parseInt(inp.value, 10) || 0)); bets.push(v); sound.click(); ask(i + 1); };
+    $("#ok", c).onclick = go; inp.onkeydown = e => { if (e.key === "Enter") go(); };
+  };
+  ask(0);
+}
+
+function finalQuestion(bets) {
+  const item = topic.final || topic.kategoriyalar[0].savollar[4];
+  const marks = S.teams.map(() => null);
+  const c = G.modal(`
+    <div class="meta"><span class="pill gold">Final savoli</span></div>
+    <div class="q-text">${item.s}</div>
+    <div id="tm"></div>
+    <p style="color:var(--muted)">Har bir jamoa javobini qogʻozga yozsin. Vaqt tugagach, javobni koʻrsating.</p>
+    <div id="ans"></div>
+    <div class="row-btns"><button class="btn gold" id="show" type="button">Javobni koʻrsatish</button></div>
+    <div class="finals hidden" id="fins">${S.teams.map((t, i) => `<div class="fin" style="--c:${t.color}"><div class="nm">${esc(t.name)}</div><div style="color:var(--muted)">Tikish: <b style="color:var(--text)">${bets[i]}</b></div>
+      <div class="row-btns"><button class="btn ok" type="button" data-i="${i}" data-m="1">✓</button><button class="btn bad" type="button" data-i="${i}" data-m="0">✗</button></div></div>`).join("")}</div>
+    <div class="row-btns"><button class="btn primary lg hidden" id="calc" type="button" disabled>Natijalarni hisoblash</button></div>`);
+  const t = G.timer($("#tm", c), 45, () => {});
+  $("#show", c).onclick = e => { t.stop(); e.target.remove(); $("#ans", c).innerHTML = `<div class="answer">${item.j}</div>`; $("#fins", c).classList.remove("hidden"); $("#calc", c).classList.remove("hidden"); };
+  $$(".fin [data-m]", c).forEach(b => b.onclick = () => {
+    const i = +b.dataset.i; marks[i] = b.dataset.m === "1";
+    $$(`.fin [data-i="${i}"]`, c).forEach(x => x.classList.toggle("sel", x === b));
+    $("#calc", c).disabled = marks.some(m => m === null);
+  });
+  $("#calc", c).onclick = () => {
+    S.teams.forEach((tm, i) => tm.score += marks[i] ? bets[i] : -bets[i]);
+    S.phase = "over"; save(); G.modal.close(); home();
+  };
+}
+
+document.addEventListener("keydown", e => {
+  if (!st || e.repeat) return;
+  const i = KEYS.indexOf(e.key.toUpperCase());
+  if (i >= 0) { e.preventDefault(); buzz(i); }
+});
+</script>
+</body>
+</html>

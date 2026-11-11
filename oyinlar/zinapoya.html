@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zinapoya</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .cats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .catcard { text-align: left; padding: 20px; border-radius: 20px; border: 1px solid var(--stroke); min-height: 130px;
+    background: linear-gradient(150deg, rgba(139,92,246,.22), rgba(34,211,238,.06)); transition: transform .15s, box-shadow .15s; }
+  .catcard:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 16px 40px -14px rgba(139,92,246,.7); }
+  .catcard .ic { font-size: 28px; }
+  .catcard .nm { font-family: var(--display); font-size: 17px; margin-top: 8px; }
+  .catcard .st { color: var(--muted); font-size: 13px; margin-top: 6px; }
+  .catcard:disabled { cursor: default; background: var(--glass); opacity: .55; border-color: var(--c, var(--stroke)); }
+  .round { display: grid; grid-template-columns: 170px 1fr; gap: 20px; text-align: left; }
+  .ladder { display: flex; flex-direction: column-reverse; gap: 6px; }
+  .step { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--stroke); background: var(--glass); font-family: var(--display); font-size: 15px; display: flex; justify-content: space-between; color: var(--muted); }
+  .step.done { background: rgba(34,197,94,.2); border-color: var(--ok); color: var(--text); }
+  .step.cur { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border-color: transparent; transform: scale(1.04); }
+  .bank { margin-top: 10px; padding: 12px; border-radius: 14px; border: 1px dashed var(--gold); text-align: center; }
+  .bank b { display: block; font-family: var(--display); font-size: 26px; color: var(--gold); }
+  .lifes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .lifes .btn { padding: 8px 12px; font-size: 14px; }
+  .choice { text-align: center; padding: 10px 0; }
+  .round .q-text { text-align: left; margin-top: 0; }
+  @media (max-width: 700px) { .round { grid-template-columns: 1fr; } .ladder { flex-direction: row-reverse; } .step { flex: 1; justify-content: center; font-size: 12px; padding: 8px 4px; } .step span:first-child { display: none; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar.js"></script>
+<script src="assets/oyin.js"></script>
+<script>
+const { $, $$, esc, store, topic, VALUES, sound } = G;
+const SK = G.saveKey("zinapoya");
+const ICONS = ["📘", "🧩", "✒️", "🏛️", "🧱", "🔎", "🎯", "💡"];
+let S = store.get(SK), R = null;
+
+G.header("Zinapoya", reset);
+S && S.teams ? render() : setup();
+
+function setup() {
+  G.setup($("#app"), {
+    title: "🪜 Zinapoya",
+    desc: "Kategoriya tanlang va 100 dan 500 gacha zinapoyadan koʻtariling. Har pogʻonadan keyin qaror qiling: davom etasizmi yoki yutuqni saqlaysizmi?",
+    rules: [
+      "Har bir jamoa navbati bilan bitta kategoriyani tanlaydi va uning 5 ta savoliga ketma-ket javob beradi.",
+      "Savollar test shaklida: 4 ta variantdan bittasi toʻgʻri.",
+      "Har toʻgʻri javobdan keyin: <b>“Davom etish”</b> yoki <b>“Toʻxtash”</b> (toʻplangan ballar saqlanadi).",
+      "Xato javob — shu raundda toʻplangan <b>barcha ballar yonadi</b>.",
+      "Har jamoada bir martalik yordamchilar bor: <b>50/50</b> va <b>+15 soniya</b>.",
+      "Barcha kategoriyalar tugagach, eng koʻp ball toʻplagan jamoa gʻolib."
+    ],
+    onStart(teams) {
+      S = { teams, played: {}, turn: 0, life: teams.map(() => ({ fifty: true, time: true })) };
+      save(); render();
+    }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { store.del(SK); S = null; R = null; G.modal.close(); setup(); }
+
+function render() {
+  const t = S.teams[S.turn], cats = topic.kategoriyalar;
+  $("#app").innerHTML = `
+    <div class="turn-banner" style="--c:${t.color}">Navbat: <b>${esc(t.name)}</b> — kategoriya tanlang</div>
+    <div class="cats">${cats.map((c, i) => {
+      const p = S.played[i];
+      if (p) { const tm = S.teams[p.team]; return `<button class="catcard" disabled style="--c:${tm.color}"><div class="ic">${ICONS[i % ICONS.length]}</div><div class="nm">${c.nomi}</div><div class="st"><b style="color:${tm.color}">${esc(tm.name)}</b> · ${p.steps}/5 pogʻona · +${p.kept}</div></button>`; }
+      return `<button class="catcard" data-c="${i}"><div class="ic">${ICONS[i % ICONS.length]}</div><div class="nm">${c.nomi}</div><div class="st">5 pogʻona · 1500 ballgacha</div></button>`;
+    }).join("")}</div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { active: S.turn, onAdjust: (i, d) => { S.teams[i].score += d; save(); render(); },
+    tag: (_, i) => `${S.life[i].fifty ? "50/50 ✓" : "50/50 ✗"} · ${S.life[i].time ? "+15s ✓" : "+15s ✗"}` });
+  $$(".catcard[data-c]").forEach(b => b.onclick = () => { sound.click(); R = { ci: +b.dataset.c, step: 0, bank: 0, team: S.turn }; step(); });
+  if (Object.keys(S.played).length === cats.length) G.winner(S.teams, reset);
+}
+
+function shell(inner) {
+  const t = S.teams[R.team], c = topic.kategoriyalar[R.ci];
+  return G.modal(`
+    <div class="meta" style="margin-bottom:14px"><span class="pill">${c.nomi}</span><span class="pill team-pill" style="--c:${t.color}">${esc(t.name)}</span></div>
+    <div class="round">
+      <div>
+        <div class="ladder">${VALUES.map((v, i) => `<div class="step ${i < R.step ? "done" : i === R.step ? "cur" : ""}"><span>${i + 1}-pogʻona</span><span>${v}</span></div>`).join("")}</div>
+        <div class="bank">Raund yutugʻi<b>${R.bank}</b></div>
+      </div>
+      <div>${inner}</div>
+    </div>`);
+}
+
+function step() {
+  const life = S.life[R.team];
+  const c = shell(`<div id="q"></div>
+    <div class="lifes">
+      <button class="btn" id="f50" type="button" ${life.fifty ? "" : "disabled"}>✂️ 50/50</button>
+      <button class="btn" id="t15" type="button" ${life.time ? "" : "disabled"}>⏱ +15 soniya</button>
+    </div>`);
+  const a = G.ask($("#q", c), topic.kategoriyalar[R.ci].savollar[R.step], { mc: true, onResult: ok => ok ? correct() : wrong() });
+  $("#f50", c).onclick = e => { life.fifty = false; save(); a.fifty(); e.currentTarget.disabled = true; sound.click(); };
+  $("#t15", c).onclick = e => { life.time = false; save(); a.timer.add(15); e.currentTarget.disabled = true; sound.click(); };
+}
+
+function correct() {
+  R.bank += VALUES[R.step]; R.step++;
+  if (R.step >= VALUES.length) { sound.bonus(); return finish(R.bank, "🏔️ Zinapoya choʻqqisi zabt etildi!"); }
+  const c = shell(`<div class="choice">
+    <div class="result-flash ok">Toʻgʻri! +${VALUES[R.step - 1]}</div>
+    <p style="color:var(--muted);font-size:18px">Keyingi pogʻona: <b style="color:var(--gold)">${VALUES[R.step]}</b> ball. Xato qilsangiz, <b>${R.bank}</b> ball yonadi.</p>
+    <div class="row-btns">
+      <button class="btn primary lg" id="go" type="button">Davom etish ⬆</button>
+      <button class="btn gold lg" id="stop" type="button">Toʻxtash va ${R.bank} ni saqlash</button>
+    </div></div>`);
+  $("#go", c).onclick = () => { sound.click(); step(); };
+  $("#stop", c).onclick = () => finish(R.bank, "Ballar saqlandi");
+}
+
+function wrong() { finish(0, "🔥 Raund yutugʻi yonib ketdi"); }
+
+function finish(kept, msg) {
+  const who = R.team;
+  S.teams[who].score += kept;
+  S.played[R.ci] = { team: who, steps: R.step, kept };
+  S.turn = (S.turn + 1) % S.teams.length; R = null; save();
+  G.modal.close(); render(); G.bump($("#sc"), who);
+  G.toast(`${msg}: <b style="color:${kept ? "var(--ok)" : "var(--bad)"}">+${kept}</b>`, 2400);
+}
+</script>
+</body>
+</html>

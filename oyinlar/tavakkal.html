@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tavakkal bellashuvi</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .bet { max-width: 520px; margin: 0 auto; }
+  .bet .val { font-family: var(--display); font-size: clamp(40px, 7vw, 72px); color: var(--gold); margin: 6px 0; }
+  .bet input[type=range] { width: 100%; accent-color: var(--gold); height: 28px; }
+  .bet .quick { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+  .bet .info { color: var(--muted); line-height: 1.6; }
+  .bet .info b { color: var(--text); }
+  .pick { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 16px; }
+  .pick button { padding: 16px; border-radius: 16px; border: 2px solid var(--c); background: var(--glass); font-weight: 800; font-size: 18px; }
+  .pick button:hover { background: var(--glass2); }
+  .cat-cell { font-size: clamp(18px, 3vw, 40px); }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar.js"></script>
+<script src="assets/oyin.js"></script>
+<script>
+const { $, $$, esc, store, topic, VALUES, sound } = G;
+const SK = G.saveKey("tavakkal");
+const CATS = 2; // "Mushuk qopda" kataklari soni
+let S = store.get(SK);
+
+G.header("Tavakkal bellashuvi", reset);
+S && S.teams ? render() : setup();
+
+function setup() {
+  G.setup($("#app"), {
+    title: "🎲 Tavakkal bellashuvi",
+    desc: "Har savoldan oldin jamoa oʻz balidan tikadi. Toʻgʻri javob — katak narxi va tikilgan ball qoʻshiladi. Xato — tikilgan ball yonadi.",
+    extra: `<label class="l">Savol turi</label><label class="check"><input type="checkbox" id="mc"> Test rejimi (4 ta variantdan tanlash)</label>`,
+    rules: [
+      "Jamoalar navbat bilan katak tanlaydi.",
+      "Savoldan oldin <b>tikish</b> qilinadi: 0 dan oʻz balingizgacha (balingiz kam boʻlsa — katak narxigacha).",
+      "Toʻgʻri javob: <b>+ narx + tikish</b>. Xato javob: <b>− tikish</b>.",
+      `Jadvalda ${CATS} ta yashirin <b>🐱 “Mushuk qopda”</b> katagi bor: savolni raqib jamoaga berasiz, u tikishsiz javob beradi.`,
+      "Hammasini tikish — <b>“Va-bank”</b>!"
+    ],
+    onStart(teams) {
+      const ids = []; topic.kategoriyalar.forEach((_, c) => VALUES.forEach((_, v) => ids.push(c + "-" + v)));
+      S = { teams, used: [], cats: G.shuffle(ids).slice(0, CATS), turn: 0, mc: $("#mc").checked };
+      save(); render();
+    }
+  });
+}
+
+function save() { store.set(SK, S); }
+function reset() { store.del(SK); S = null; G.modal.close(); setup(); }
+
+function render() {
+  const t = S.teams[S.turn];
+  $("#app").innerHTML = `
+    <div class="turn-banner" style="--c:${t.color}">Navbat: <b>${esc(t.name)}</b> — katak tanlang</div>
+    <div class="board">
+      ${topic.kategoriyalar.map(c => `<div class="cat">${c.nomi}</div>`).join("")}
+      ${VALUES.map((v, vi) => topic.kategoriyalar.map((_, ci) => {
+        const id = ci + "-" + vi, used = S.used.includes(id);
+        return `<button class="cell" data-id="${id}" ${used ? "disabled" : ""}>${used ? "" : v}</button>`;
+      }).join("")).join("")}
+    </div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { active: S.turn, onAdjust: (i, d) => { S.teams[i].score += d; save(); render(); } });
+  $$(".cell:not(:disabled)").forEach(b => b.onclick = () => open(b.dataset.id));
+  if (S.used.length === topic.kategoriyalar.length * VALUES.length) G.winner(S.teams, reset);
+}
+
+function open(id) {
+  sound.click();
+  const [ci, vi] = id.split("-").map(Number);
+  if (S.cats.includes(id)) return catInBag(id, ci, vi);
+  const t = S.teams[S.turn], value = VALUES[vi];
+  const max = Math.max(t.score, value);
+  let bet = Math.min(Math.round(max / 2 / 50) * 50, max);
+  const c = G.modal(`
+    <div class="meta"><span class="pill">${topic.kategoriyalar[ci].nomi}</span><span class="pill gold">${value}</span><span class="pill team-pill" style="--c:${t.color}">${esc(t.name)}</span></div>
+    <div class="bet">
+      <h2 style="margin:16px 0 4px">Qancha tikasiz?</h2>
+      <p class="info">Balingiz: <b>${t.score}</b> · Maksimal tikish: <b>${max}</b></p>
+      <div class="val" id="bv">${bet}</div>
+      <input type="range" id="rg" min="0" max="${max}" step="50" value="${bet}">
+      <div class="quick">
+        <button class="btn" data-b="0" type="button">0</button>
+        <button class="btn" data-b="${Math.round(max / 4 / 50) * 50}" type="button">25%</button>
+        <button class="btn" data-b="${Math.round(max / 2 / 50) * 50}" type="button">50%</button>
+        <button class="btn gold" data-b="${max}" type="button">Va-bank!</button>
+      </div>
+      <p class="info" id="pv"></p>
+      <button class="btn primary block lg" id="ok" type="button">Savolni ochish ▶</button>
+    </div>`);
+  const upd = () => { $("#bv", c).textContent = bet; $("#pv", c).innerHTML = `Toʻgʻri: <b style="color:var(--ok)">+${value + bet}</b> · Xato: <b style="color:var(--bad)">−${bet}</b>`; };
+  $("#rg", c).oninput = e => { bet = +e.target.value; upd(); };
+  $$("[data-b]", c).forEach(b => b.onclick = () => { bet = +b.dataset.b; $("#rg", c).value = bet; sound.click(); upd(); });
+  $("#ok", c).onclick = () => question(id, ci, vi, S.turn, ok => ok ? value + bet : -bet, bet === max && bet > 0 ? "VA-BANK" : "Tikish: " + bet);
+  upd();
+}
+
+function catInBag(id, ci, vi) {
+  sound.bonus();
+  const value = VALUES[vi];
+  const c = G.modal(`
+    <div class="meta"><span class="pill">${topic.kategoriyalar[ci].nomi}</span><span class="pill gold">${value}</span></div>
+    <div class="big">🐱 Mushuk qopda!</div>
+    <p style="color:var(--muted)">Bu savolni qaysi raqib jamoaga berasiz? U tikishsiz javob beradi: toʻgʻri — <b>+${value}</b>, xato — 0.</p>
+    <div class="pick">${S.teams.map((t, i) => i === S.turn ? "" : `<button type="button" data-i="${i}" style="--c:${t.color}">${esc(t.name)}</button>`).join("")}</div>`);
+  $$(".pick button", c).forEach(b => b.onclick = () => question(id, ci, vi, +b.dataset.i, ok => ok ? value : 0, "Mushuk qopda"));
+}
+
+function question(id, ci, vi, who, delta, label) {
+  const t = S.teams[who], item = topic.kategoriyalar[ci].savollar[vi];
+  const c = G.modal(`
+    <div class="meta"><span class="pill">${topic.kategoriyalar[ci].nomi}</span><span class="pill gold">${VALUES[vi]}</span>
+      <span class="pill team-pill" style="--c:${t.color}">${esc(t.name)}</span><span class="pill">${label}</span></div>
+    <div id="q"></div>`);
+  G.ask($("#q", c), item, { mc: S.mc, onResult(ok) {
+    const d = delta(ok);
+    S.teams[who].score += d; S.used.push(id); S.turn = (S.turn + 1) % S.teams.length; save();
+    G.modal.close(); render(); G.bump($("#sc"), who);
+    G.toast(`${esc(t.name)}: <b style="color:${d >= 0 ? "var(--ok)" : "var(--bad)"}">${d >= 0 ? "+" : ""}${d}</b>`);
+  }});
+}
+</script>
+</body>
+</html>

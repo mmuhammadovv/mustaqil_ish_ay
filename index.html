@@ -3,366 +3,97 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Publitsistika bellashuvi</title>
+<title>Interaktiv oʻyinlar</title>
+<link rel="stylesheet" href="oyinlar/assets/style.css">
 <style>
-  :root {
-    --bg: #0b1026; --board: #13205a; --cell: #1b2d7a; --cell-hi: #2541a8; --used: #0f1840;
-    --gold: #ffcc33; --text: #f4f6ff; --muted: #a9b3d9; --ok: #22c55e; --bad: #ef4444; --line: #2b3a85;
+  .hero { text-align: center; padding: clamp(28px, 6vw, 70px) 16px 10px; }
+  .hero .kicker { display: inline-block; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--stroke); background: var(--glass); color: var(--muted); font-weight: 700; font-size: 13px; }
+  .hero h1 { font-family: var(--display); font-size: clamp(30px, 6vw, 68px); line-height: 1.05; margin: 18px 0 12px; letter-spacing: -.5px; }
+  .hero h1 span { background: linear-gradient(135deg, var(--accent), var(--accent2), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { color: var(--muted); max-width: 640px; margin: 0 auto; line-height: 1.6; font-size: 17px; }
+  .topics { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 26px 0 6px; }
+  .topic { padding: 12px 18px; border-radius: 16px; border: 1px solid var(--stroke); background: var(--glass); text-align: left; }
+  .topic small { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
+  .topic b { font-size: 15px; }
+  .topic.on { border-color: transparent; background: linear-gradient(135deg, rgba(139,92,246,.5), rgba(34,211,238,.35)); box-shadow: 0 10px 30px -10px rgba(139,92,246,.7); }
+  .games { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-top: 18px; }
+  .games .game { grid-column: span 2; }
+  .games .game:nth-child(4), .games .game:nth-child(5) { grid-column: span 3; }
+  @media (max-width: 980px) { .games { grid-template-columns: 1fr 1fr; } .games .game, .games .game:nth-child(4) { grid-column: span 1; } .games .game:nth-child(5) { grid-column: span 2; } }
+  @media (max-width: 620px) { .games { grid-template-columns: 1fr; } .games .game, .games .game:nth-child(n) { grid-column: auto; } }
+  .game {
+    position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 10px; padding: 22px; border-radius: 24px; text-decoration: none;
+    background: var(--glass); border: 1px solid var(--stroke); min-height: 250px; transition: transform .2s, border-color .2s, box-shadow .2s;
   }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; }
-  body {
-    background: radial-gradient(1200px 600px at 50% -10%, #1d2a6b 0%, var(--bg) 60%) fixed, var(--bg);
-    color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    display: flex; flex-direction: column; min-height: 100%;
-  }
-  button { font: inherit; cursor: pointer; }
-  header {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-    padding: 12px 16px; border-bottom: 1px solid var(--line);
-  }
-  header h1 { margin: 0; font-size: clamp(18px, 2.4vw, 28px); letter-spacing: .5px; }
-  header h1 span { color: var(--gold); }
-  .hbtns { display: flex; gap: 8px; flex-wrap: wrap; }
-  .hbtns a, .hbtns button {
-    color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 8px;
-    padding: 8px 12px; text-decoration: none; font-size: 14px;
-  }
-  .hbtns a:hover, .hbtns button:hover { border-color: var(--gold); color: var(--gold); }
-  main { flex: 1; display: flex; flex-direction: column; padding: 16px; gap: 16px; max-width: 1400px; width: 100%; margin: 0 auto; }
-
-  /* Setup */
-  .setup { max-width: 560px; margin: 4vh auto; background: var(--board); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
-  .setup h2 { margin: 0 0 6px; color: var(--gold); }
-  .setup p { color: var(--muted); margin: 0 0 16px; line-height: 1.5; }
-  .setup label { display: block; font-size: 14px; color: var(--muted); margin: 12px 0 6px; }
-  .count { display: flex; gap: 8px; }
-  .count button { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--cell); color: var(--text); font-weight: 700; }
-  .count button.on { background: var(--gold); color: #1a1a1a; border-color: var(--gold); }
-  .names input { width: 100%; padding: 10px 12px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--line); background: #0d1640; color: var(--text); font-size: 16px; }
-  .primary { width: 100%; margin-top: 16px; padding: 14px; border: 0; border-radius: 10px; background: var(--gold); color: #1a1a1a; font-weight: 800; font-size: 18px; }
-  .rules { margin-top: 16px; font-size: 14px; color: var(--muted); line-height: 1.6; padding-left: 18px; }
-
-  /* Board */
-  .board {
-    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px;
-    background: var(--board); padding: 8px; border-radius: 14px; border: 1px solid var(--line); flex: 1;
-  }
-  .cat {
-    display: flex; align-items: center; justify-content: center; text-align: center;
-    background: #0e1847; border-radius: 8px; padding: 10px 6px; font-weight: 800; text-transform: uppercase;
-    font-size: clamp(10px, 1.15vw, 16px); line-height: 1.2; min-height: 64px; letter-spacing: .3px;
-  }
-  .cell {
-    border: 0; border-radius: 8px; background: var(--cell); color: var(--gold);
-    font-weight: 900; font-size: clamp(18px, 3.2vw, 44px); min-height: 64px;
-    text-shadow: 0 2px 0 rgba(0,0,0,.35); transition: transform .12s, background .12s;
-  }
-  .cell:hover:not(:disabled) { background: var(--cell-hi); transform: scale(1.03); }
-  .cell:disabled { background: var(--used); color: transparent; text-shadow: none; cursor: default; }
-
-  /* Scores */
-  .scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-  .team { background: var(--board); border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; text-align: center; }
-  .team .n { font-size: 15px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .team .s { font-size: clamp(24px, 3vw, 38px); font-weight: 900; }
-  .team .s.neg { color: var(--bad); }
-  .team .adj { display: flex; gap: 6px; justify-content: center; margin-top: 4px; }
-  .team .adj button { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 6px; padding: 2px 10px; font-size: 13px; }
-  .team.lead { border-color: var(--gold); }
-
-  /* Modal */
-  .modal { position: fixed; inset: 0; background: rgba(5,8,25,.92); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
-  .modal.open { display: flex; }
-  .card {
-    width: min(1000px, 100%); max-height: 100%; overflow: auto; background: var(--board); border: 2px solid var(--gold);
-    border-radius: 18px; padding: clamp(16px, 3vw, 36px); text-align: center; position: relative;
-  }
-  .card .meta { color: var(--gold); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; font-size: clamp(13px, 1.4vw, 18px); }
-  .card .q { font-size: clamp(20px, 3.2vw, 40px); font-weight: 700; line-height: 1.35; margin: 18px 0; }
-  .card .a { display: none; font-size: clamp(18px, 2.6vw, 32px); color: #111; background: var(--gold); border-radius: 12px; padding: 14px 18px; margin: 10px 0 18px; font-weight: 700; line-height: 1.35; }
-  .card.show .a { display: block; }
-  .timer { height: 10px; background: #0d1640; border-radius: 99px; overflow: hidden; margin: 8px 0 14px; }
-  .timer i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--ok), var(--gold), var(--bad)); transform-origin: left; }
-  .tline { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .tline b { color: var(--text); font-size: 22px; min-width: 2ch; display: inline-block; }
-  .ctrl { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
-  .ctrl button { border: 1px solid var(--line); background: var(--cell); color: var(--text); border-radius: 10px; padding: 10px 16px; font-weight: 700; }
-  .ctrl .show-a { background: var(--gold); color: #1a1a1a; border-color: var(--gold); }
-  .award { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 14px; }
-  .award .t { background: #0e1847; border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
-  .award .t div { font-weight: 700; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .award .t button { border: 0; border-radius: 8px; padding: 8px 0; width: 48%; font-weight: 800; color: #fff; }
-  .award .t .y { background: var(--ok); } .award .t .x { background: var(--bad); }
-  .award .t.done { opacity: .45; }
-  .bonus-splash { font-size: clamp(36px, 7vw, 90px); font-weight: 900; color: var(--gold); margin: 20px 0; animation: pop .6s ease; }
-  @keyframes pop { 0% { transform: scale(.3); opacity: 0; } 70% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
-  .winner h2 { font-size: clamp(28px, 5vw, 56px); color: var(--gold); margin: 6px 0; }
-  .winner ol { text-align: left; display: inline-block; font-size: clamp(18px, 2.4vw, 26px); line-height: 1.7; }
-  .hint { color: var(--muted); font-size: 13px; margin-top: 12px; }
-
-  @media (max-width: 700px) {
-    main { padding: 10px; }
-    .board { gap: 4px; padding: 4px; }
-    .cat { min-height: 52px; padding: 4px 2px; font-size: 9px; letter-spacing: 0; }
-    .cell { min-height: 48px; font-size: 16px; }
-    .award .t button { padding: 10px 0; }
-  }
+  .game::after { content: ""; position: absolute; width: 220px; height: 220px; right: -70px; top: -70px; border-radius: 50%; background: var(--g); filter: blur(50px); opacity: .45; transition: opacity .2s; }
+  .game:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.28); box-shadow: 0 24px 60px -24px var(--g); }
+  .game:hover::after { opacity: .75; }
+  .game .ic { font-size: 40px; position: relative; z-index: 1; }
+  .game h3 { font-family: var(--display); margin: 0; font-size: 20px; position: relative; z-index: 1; }
+  .game p { margin: 0; color: var(--muted); line-height: 1.55; flex: 1; position: relative; z-index: 1; }
+  .game .tags { display: flex; gap: 6px; flex-wrap: wrap; position: relative; z-index: 1; }
+  .game .tags span { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.08); }
+  .game .play { font-weight: 800; position: relative; z-index: 1; }
+  .extra { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 26px 0 30px; }
+  .extra .glass { padding: 20px; }
+  .extra h4 { margin: 0 0 8px; font-family: var(--display); font-size: 16px; }
+  .extra p, .extra li { color: var(--muted); line-height: 1.6; margin: 0; }
+  .extra a.btn { margin-top: 12px; text-decoration: none; }
+  code { background: rgba(255,255,255,.1); padding: 1px 6px; border-radius: 6px; font-size: 13px; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 20px 16px 30px; }
 </style>
 </head>
 <body>
-<header>
-  <h1>Publitsistika <span>bellashuvi</span></h1>
-  <div class="hbtns">
-    <a href="mustaqil-ish/">📄 Mustaqil ish</a>
-    <button id="fsBtn" type="button">⛶ Toʻliq ekran</button>
-    <button id="resetBtn" type="button">↺ Yangi oʻyin</button>
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Akademik yozuv · Mustaqil ish</span>
+    <h1>Interaktiv <span>bilimlar oʻyinlari</span></h1>
+    <p>Mavzuni tanlang va jamoaviy oʻyinlardan birini boshlang. Barcha oʻyinlar internetsiz ishlaydi — proyektor yoki katta ekranda oʻynash uchun moʻljallangan.</p>
+    <div class="topics" id="topics"></div>
+  </section>
+
+  <div class="games" id="games"></div>
+
+  <div class="extra">
+    <div class="glass">
+      <h4>📄 Mustaqil ish</h4>
+      <p>“Publitsistik nutq uslubi. Publitsistik maqolalar tahlili; ‘Men tanlagan soha va OAV’ mavzusida maqola” — 22 bet, chop etishga tayyor.</p>
+      <a class="btn" href="mustaqil-ish/index.html">Ochish →</a>
+    </div>
+    <div class="glass">
+      <h4>➕ Yangi mavzu qoʻshish</h4>
+      <p>Savollar <code>oyinlar/savollar.js</code> faylida. Fayl oxiridagi shablonni nusxalab, 6 ta kategoriya × 5 ta savol yozing — yangi mavzu shu yerda paydo boʻladi va barcha oʻyinlarda ishlaydi.</p>
+    </div>
   </div>
-</header>
+</main>
+<footer>Topshiruvchi: Muxamadov Muhammadali · Fan oʻqituvchisi: Yunusova Maftuna</footer>
 
-<main id="app"></main>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="card" id="card"></div></div>
-
+<script src="oyinlar/savollar.js"></script>
 <script>
-const CATS = [
-  { name: "Uslub nazariyasi", qs: [
-    ["“Publitsistika” soʻzi qaysi tildan olingan va qanday maʼnoni anglatadi?", "Lotincha <i>publicus</i> — “ijtimoiy, ommaviy”"],
-    ["Publitsistik uslubning ikki asosiy vazifasini ayting.", "Xabar berish (axborot) va taʼsir koʻrsatish"],
-    ["Oʻzbek tilida nechta asosiy funksional uslub ajratiladi? Ularni sanang.", "5 ta: soʻzlashuv, ilmiy, rasmiy-idoraviy, publitsistik, badiiy"],
-    ["Publitsistik uslub qayerlarda qoʻllanadi? Kamida 4 ta joyni ayting.", "Gazeta, jurnal, radio, televideniye, internet nashrlari, ijtimoiy tarmoqlar, notiqlik nutqi"],
-    ["Nima uchun publitsistik uslub boshqa uslublar orasida “oraliq” uslub deyiladi?", "U ilmiy uslubning mantiqiyligi, rasmiy uslubning aniqligi, badiiy uslubning obrazliligi va soʻzlashuv uslubining jonliligini birlashtiradi"]
-  ]},
-  { name: "Janrlar", qs: [
-    ["Salbiy hodisalarni hajv va kulgi orqali fosh etuvchi janr qanday ataladi?", "Felyeton"],
-    ["Voqea joyidan, muallif koʻzi bilan “jonli” hikoya qiluvchi axborot janri?", "Reportaj"],
-    ["Real shaxs yoki voqeani badiiy tasvir vositalari bilan hikoya qiluvchi janr?", "Ocherk"],
-    ["Publitsistik janrlar qaysi uch guruhga boʻlinadi?", "Axborot, tahliliy va badiiy-publitsistik janrlar"],
-    ["Kitob, film yoki spektakl haqida tanqidiy-tahliliy fikr bildiruvchi janr?", "Taqriz"]
-  ]},
-  { name: "Til vositalari", qs: [
-    ["“Bunga kim javobgar?” — javob kutmaydigan, oʻylashga undovchi savol qanday ataladi?", "Ritorik soʻroq"],
-    ["“Aziz yoshlar!” — oʻquvchiga bevosita qaratilgan bu vosita nima?", "Murojaat"],
-    ["“Jurnalist soʻzni yaratadi, dasturchi esa uni yetkazuvchi yoʻlni quradi.” Bu gapda qaysi usul qoʻllangan?", "Antiteza (qarshilantirish)"],
-    ["“OAV — jamiyatning koʻzgusi.” Bu qaysi tasviriy vosita?", "Metafora"],
-    ["“Biz oʻzgaramiz. Albatta. Lekin qachon?” — gapni boʻlaklarga boʻlib taʼkid yaratish usuli qanday ataladi?", "Parcellyatsiya"]
-  ]},
-  { name: "Matbuot tarixi", qs: [
-    ["Abdulla Qodiriy “Mushtum” jurnalida qaysi taxallus bilan felyetonlar yozgan?", "Julqunboy"],
-    ["Behbudiyning “Ikki emas, toʻrt til lozim” maqolasi qaysi jurnalda chiqqan?", "“Oyina” jurnali (1913-yil)"],
-    ["Abdulla Qodiriyning “Kalvak Mahzum” obrazi qaysi janrdagi asarlar qahramoni?", "Felyeton (hajviy publitsistika)"],
-    ["Oʻzbek tilidagi ilk gazeta qanday nomlangan va qachon chiqa boshlagan?", "“Turkiston viloyatining gazeti”, 1870-yil"],
-    ["Behbudiy maqolasida yoshlar qaysi toʻrt tilni bilishi kerak deb yozgan?", "Turkiy, forsiy, arab va rus tillari"]
-  ]},
-  { name: "Maqola tuzilishi", qs: [
-    ["Maqolaning oʻquvchini birinchi jumladanoq qiziqtiradigan kirish abzasi nima deyiladi?", "Lid"],
-    ["Eng muhim maʼlumot boshida, kamroq muhimlari oxirida beriladigan tuzilish qanday ataladi?", "“Teskari piramida”"],
-    ["Publitsistik maqola qismlarini tartib bilan ayting.", "Sarlavha → lid → muammo bayoni → dalillar → muallif munosabati → xulosa va chaqiriq"],
-    ["Publitsistik maqolada dalil sifatida nimalar keltiriladi? Kamida 3 ta ayting.", "Faktlar, raqamlar va statistika, hayotiy misollar, mutaxassis fikri, hujjatlar"],
-    ["“Dolzarb masala”, “jamoatchilik eʼtibori” kabi publitsistikada koʻp takrorlanadigan tayyor birikmalar nima deyiladi?", "Nutqiy qoliplar (barqaror birikmalar, shtamplar)"]
-  ]},
-  { name: "Axborot savodxonligi", qs: [
-    ["Faqat bosish (klik) sonini oshirish uchun yozilgan shov-shuvli sarlavha nima deyiladi?", "Klikbeyt"],
-    ["Xabardagi faktlarning toʻgʻriligini tekshirish jarayoni qanday ataladi?", "Fakt-cheking (faktlarni tekshirish)"],
-    ["Xabarni ulashishdan oldin birinchi navbatda nimani tekshirish kerak?", "Uning manbasini: kim, qachon va qayerda eʼlon qilgan"],
-    ["Sunʼiy intellekt yordamida yasalgan soxta video yoki ovoz nima deyiladi?", "Dipfeyk (deepfake)"],
-    ["Oʻzbekistonda OAV faoliyatini tartibga soluvchi asosiy qonun qaysi?", "“Ommaviy axborot vositalari toʻgʻrisida”gi Qonun (2007-yil, yangi tahrir)"]
-  ]}
+const GAMES = [
+  { f: "tavakkal", ic: "🎲", t: "Tavakkal bellashuvi", g: "#f59e0b", d: "Har savoldan oldin ballaringizdan tiking. Toʻgʻri topsangiz — narx va tikish qoʻshiladi, xato qilsangiz — tikish yonadi. Yashirin “Mushuk qopda” kataklari bilan.", tags: ["2–4 jamoa", "Tikish", "Strategiya"] },
+  { f: "hududlar", ic: "🗺️", t: "Hududlar xaritasi", g: "#22d3ee", d: "Toʻgʻri javob bering va hududni oʻz rangingizga boʻyang. Ketma-ket 3 ta hudud — bonus. Xato javobdan keyin hudud yonib ketadi.", tags: ["2–4 jamoa", "Xarita", "Bonus chiziqlar"] },
+  { f: "tezkor", ic: "⚡", t: "Tezkor tugma", g: "#fb7185", d: "Savol hammaga birdan chiqadi — kim birinchi tugmani bossa, oʻsha javob beradi. Oxirida yashirin tikishli Final raund.", tags: ["2–4 jamoa", "Klaviatura", "Final"] },
+  { f: "zinapoya", ic: "🪜", t: "Zinapoya", g: "#a78bfa", d: "Kategoriya tanlang va 100 dan 500 gacha koʻtariling. Har pogʻonada qaror: davom etish yoki yutuqni saqlash. 50/50 va +15 soniya yordamchilari.", tags: ["2–4 jamoa", "Test", "Xavf"] },
+  { f: "klassik", ic: "🎯", t: "Klassik bellashuv", g: "#22c55e", d: "6 mavzu × 5 narxli savollar jadvali. Boshlovchi har bir jamoaning javobini baholaydi. 2 ta yashirin BONUS ×2 katak.", tags: ["2–4 jamoa", "Klassik", "Bonus"] }
 ];
-const VALUES = [100, 200, 300, 400, 500];
-const TIME = 30;
-const KEY = "pub-bellashuv-v1";
+const all = Object.keys(window.MAVZULAR || {});
+let key = new URLSearchParams(location.search).get("mavzu");
+try { key = key || JSON.parse(localStorage.getItem("tanlangan-mavzu")); } catch (e) {}
+if (!all.includes(key)) key = all[0];
 
-let S = load() || null;
-let timer = null, left = TIME, cur = null;
-
-function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
-const $ = s => document.querySelector(s);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-
-/* ---------- Ovoz ---------- */
-let ac = null;
-function beep(f = 660, d = .15, type = "sine", vol = .15) {
-  try {
-    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-    const o = ac.createOscillator(), g = ac.createGain();
-    o.type = type; o.frequency.value = f; g.gain.value = vol;
-    o.connect(g); g.connect(ac.destination); o.start();
-    g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + d); o.stop(ac.currentTime + d);
-  } catch (e) {}
+function draw() {
+  try { localStorage.setItem("tanlangan-mavzu", JSON.stringify(key)); } catch (e) {}
+  document.getElementById("topics").innerHTML = all.map(k => `<button type="button" class="topic ${k === key ? "on" : ""}" data-k="${k}"><small>${MAVZULAR[k].fan}</small><b>${MAVZULAR[k].nomi}</b></button>`).join("");
+  document.querySelectorAll(".topic").forEach(b => b.onclick = () => { key = b.dataset.k; draw(); });
+  document.getElementById("games").innerHTML = GAMES.map(g => `
+    <a class="game" href="oyinlar/${g.f}.html?mavzu=${encodeURIComponent(key)}" style="--g:${g.g}">
+      <div class="ic">${g.ic}</div><h3>${g.t}</h3><p>${g.d}</p>
+      <div class="tags">${g.tags.map(t => `<span>${t}</span>`).join("")}</div>
+      <div class="play" style="color:${g.g}">Oʻynash →</div>
+    </a>`).join("");
 }
-const sOk = () => { beep(660, .12); setTimeout(() => beep(990, .2), 120); };
-const sBad = () => beep(160, .35, "sawtooth", .12);
-const sBonus = () => [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => beep(f, .18, "triangle"), i * 110));
-
-/* ---------- Sozlash ---------- */
-function renderSetup() {
-  let n = 3;
-  const app = $("#app");
-  const draw = () => {
-    const old = [...document.querySelectorAll(".names input")].map(i => i.value);
-    app.innerHTML = `
-      <section class="setup">
-        <h2>Oʻyinni boshlash</h2>
-        <p>Akademik yozuv fani · “Publitsistik nutq uslubi” mavzusi boʻyicha jamoaviy bilimlar bellashuvi.</p>
-        <label>Jamoalar soni</label>
-        <div class="count">${[2,3,4].map(k => `<button type="button" data-n="${k}" class="${k===n?'on':''}">${k}</button>`).join("")}</div>
-        <label>Jamoa nomlari</label>
-        <div class="names">${Array.from({length:n},(_,i)=>`<input maxlength="24" value="${esc(old[i] ?? (i+1)+"-jamoa")}">`).join("")}</div>
-        <button class="primary" id="start" type="button">Boshlash ▶</button>
-        <ul class="rules">
-          <li>Jamoalar navbat bilan mavzu va narxni tanlaydi.</li>
-          <li>Javob uchun ${TIME} soniya beriladi. Toʻgʻri javob — ball qoʻshiladi, xato — ayiriladi.</li>
-          <li>Jadvalda yashirin <b>2 ta BONUS</b> katak bor: unda ball ikki baravar boʻladi!</li>
-          <li>Barcha savollar tugagach, eng koʻp ball toʻplagan jamoa gʻolib.</li>
-        </ul>
-      </section>`;
-    app.querySelectorAll(".count button").forEach(b => b.onclick = () => { n = +b.dataset.n; draw(); });
-    $("#start").onclick = () => {
-      const names = [...document.querySelectorAll(".names input")].map((i, k) => i.value.trim() || (k+1)+"-jamoa");
-      const all = []; CATS.forEach((_, c) => VALUES.forEach((_, v) => all.push(c+"-"+v)));
-      const bonus = [];
-      while (bonus.length < 2) { const x = all[Math.floor(Math.random()*all.length)]; if (!bonus.includes(x)) bonus.push(x); }
-      S = { teams: names.map(name => ({ name, score: 0 })), used: [], bonus };
-      save(); renderGame();
-    };
-  };
-  draw();
-}
-
-/* ---------- Oʻyin taxtasi ---------- */
-function renderGame() {
-  const app = $("#app");
-  const max = Math.max(...S.teams.map(t => t.score));
-  app.innerHTML = `
-    <div class="board">
-      ${CATS.map(c => `<div class="cat">${c.name}</div>`).join("")}
-      ${VALUES.map((v, vi) => CATS.map((_, ci) => {
-        const id = ci+"-"+vi, used = S.used.includes(id);
-        return `<button class="cell" data-id="${id}" ${used?"disabled":""} aria-label="${CATS[ci].name}, ${v}">${used?"":v}</button>`;
-      }).join("")).join("")}
-    </div>
-    <div class="scores">
-      ${S.teams.map((t, i) => `
-        <div class="team ${t.score===max && max>0 ? "lead":""}">
-          <div class="n">${esc(t.name)}</div>
-          <div class="s ${t.score<0?"neg":""}">${t.score}</div>
-          <div class="adj"><button type="button" data-t="${i}" data-d="-100">−100</button><button type="button" data-t="${i}" data-d="100">+100</button></div>
-        </div>`).join("")}
-    </div>`;
-  app.querySelectorAll(".cell:not(:disabled)").forEach(b => b.onclick = () => openQ(b.dataset.id));
-  app.querySelectorAll(".adj button").forEach(b => b.onclick = () => { S.teams[+b.dataset.t].score += +b.dataset.d; save(); renderGame(); });
-  if (S.used.length === CATS.length * VALUES.length) showWinner();
-}
-
-/* ---------- Savol oynasi ---------- */
-function openQ(id) {
-  const [ci, vi] = id.split("-").map(Number);
-  const bonus = S.bonus.includes(id);
-  cur = { id, ci, vi, value: VALUES[vi] * (bonus ? 2 : 1), bonus, done: [] };
-  $("#modal").classList.add("open");
-  if (bonus) {
-    $("#card").className = "card";
-    $("#card").innerHTML = `<div class="meta">${CATS[ci].name}</div><div class="bonus-splash">⭐ BONUS ×2 ⭐</div>
-      <div class="q" style="font-size:clamp(18px,2.4vw,28px)">Bu savol <b style="color:var(--gold)">${cur.value}</b> ball turadi!</div>
-      <div class="ctrl"><button class="show-a" id="goQ" type="button">Savolni koʻrsatish ▶</button></div>`;
-    sBonus(); $("#goQ").onclick = drawQ;
-  } else drawQ();
-}
-
-function drawQ() {
-  const { ci, vi } = cur; const [q, a] = CATS[ci].qs[vi];
-  const card = $("#card"); card.className = "card";
-  card.innerHTML = `
-    <div class="meta">${CATS[ci].name} · ${cur.value}${cur.bonus ? " · BONUS" : ""}</div>
-    <div class="q">${q}</div>
-    <div class="timer"><i id="bar"></i></div>
-    <div class="tline">⏱ <b id="sec">${TIME}</b> soniya <button type="button" id="tgl" class="tb" style="border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:6px;padding:2px 10px">⏸</button></div>
-    <div class="a">${a}</div>
-    <div class="ctrl">
-      <button class="show-a" id="showA" type="button">Javobni koʻrsatish</button>
-      <button id="closeQ" type="button">Yopish ✕</button>
-    </div>
-    <div class="award">${S.teams.map((t, i) => `
-      <div class="t" data-i="${i}"><div>${esc(t.name)}</div>
-        <button class="y" data-i="${i}" type="button">✓ +${cur.value}</button>
-        <button class="x" data-i="${i}" type="button">✗ −${cur.value}</button>
-      </div>`).join("")}</div>
-    <div class="hint">Probel — javobni koʻrsatish · Esc — yopish</div>`;
-  $("#showA").onclick = showAnswer;
-  $("#closeQ").onclick = closeQ;
-  $("#tgl").onclick = () => timer ? stopTimer() : startTimer();
-  card.querySelectorAll(".award .y").forEach(b => b.onclick = () => award(+b.dataset.i, true));
-  card.querySelectorAll(".award .x").forEach(b => b.onclick = () => award(+b.dataset.i, false));
-  left = TIME; startTimer();
-}
-
-function startTimer() {
-  stopTimer(); const t0 = Date.now() - (TIME - left) * 1000;
-  $("#tgl") && ($("#tgl").textContent = "⏸");
-  timer = setInterval(() => {
-    left = Math.max(0, TIME - (Date.now() - t0) / 1000);
-    const sec = $("#sec"), bar = $("#bar");
-    if (!sec) return stopTimer();
-    const whole = Math.ceil(left);
-    if (sec.textContent != whole) { sec.textContent = whole; if (whole <= 5 && whole > 0) beep(880, .08); }
-    bar.style.transform = `scaleX(${left / TIME})`;
-    if (left <= 0) { stopTimer(); beep(220, .6, "square", .1); }
-  }, 100);
-}
-function stopTimer() { clearInterval(timer); timer = null; $("#tgl") && ($("#tgl").textContent = "▶"); }
-
-function showAnswer() { $("#card").classList.add("show"); stopTimer(); $("#showA").style.display = "none"; }
-
-function award(i, ok) {
-  if (cur.done.includes(i)) return;
-  cur.done.push(i);
-  S.teams[i].score += ok ? cur.value : -cur.value; save();
-  document.querySelector(`.award .t[data-i="${i}"]`).classList.add("done");
-  if (ok) { sOk(); showAnswer(); setTimeout(closeQ, 1400); } else sBad();
-}
-
-function closeQ() {
-  if (!cur) return;
-  stopTimer();
-  if (!S.used.includes(cur.id)) S.used.push(cur.id);
-  save(); cur = null;
-  $("#modal").classList.remove("open"); renderGame();
-}
-
-function showWinner() {
-  const sorted = [...S.teams].sort((a, b) => b.score - a.score);
-  const top = sorted.filter(t => t.score === sorted[0].score);
-  $("#modal").classList.add("open");
-  $("#card").className = "card winner";
-  $("#card").innerHTML = `<div class="meta">Oʻyin tugadi</div>
-    <h2>🏆 ${top.map(t => esc(t.name)).join(" va ")}</h2>
-    <p style="color:var(--muted)">${top.length > 1 ? "Durang!" : "Gʻolib jamoa!"}</p>
-    <ol>${sorted.map(t => `<li>${esc(t.name)} — <b>${t.score}</b></li>`).join("")}</ol>
-    <div class="ctrl"><button class="show-a" id="again" type="button">Yangi oʻyin ↺</button></div>`;
-  $("#again").onclick = () => { $("#modal").classList.remove("open"); reset(true); };
-  [0, 200, 400, 600, 800].forEach((d, k) => setTimeout(() => beep([523, 659, 784, 1046, 1318][k], .25, "triangle"), d));
-}
-
-function reset(force) {
-  if (!force && !confirm("Yangi oʻyin boshlansinmi? Joriy ballar oʻchadi.")) return;
-  stopTimer(); cur = null; S = null;
-  try { localStorage.removeItem(KEY); } catch (e) {}
-  $("#modal").classList.remove("open"); renderSetup();
-}
-
-document.addEventListener("keydown", e => {
-  if (!$("#modal").classList.contains("open")) return;
-  if (e.key === "Escape" && cur) closeQ();
-  if (e.key === " " && cur) { e.preventDefault(); if ($("#goQ")) drawQ(); else if ($("#showA")) showAnswer(); }
-});
-$("#resetBtn").onclick = () => reset(false);
-$("#fsBtn").onclick = () => {
-  try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); } catch (e) {}
-};
-
-S && S.teams ? renderGame() : renderSetup();
+draw();
 </script>
 </body>
 </html>

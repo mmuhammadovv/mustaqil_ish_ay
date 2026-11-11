@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hududlar xaritasi</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .map .cell.own { color: #fff; border-style: solid; border-color: var(--c); cursor: default;
+    background: linear-gradient(150deg, color-mix(in srgb, var(--c) 75%, transparent), color-mix(in srgb, var(--c) 30%, transparent));
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.15), 0 0 24px -8px var(--c); }
+  .map .cell.own .o { font-family: var(--font); font-weight: 800; font-size: clamp(10px, 1.1vw, 15px); display: block; opacity: .95; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
+  .map .cell.own .v { font-size: clamp(12px, 1.6vw, 22px); opacity: .7; }
+  .map .cell.burn { background: repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 8px, transparent 8px 16px); color: rgba(255,255,255,.25); border-style: dashed; cursor: default; }
+  .map .cell.line { animation: glow 1.2s ease 2; }
+  @keyframes glow { 50% { transform: scale(1.06); box-shadow: 0 0 40px var(--c); } }
+  .map .cell.capt { animation: cap .6s cubic-bezier(.2,.9,.3,1.4); }
+  @keyframes cap { from { transform: rotateY(90deg) scale(.8); } }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar.js"></script>
+<script src="assets/oyin.js"></script>
+<script>
+const { $, $$, esc, store, topic, VALUES, sound } = G;
+const SK = G.saveKey("hududlar");
+const COLS = 6, ROWS = 5, BONUS = 200;
+let S = store.get(SK);
+
+G.header("Hududlar xaritasi", reset);
+S && S.teams ? render() : setup();
+
+function setup() {
+  G.setup($("#app"), {
+    title: "🗺️ Hududlar xaritasi",
+    desc: "Har bir katak — bitta hudud. Toʻgʻri javob bering va hududni oʻz rangingizga boʻyang! Ketma-ket 3 ta hudud egallasangiz — bonus.",
+    extra: `<label class="l">Savol turi</label><label class="check"><input type="checkbox" id="mc"> Test rejimi (4 ta variantdan tanlash)</label>`,
+    rules: [
+      "Jamoalar navbat bilan boʻsh hududni tanlaydi.",
+      "Toʻgʻri javob — hudud sizniki, uning narxi balingizga qoʻshiladi.",
+      "Xato javob — hudud <b>yonib ketadi</b> va hech kimga tegmaydi.",
+      `Gorizontal, vertikal yoki diagonal boʻyicha <b>ketma-ket 3 ta</b> hudud egallasangiz — <b>+${BONUS}</b> bonus (har bir chiziq uchun).`,
+      "Barcha hududlar tugagach, eng koʻp ball toʻplagan jamoa gʻolib."
+    ],
+    onStart(teams) { S = { teams, cells: {}, lines: [], turn: 0, mc: $("#mc").checked }; save(); render(); }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { store.del(SK); S = null; G.modal.close(); setup(); }
+
+function render(hl = []) {
+  const t = S.teams[S.turn];
+  $("#app").innerHTML = `
+    <div class="turn-banner" style="--c:${t.color}">Navbat: <b>${esc(t.name)}</b> — hudud tanlang</div>
+    <div class="board map">
+      ${topic.kategoriyalar.map(c => `<div class="cat">${c.nomi}</div>`).join("")}
+      ${VALUES.map((v, r) => topic.kategoriyalar.map((_, c) => {
+        const id = c + "-" + r, own = S.cells[id];
+        if (own === undefined) return `<button class="cell" data-id="${id}">${v}</button>`;
+        if (own === -1) return `<button class="cell burn" disabled>✕</button>`;
+        const tm = S.teams[own];
+        return `<button class="cell own ${hl.includes(id) ? "line" : ""} ${hl[0] === "cap:" + id ? "capt" : ""}" style="--c:${tm.color}" disabled><span class="o">${esc(tm.name)}</span><span class="v">${v}</span></button>`;
+      }).join("")).join("")}
+    </div>
+    <div class="legend"><span>✕ — yonib ketgan hudud</span><span>3 ta ketma-ket = +${BONUS}</span></div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { active: S.turn, onAdjust: (i, d) => { S.teams[i].score += d; save(); render(); },
+    tag: (_, i) => `${Object.values(S.cells).filter(o => o === i).length} ta hudud` });
+  $$(".cell[data-id]").forEach(b => b.onclick = () => open(b.dataset.id));
+  if (Object.keys(S.cells).length === COLS * ROWS) setTimeout(() => G.winner(S.teams, reset), 600);
+}
+
+function open(id) {
+  sound.click();
+  const [c, r] = id.split("-").map(Number), t = S.teams[S.turn], who = S.turn;
+  const m = G.modal(`
+    <div class="meta"><span class="pill">${topic.kategoriyalar[c].nomi}</span><span class="pill gold">${VALUES[r]}</span><span class="pill team-pill" style="--c:${t.color}">${esc(t.name)}</span></div>
+    <div id="q"></div>`);
+  G.ask($("#q", m), topic.kategoriyalar[c].savollar[r], { mc: S.mc, onResult(ok) {
+    S.cells[id] = ok ? who : -1;
+    let gained = 0, hl = [];
+    if (ok) {
+      S.teams[who].score += VALUES[r]; gained = VALUES[r];
+      const nl = newLines(who);
+      nl.forEach(l => { S.lines.push(l.key); hl.push(...l.cells); });
+      if (nl.length) { S.teams[who].score += BONUS * nl.length; gained += BONUS * nl.length; setTimeout(sound.bonus, 300); }
+      if (!nl.length) hl = ["cap:" + id];
+    }
+    S.turn = (S.turn + 1) % S.teams.length; save();
+    G.modal.close(); render(hl); G.bump($("#sc"), who);
+    G.toast(ok ? `${esc(t.name)} hududni egalladi: <b style="color:var(--ok)">+${gained}</b>${gained > VALUES[r] ? " (chiziq bonusi!)" : ""}` : `Hudud yonib ketdi ✕`);
+  }});
+}
+
+function newLines(who) {
+  const own = (c, r) => S.cells[c + "-" + r] === who, out = [];
+  const dirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
+  for (let c = 0; c < COLS; c++) for (let r = 0; r < ROWS; r++) for (const [dc, dr] of dirs) {
+    const cells = [0, 1, 2].map(k => [c + dc * k, r + dr * k]);
+    if (cells.some(([x, y]) => x < 0 || y < 0 || x >= COLS || y >= ROWS)) continue;
+    if (!cells.every(([x, y]) => own(x, y))) continue;
+    const key = cells.map(([x, y]) => x + "-" + y).join("|");
+    if (!S.lines.includes(key)) out.push({ key, cells: cells.map(([x, y]) => x + "-" + y) });
+  }
+  return out;
+}
+</script>
+</body>
+</html>
