@@ -10,11 +10,11 @@
 
 | Oʻyin | Shakli |
 |---|---|
-| Tavakkal | Gʻildirak kategoriyani tanlaydi; 500 ballik balansdan tikish |
+| Tavakkal | Gʻildirak kategoriya va daraja (1–5) tanlaydi; 500 ballik balansdan tikish |
 | Hududlar | Olti burchakli kataklar xaritasi; bazadan kengayish va hujum |
-| Svetofor | Qizil → tasodifiy vaqtda yashil; falstart jarimasi |
+| Svetofor | Qizil → tasodifiy vaqtda yashil, chalgʻituvchi tovushlar; boshlovchi belgilaydi |
 | Zinapoya | 10 kategoriya, 5 pogʻona, davom etish yoki saqlash |
-| Arqon tortish | 2 jamoa bir vaqtda javob beradi, arqon tortiladi |
+| Arqon tortish | 2 jamoa navbat bilan javob beradi, arqon tortiladi |
 
 Kunduzgi/tungi rejim, har fan uchun alohida dizayn.
 
