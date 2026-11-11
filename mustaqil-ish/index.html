@@ -22,7 +22,9 @@
   p { margin: 0; text-align: justify; text-indent: 1.25cm; hyphens: auto; }
   h1, h2, h3 { font-size: 14pt; text-align: center; margin: 0 0 12pt; }
   h1 { text-transform: uppercase; }
+  h2 { margin: 12pt 0 8pt; }
   h3 { text-align: left; text-indent: 1.25cm; margin: 10pt 0 4pt; }
+  h3.ah { text-align: center; text-indent: 0; font-style: italic; }
   ul, ol { margin: 0 0 0 1.25cm; padding-left: .6cm; text-align: justify; }
   blockquote { margin: 6pt 0 6pt 1.25cm; font-style: italic; }
   table { width: 100%; border-collapse: collapse; font-size: 12pt; line-height: 1.3; margin: 8pt 0; }
@@ -116,19 +118,32 @@
 <section class="page">
   <h1>Reja</h1>
   <ul class="toc">
-    <li><span>Kirish</span><span class="dots"></span><span>2</span></li>
-    <li><span>1. Publitsistik nutq uslubi haqida umumiy tushuncha</span><span class="dots"></span><span>3</span></li>
-    <li class="sub"><span>1.1. Publitsistik uslubning vazifalari</span><span class="dots"></span><span>3</span></li>
-    <li class="sub"><span>1.2. Publitsistik uslubning til xususiyatlari</span><span class="dots"></span><span>4</span></li>
-    <li class="sub"><span>1.3. Publitsistik janrlar</span><span class="dots"></span><span>5</span></li>
-    <li><span>2. Publitsistik maqolalar bilan tanishish va ularni tahlil qilish</span><span class="dots"></span><span>5</span></li>
-    <li class="sub"><span>2.1. Maqolani tahlil qilish mezonlari</span><span class="dots"></span><span>5</span></li>
-    <li class="sub"><span>2.2. M. Behbudiyning “Ikki emas, toʻrt til lozim” maqolasi tahlili</span><span class="dots"></span><span>6</span></li>
-    <li class="sub"><span>2.3. A. Qodiriy felyetonlari tahlili</span><span class="dots"></span><span>6</span></li>
-    <li class="sub"><span>2.4. Zamonaviy internet-nashr maqolasi tahlili</span><span class="dots"></span><span>7</span></li>
-    <li><span>3. “Men tanlagan soha va OAV” — publitsistik maqola</span><span class="dots"></span><span>8</span></li>
-    <li><span>Xulosa</span><span class="dots"></span><span>10</span></li>
-    <li><span>Foydalanilgan adabiyotlar</span><span class="dots"></span><span>11</span></li>
+    <li data-key="KIRISH"><span>Kirish</span><span class="dots"></span><span>2</span></li>
+    <li data-key="1. PUBLITSISTIK NUTQ"><span>1. Publitsistik nutq uslubi haqida umumiy tushuncha</span><span class="dots"></span><span>4</span></li>
+    <li class="sub" data-key="1.1. Publitsistik"><span>1.1. Publitsistik uslubning vazifalari</span><span class="dots"></span><span>4</span></li>
+    <li class="sub" data-key="1.2. Publitsistik"><span>1.2. Publitsistik uslubning til xususiyatlari</span><span class="dots"></span><span>4</span></li>
+    <li class="sub" data-key="1.3. Publitsistik"><span>1.3. Publitsistik janrlar</span><span class="dots"></span><span>5</span></li>
+    <li class="sub" data-key="1.4. Oʻzbek"><span>1.4. Oʻzbek publitsistikasining shakllanish va taraqqiyot bosqichlari</span><span class="dots"></span><span>6</span></li>
+    <li class="sub" data-key="1.5. Publitsistik"><span>1.5. Publitsistik uslubning boshqa uslublardan farqi</span><span class="dots"></span><span>7</span></li>
+    <li class="sub" data-key="1.6. Publitsistik"><span>1.6. Publitsistik nutq madaniyati va jurnalist odobi</span><span class="dots"></span><span>8</span></li>
+    <li class="sub" data-key="1.7. Internet"><span>1.7. Internet publitsistikasining oʻziga xos xususiyatlari</span><span class="dots"></span><span>9</span></li>
+    <li data-key="2. PUBLITSISTIK MAQOLALAR"><span>2. Publitsistik maqolalar bilan tanishish va ularni tahlil qilish</span><span class="dots"></span><span>10</span></li>
+    <li class="sub" data-key="2.1. Maqolani"><span>2.1. Maqolani tahlil qilish mezonlari</span><span class="dots"></span><span>10</span></li>
+    <li class="sub" data-key="2.2. Mahmud"><span>2.2. M. Behbudiyning “Ikki emas, toʻrt til lozim” maqolasi tahlili</span><span class="dots"></span><span>10</span></li>
+    <li class="sub" data-key="2.3. Abdulla"><span>2.3. A. Qodiriy felyetonlari tahlili</span><span class="dots"></span><span>11</span></li>
+    <li class="sub" data-key="2.4. Zamonaviy"><span>2.4. Zamonaviy internet-nashr maqolasi tahlili</span><span class="dots"></span><span>11</span></li>
+    <li class="sub" data-key="2.5. Abdurauf"><span>2.5. A. Fitratning “Munozara” asari tahlili</span><span class="dots"></span><span>12</span></li>
+    <li class="sub" data-key="2.6. Abdulla Avloniy"><span>2.6. A. Avloniyning “Turkiy guliston yoxud axloq” asaridagi publitsistik ruh</span><span class="dots"></span><span>13</span></li>
+    <li class="sub" data-key="2.7. Tahlil"><span>2.7. Tahlil qilingan matnlarning qiyosiy tavsifi</span><span class="dots"></span><span>13</span></li>
+    <li class="sub" data-key="2.8. Bitta"><span>2.8. Bitta faktning turli publitsistik janrlarda ifodalanishi</span><span class="dots"></span><span>14</span></li>
+    <li data-key="3. “MEN TANLAGAN"><span>3. “Men tanlagan soha va OAV” — publitsistik maqola</span><span class="dots"></span><span>15</span></li>
+    <li class="sub" data-key="3.1. Maqola"><span>3.1. Maqola ustida ishlash bosqichlari</span><span class="dots"></span><span>15</span></li>
+    <li class="sub" data-key="3.2. Maqola matni"><span>3.2. Maqola matni: “Kod yozadigan avlod va ekran ortidagi haqiqat”</span><span class="dots"></span><span>15</span></li>
+    <li class="sub" data-key="3.3. Maqolada"><span>3.3. Maqolada qoʻllangan publitsistik vositalar</span><span class="dots"></span><span>18</span></li>
+    <li class="sub" data-key="3.4. Maqolaning"><span>3.4. Maqolaning oʻz-oʻzini tahlili</span><span class="dots"></span><span>18</span></li>
+    <li data-key="XULOSA"><span>Xulosa</span><span class="dots"></span><span>19</span></li>
+    <li data-key="FOYDALANILGAN"><span>Foydalanilgan adabiyotlar</span><span class="dots"></span><span>20</span></li>
+    <li data-key="ILOVALAR"><span>Ilovalar</span><span class="dots"></span><span>21</span></li>
   </ul>
 
 <!-- ================= KIRISH ================= -->
@@ -141,11 +156,17 @@
   <p><b>Ishning vazifalari:</b></p>
   <ul>
     <li>publitsistik uslubning vazifalari, til xususiyatlari va janrlarini aniqlash;</li>
+    <li>oʻzbek publitsistikasining tarixiy taraqqiyot bosqichlarini koʻrib chiqish;</li>
+    <li>publitsistik uslubni boshqa uslublar bilan qiyoslash, nutq madaniyati va jurnalist odobi talablarini oʻrganish;</li>
     <li>publitsistik maqolani tahlil qilish mezonlarini ishlab chiqish;</li>
     <li>mumtoz va zamonaviy publitsistik matnlarni shu mezonlar asosida tahlil qilish;</li>
     <li>tanlangan soha va OAV munosabatiga bagʻishlangan publitsistik maqola yozish.</li>
   </ul>
-  <p><b>Ishning tuzilishi.</b> Mustaqil ish kirish, uch qism, xulosa va foydalanilgan adabiyotlar roʻyxatidan iborat.</p>
+  <p><b>Tadqiqot obyekti</b> — oʻzbek publitsistik matnlari: jadid matbuoti namunalari, XX asr felyetonlari va zamonaviy internet nashrlari maqolalari.</p>
+  <p><b>Tadqiqot predmeti</b> — publitsistik uslubning til vositalari, janr xususiyatlari va taʼsir koʻrsatish usullari.</p>
+  <p><b>Tadqiqot metodlari.</b> Ishda tavsifiy, qiyosiy-tahliliy, stilistik tahlil va umumlashtirish metodlaridan foydalanildi. Shuningdek, bitta faktni turli janrlarda ifodalash boʻyicha amaliy tajriba oʻtkazildi.</p>
+  <p><b>Ishning amaliy ahamiyati.</b> Ish natijalari va ilovalardagi atamalar lugʻati hamda nazorat roʻyxatidan talabalar publitsistik maqola, esse va ijtimoiy tarmoq postlarini yozishda foydalanishlari mumkin.</p>
+  <p><b>Ishning tuzilishi.</b> Mustaqil ish kirish, uch qism (nazariy qism, publitsistik maqolalar tahlili va mustaqil yozilgan maqola), xulosa, foydalanilgan adabiyotlar roʻyxati va ikkita ilovadan iborat.</p>
 
 <!-- ================= 1-QISM ================= -->
 
@@ -189,6 +210,60 @@
   <p><b>Maqola</b> publitsistikaning yetakchi janri hisoblanadi. Unda muallif muayyan ijtimoiy muammoni koʻtaradi, uni dalillar asosida tahlil qiladi va oʻz yechimini taklif etadi. Maqolaning muammoli, tahliliy, tanqidiy, targʻibot-tashviqot turlari mavjud.</p>
   <p><b>Felyeton</b> — salbiy hodisalarni hajv (satira) va yumor orqali fosh etuvchi janr. <b>Ocherk</b> real shaxs yoki voqeani badiiy tasvir vositalari bilan hikoya qiladi. <b>Esse</b> esa muallifning erkin, shaxsiy mulohazalari asosida quriladi.</p>
   <p>Zamonaviy davrda internet OAV paydo boʻlishi bilan yangi shakllar — <b>blog, uzun oʻqish (longrid), Telegram-kanal posti, video-sharh, podkast</b> — ham publitsistik vazifani bajarmoqda. Ularning tili soddaroq, qisqaroq boʻlsa-da, asosiy talab oʻzgarmagan: dolzarblik, dalillilik, aniq muallif pozitsiyasi.</p>
+
+  <h3>1.4. Oʻzbek publitsistikasining shakllanish va taraqqiyot bosqichlari</h3>
+  <p>Oʻzbek publitsistikasi uzoq va boy tarixga ega. Uning ildizlari mumtoz adabiyotdagi pand-nasihat asarlari, tarixiy solnomalar va maktubotlarga borib taqaladi. Biroq publitsistika alohida ijod turi sifatida matbuot paydo boʻlishi bilan shakllandi. Uning taraqqiyotini shartli ravishda toʻrt bosqichga ajratish mumkin.</p>
+  <p><b>Birinchi bosqich — ilk matbuot davri (1870–1905).</b> 1870-yildan Toshkentda “Turkiston viloyatining gazeti” chiqa boshladi. Bu oʻzbek tilidagi ilk davriy nashr boʻlib, unda asosan rasmiy farmoyishlar, xabarlar va eʼlonlar bosilgan. Gazeta rasmiy xarakterda boʻlsa-da, xalqni bosma soʻz bilan tanishtirdi va oʻzbek jurnalistikasining tugʻilishiga zamin yaratdi.</p>
+  <p><b>Ikkinchi bosqich — jadid matbuoti (1906–1920).</b> XX asr boshida jadidlar millatni maʼrifat orqali uygʻotishni maqsad qilib, milliy gazeta va jurnallar tashkil etdilar. 1906-yilda Ismoil Obidov “Taraqqiy” gazetasini, Munavvarqori Abdurashidxonov “Xurshid” gazetasini chiqardi. Abdulla Avloniy “Shuhrat” (1907) gazetasiga asos soldi. Mahmudxoʻja Behbudiy esa “Samarqand” gazetasi va “Oyina” jurnalini (1913–1915) nashr ettirdi. Bu davr publitsistikasining asosiy mavzulari — yangi usul maktablari, ilm-fan, til oʻrganish, xotin-qizlar taʼlimi, isrofgarchilik va jaholatga qarshi kurash edi. Jadid publitsistikasi oʻzbek tilida birinchi marta jamiyatga ochiq murojaat qilgan, oʻquvchini fikrlashga undagan matnlar namunasini yaratdi.</p>
+  <p><b>Uchinchi bosqich — sovet davri publitsistikasi (1920–1990).</b> Bu davrda “Qizil Oʻzbekiston” (keyinchalik “Sovet Oʻzbekistoni”) gazetasi, “Mushtum” hajviy jurnali kabi nashrlar faoliyat koʻrsatdi. Abdulla Qodiriy, Choʻlpon, Gʻafur Gʻulom, Abdulla Qahhor kabi adiblar publitsistik maqola va felyetonlar yozdilar. Biroq matbuot qatʼiy mafkuraviy nazorat ostida boʻlgani sababli publitsistika koʻpincha tashviqot vositasiga aylandi. Shunga qaramay, bu davrda ocherk, felyeton, publitsistik maqola janrlari mukammal shaklga keldi, ikkinchi jahon urushi yillarida esa vatanparvarlik publitsistikasi keng rivojlandi.</p>
+  <p><b>Toʻrtinchi bosqich — mustaqillik va raqamli davr (1991-yildan hozirgacha).</b> Mustaqillik yillarida “Xalq soʻzi” gazetasi tashkil etildi, “Jurnalistlik faoliyatini himoya qilish toʻgʻrisida”gi (1997) va “Ommaviy axborot vositalari toʻgʻrisida”gi (2007, yangi tahrir) qonunlar qabul qilindi. Publitsistikada milliy qadriyatlar, tarixiy xotira, til va maʼnaviyat masalalari yetakchi oʻringa chiqdi. XXI asrning ikkinchi oʻn yilligidan boshlab esa internet nashrlari, Telegram-kanallar, bloglar va videoplatformalar publitsistikaning asosiy maydoniga aylandi. Endi har bir fuqaro ham axborot isteʼmolchisi, ham uning yaratuvchisi boʻlishi mumkin.</p>
+  <p>Bu bosqichlar shuni koʻrsatadiki, publitsistikaning shakli va texnik vositalari doimo oʻzgarib borgan, lekin uning asosiy vazifasi — jamiyatning dolzarb muammolarini koʻtarish va odamlarni fikrlashga undash — oʻzgarmay qolgan.</p>
+
+  <h3>1.5. Publitsistik uslubning boshqa uslublardan farqi</h3>
+  <p>Publitsistik uslubning oʻziga xosligini yaxshiroq anglash uchun bir mavzu — “internetdagi soxta xabarlar” — turli uslublarda qanday ifodalanishini qiyoslab koʻramiz:</p>
+  <table>
+    <tr><th style="width:22%">Uslub</th><th>Namuna</th><th style="width:28%">Asosiy belgisi</th></tr>
+    <tr><td>Soʻzlashuv</td><td>“Eshitdingmi, yana bir yolgʻon xabar tarqabdi. Hamma ishonib, ulashib yuboribdi-ya!”</td><td>Erkin, hissiy, toʻliqsiz gaplar; norasmiy muloqot.</td></tr>
+    <tr><td>Ilmiy</td><td>“Dezinformatsiya — ataylab tarqatiladigan, haqiqatga zid axborot boʻlib, uning tarqalish tezligi ijtimoiy tarmoq algoritmlari bilan bogʻliq.”</td><td>Atamalar, taʼriflar, mantiqiy izchillik, hissiyotsizlik.</td></tr>
+    <tr><td>Rasmiy-idoraviy</td><td>“Ataylab yolgʻon maʼlumot tarqatish qonunchilikda belgilangan tartibda javobgarlikka sabab boʻladi.”</td><td>Qolip iboralar, aniqlik, shaxssizlik, majburiylik.</td></tr>
+    <tr><td>Badiiy</td><td>“Yolgʻon qanotli edi — u tong otguncha butun shaharni aylanib chiqdi, haqiqat esa hali kavushini kiyib ulgurmagan edi.”</td><td>Obrazlilik, tasviriylik, estetik taʼsir.</td></tr>
+    <tr><td><b>Publitsistik</b></td><td>“Bir soniyalik “ulashish” tugmasi kimningdir obroʻsini toʻkishi mumkin. Xoʻsh, biz bu masʼuliyatni his qilyapmizmi? Keling, har bir xabarni ulashishdan oldin manbasini tekshiraylik!”</td><td>Dolzarb muammo, ritorik soʻroq, murojaat, chaqiriq.</td></tr>
+  </table>
+  <p>Jadvaldan koʻrinadiki, ilmiy uslub hodisani <i>tushuntiradi</i>, rasmiy uslub uni <i>tartibga soladi</i>, badiiy uslub uni <i>tasvirlaydi</i>, publitsistik uslub esa unga <i>munosabat bildirib, oʻquvchini harakatga chorlaydi</i>. Aynan baholash va chaqiriq publitsistik uslubni boshqalardan ajratib turadi.</p>
+  <p>Shu bilan birga, uslublar orasida qatʼiy chegara yoʻq. Ilmiy-ommabop maqola ilmiy va publitsistik uslubni, ocherk esa badiiy va publitsistik uslubni qoʻshib yuboradi. Bunday matnlar <b>aralash uslub</b> namunasi hisoblanadi.</p>
+
+  <h3>1.6. Publitsistik nutq madaniyati va jurnalist odobi</h3>
+  <p>Publitsistik matnning taʼsiri katta boʻlgani uchun unga qoʻyiladigan nutq madaniyati talablari ham yuqori. Tilshunoslikda yaxshi nutqning quyidagi kommunikativ sifatlari ajratiladi:</p>
+  <ul>
+    <li><b>toʻgʻrilik</b> — adabiy til meʼyorlariga (imlo, talaffuz, grammatika) rioya qilish;</li>
+    <li><b>aniqlik</b> — soʻzlarni oʻz maʼnosida, fikrni chalkashtirmasdan ifodalash;</li>
+    <li><b>mantiqiylik</b> — fikrlar orasidagi izchillik va asoslanganlik;</li>
+    <li><b>sofllik</b> — nutqda keraksiz chet soʻzlar, sheva, jargon va qoʻpol soʻzlardan qochish;</li>
+    <li><b>ifodalilik</b> — fikrni taʼsirchan, jonli yetkazish;</li>
+    <li><b>boylik</b> — soʻz va grammatik vositalarni xilma-xil qoʻllash;</li>
+    <li><b>oʻrinlilik</b> — nutqni vaziyat va tinglovchiga moslash.</li>
+  </ul>
+  <p>Publitsist uchun bu sifatlar bilan bir qatorda <b>kasbiy odob (etika)</b> tamoyillari ham muhimdir. Ular quyidagilardan iborat:</p>
+  <ol>
+    <li><b>Haqqoniylik</b> — faqat tekshirilgan, ishonchli faktlarni keltirish.</li>
+    <li><b>Xolislik</b> — voqeaning barcha tomonlari fikrini berish, bir tomonlama baho bermaslik.</li>
+    <li><b>Manbaga hurmat</b> — iqtibos va maʼlumotlarning muallifini koʻrsatish, plagiatga yoʻl qoʻymaslik.</li>
+    <li><b>Shaxsiy hayot daxlsizligi</b> — inson shaʼni va qadr-qimmatini kamsitmaslik.</li>
+    <li><b>Masʼuliyat</b> — yozilgan soʻzning jamiyatga taʼsirini oldindan oʻylash.</li>
+  </ol>
+  <p>Bu tamoyillar faqat professional jurnalistlarga emas, balki ijtimoiy tarmoqda post yozuvchi har bir foydalanuvchiga ham taalluqlidir. Chunki bugun bitta post minglab odamga yetib borishi mumkin.</p>
+
+  <h3>1.7. Internet publitsistikasining oʻziga xos xususiyatlari</h3>
+  <p>Raqamli texnologiyalar publitsistikaning shakli va tiliga jiddiy taʼsir koʻrsatdi. Internet publitsistikasi quyidagi xususiyatlarga ega:</p>
+  <ul>
+    <li><b>Tezkorlik</b> — xabar voqea sodir boʻlgan zahoti eʼlon qilinadi va tez-tez yangilanadi.</li>
+    <li><b>Multimedialilik</b> — matn bilan birga fotosurat, video, audio, infografika qoʻllanadi.</li>
+    <li><b>Gipermatnlilik</b> — matn ichidagi havolalar oʻquvchini boshqa manbalarga yoʻnaltiradi va dalillarni tekshirish imkonini beradi.</li>
+    <li><b>Interaktivlik</b> — oʻquvchi izoh yozadi, ovoz beradi, matnni ulashadi, muhokamada ishtirok etadi.</li>
+    <li><b>Qisqalik va skanerlab oʻqishga moslik</b> — qisqa abzaslar, oraliq sarlavhalar, roʻyxatlar, ajratilgan iqtiboslar.</li>
+    <li><b>Shaxsiylashuv</b> — bloger yoki kanal muallifining shaxsiy uslubi, ovozi ustun boʻladi.</li>
+  </ul>
+  <p>Shu bilan birga internet publitsistikasining xavfli tomonlari ham bor: tekshirilmagan xabarlarning tez tarqalishi, “klikbeyt” sarlavhalar, haqoratli izohlar, “axborot pufagi” (inson faqat oʻz qarashiga mos xabarlarni koʻrishi) va sunʼiy intellekt yordamida yasalgan soxta kontent. Shu sababli zamonaviy publitsist va oʻquvchi uchun <b>media savodxonlik</b> — axborotni tanqidiy baholash, manbani tekshirish va faktni fikrdan ajrata olish koʻnikmasi — eng zarur sifatlardan biriga aylandi.</p>
 
 <!-- ================= 2-QISM ================= -->
 
@@ -235,9 +310,57 @@
   </table>
   <p><b>Taqqoslash natijasi.</b> Behbudiy va Qodiriy davridan buyon publitsistikaning shakli oʻzgardi: matnlar qisqardi, multimedia qoʻshildi, oʻquvchi bilan aloqa tezlashdi. Ammo mohiyat oʻzgarmadi: dolzarb mavzu, ishonchli dalil, aniq pozitsiya va jamiyatga xizmat qilish maqsadi. Shu bilan birga, internet davrida yangi xavf — tasdiqlanmagan xabarlar va “klikbeyt” sarlavhalar paydo boʻldi. Shuning uchun har bir oʻquvchi axborotni manbasi orqali tekshirish madaniyatiga ega boʻlishi zarur.</p>
 
+  <h3>2.5. Abdurauf Fitratning “Munozara” asari tahlili</h3>
+  <p>Jadid maʼrifatparvari Abdurauf Fitratning “Hind sayyohi bilan Buxoro mudarrisining yangi maktablar xususida qilgan munozarasi” (qisqacha “Munozara”) asari 1909-yilda Istanbulda fors tilida nashr etilgan, 1911-yilda esa rus tiliga tarjima qilingan. Asar publitsistikaning kamyob shakli — <b>munozara (dialog) shaklidagi publitsistika</b> namunasidir.</p>
+  <p><b>Mavzu va muammo.</b> Asarda Buxoroning eski maktab va madrasalaridagi taʼlim tizimi, yangi usul maktablariga boʻlgan munosabat, ilm-fan va taraqqiyotdan orqada qolish sabablari muhokama qilinadi. Muallif jamiyatni uygʻotish uchun taʼlim islohoti zarurligini isbotlaydi.</p>
+  <p><b>Usul.</b> Fitrat oʻz fikrini toʻgʻridan-toʻgʻri aytish oʻrniga ikki qahramon — yangilikka qarshi mudarris va dunyoni koʻrgan sayyoh — oʻrtasidagi bahsni tasvirlaydi. Har bir eʼtirozga dalil bilan javob beriladi. Bu usul oʻquvchini bahsning ishtirokchisiga aylantiradi va uni mustaqil xulosa chiqarishga undaydi.</p>
+  <p><b>Til vositalari.</b> Savol-javob shakli, ritorik soʻroqlar, hayotiy misollar va qiyoslash (Buxoro va boshqa mamlakatlar taʼlimi) asosiy vositalardir. Dalillash mantiqiy izchillikka qurilgan.</p>
+  <p><b>Ahamiyati.</b> “Munozara” oʻz davrida keng muhokamalarga sabab boʻlgan va jadidchilik gʻoyalarining tarqalishiga xizmat qilgan. Bugungi kunda ham bu usul — muammoni turli nuqtai nazarlar toʻqnashuvi orqali yoritish — debat, tok-shou va tahliliy podkastlarda keng qoʻllanmoqda.</p>
+
+  <h3>2.6. Abdulla Avloniyning “Turkiy guliston yoxud axloq” asaridagi publitsistik ruh</h3>
+  <p>Abdulla Avloniyning 1913-yilda yozilgan “Turkiy guliston yoxud axloq” asari maktab darsligi sifatida yaratilgan boʻlsa-da, unda publitsistik ruh kuchli. Asar yaxshi va yomon xulqlar, tarbiya va vatan haqidagi mulohazalardan iborat.</p>
+  <p>Asarning eng mashhur jumlasi publitsistik taʼsir vositalarining yorqin namunasidir:</p>
+  <blockquote>“Tarbiya bizlar uchun yo hayot — yo mamot, yo najot — yo halokat, yo saodat — yo falokat masalasidur.”</blockquote>
+  <p>Bu jumlada <b>antiteza</b> (hayot — mamot, najot — halokat, saodat — falokat), <b>parallel qurilma</b> va <b>takror</b> (“yo ... — yo ...”) vositalari birgalikda qoʻllangan. Natijada oddiy fikr — “tarbiya muhim” — oʻquvchi qalbiga chuqur taʼsir qiluvchi shiorga aylangan. Qofiyadosh soʻzlar (najot — mamot, saodat — falokat) jumlani esda qolarli qiladi.</p>
+  <p>Avloniy matnlari publitsistikaning <b>tarbiyaviy vazifasini</b> yaqqol koʻrsatadi: muallif ijtimoiy muammoni koʻtarish bilan cheklanmay, oʻquvchini oʻzini oʻzgartirishga, jamiyat uchun foydali inson boʻlishga undaydi.</p>
+
+  <h3>2.7. Tahlil qilingan matnlarning qiyosiy tavsifi</h3>
+  <p>Oʻrganilgan matnlarni 2.1-bandda belgilangan mezonlar asosida qiyoslab, quyidagi umumlashtiruvchi jadvalni tuzdik:</p>
+  <table>
+    <tr><th style="width:17%">Mezon</th><th>Behbudiy</th><th>Fitrat</th><th>Avloniy</th><th>Qodiriy</th><th>Internet maqola</th></tr>
+    <tr><td>Janr</td><td>Muammoli maqola</td><td>Munozara</td><td>Axloqiy-publitsistik risola</td><td>Felyeton</td><td>Tahliliy maqola</td></tr>
+    <tr><td>Asosiy muammo</td><td>Til bilish</td><td>Taʼlim islohoti</td><td>Tarbiya, axloq</td><td>Jaholat, illatlar</td><td>Dolzarb ijtimoiy masala</td></tr>
+    <tr><td>Asosiy usul</td><td>Dalillash</td><td>Bahs, dialog</td><td>Nasihat, qiyoslash</td><td>Hajv, kinoya</td><td>Fakt va raqam</td></tr>
+    <tr><td>Yetakchi vosita</td><td>Murojaat</td><td>Savol-javob</td><td>Antiteza, takror</td><td>Kinoya, soʻzlashuv tili</td><td>Sarlavha, lid, multimedia</td></tr>
+    <tr><td>Muallif pozitsiyasi</td><td>Ochiq</td><td>Qahramon orqali</td><td>Ochiq</td><td>Yashirin (kulgi orqali)</td><td>Ochiq yoki xolis</td></tr>
+    <tr><td>Taʼsir yoʻli</td><td>Aqlga</td><td>Aqlga</td><td>Qalbga</td><td>Kulgi orqali ongga</td><td>Aql va koʻrish orqali</td></tr>
+  </table>
+  <p>Qiyosiy tahlil shuni koʻrsatadiki, publitsistik taʼsirga turli yoʻllar bilan erishish mumkin: dalil bilan ishontirish (Behbudiy), bahs orqali fikrlatish (Fitrat), hissiyotga murojaat qilish (Avloniy) yoki kulgi orqali fosh etish (Qodiriy). Zamonaviy internet maqola esa bu usullarni multimedia imkoniyatlari bilan birlashtiradi. Barcha matnlarni birlashtiruvchi umumiy jihat — muallifning jamiyat taqdiriga befarq emasligidir.</p>
+
+  <h3>2.8. Bitta faktning turli publitsistik janrlarda ifodalanishi</h3>
+  <p>Janrlar farqini amalda koʻrish uchun bitta faktni turli janrlarda yozib koʻrdik. <i>Fakt: universitetda talabalar uchun yangi IT-markaz ochildi.</i></p>
+  <p><b>Xabar (axborot janri):</b> <i>“Universitetda talabalar uchun zamonaviy kompyuterlar bilan jihozlangan IT-markaz ochildi. Markazda dasturlash, dizayn va sunʼiy intellekt boʻyicha bepul kurslar tashkil etiladi.”</i> — Faqat fakt; kim, nima, qayerda, qachon degan savollarga javob beriladi; muallif fikri yoʻq.</p>
+  <p><b>Reportaj:</b> <i>“Ertalab soat toʻqqiz. Yangi markaz eshigi oldida navbat. Ikkinchi kurs talabasi Dilnoza qoʻlidagi noutbukni mahkam quchoqlab turibdi: ‘Nihoyat, oʻz loyihamni shu yerda boshlayman!’ — deydi u koʻzlari chaqnab.”</i> — Voqea joyidan jonli tasvir, qahramon nutqi, “hozir”lik hissi.</p>
+  <p><b>Maqola:</b> <i>“Yangi IT-markaz — bu faqat kompyuterlar emas. Bu talabalar uchun bilimni amaliyotga aylantirish imkoniyati. Ammo savol tugʻiladi: bu imkoniyatdan hamma teng foydalana oladimi? Markaz samarali ishlashi uchun nimalar qilish kerak?”</i> — Muammo qoʻyiladi, tahlil va baho beriladi.</p>
+  <p><b>Felyeton:</b> <i>“Markaz ochildi! Kompyuterlar yangi, stullar yumshoq, internet esa... internet hali ‘yoʻlda’. Aytishlaricha, u ham tez orada yetib kelarmish — keyingi oʻquv yili boshlanguncha.”</i> — Kamchilik kinoya va kulgi orqali koʻrsatiladi.</p>
+  <p>Bu tajriba bir xil faktdan janrga qarab butunlay boshqa matn hosil boʻlishini, publitsistning maqsadi esa til vositalarini tanlashni belgilashini yaqqol koʻrsatadi.</p>
+
 <!-- ================= 3-QISM: MAQOLA ================= -->
 
   <h1>3. “Men tanlagan soha va OAV” — publitsistik maqola</h1>
+  <h3>3.1. Maqola ustida ishlash bosqichlari</h3>
+  <p>Publitsistik maqola tasodifan yozilmaydi — u puxta oʻylangan jarayon natijasidir. Maqolani tayyorlashda quyidagi bosqichlardan oʻtdik:</p>
+  <ol>
+    <li><b>Mavzuni aniqlashtirish.</b> “Men tanlagan soha va OAV” — keng mavzu. Uni toraytirib, asosiy muammo sifatida “axborot texnologiyalari mutaxassisining OAV oldidagi masʼuliyati”ni tanladik.</li>
+    <li><b>Auditoriyani belgilash.</b> Maqola tengdoshlarimiz — talabalar va yoshlar uchun moʻljallangan. Shu sababli til sodda, misollar esa ularning kundalik hayotidan olingan.</li>
+    <li><b>Tezisni shakllantirish.</b> Asosiy fikr: <i>“Texnologiya va OAV bir-biriga muhtoj; ekran ortidagi haqiqat uchun dasturchi ham javobgar.”</i></li>
+    <li><b>Material yigʻish.</b> Soha haqidagi bilimlar, internet nashrlarining xususiyatlari, tarixiy misol (Behbudiyning “toʻrt til” gʻoyasi), shaxsiy kuzatishlar toʻplandi.</li>
+    <li><b>Reja tuzish.</b> Lid → sohaga kelish sababi → OAV va texnologiya aloqasi → muammo (algoritmlar, soxta xabar) → ijobiy tomon → yangi kasblar → shaxsiy pozitsiya → yakuniy chaqiriq.</li>
+    <li><b>Qoralama yozish va tahrir.</b> Birinchi variant yozilgandan soʻng ortiqcha soʻzlar qisqartirildi, uzun gaplar boʻlindi, ritorik soʻroq va murojaatlar qoʻshildi.</li>
+    <li><b>Sarlavha tanlash.</b> Bir nechta variantdan (“IT va OAV”, “Ekran ortidagi masʼuliyat”, “Kod yozadigan avlod va ekran ortidagi haqiqat”) eng obrazli va qiziqarlisi tanlandi.</li>
+  </ol>
+
+  <h3>3.2. Maqola matni</h3>
   <div class="article-head">
     <p class="h">Kod yozadigan avlod va ekran ortidagi haqiqat</p>
     <p class="lead">Axborot texnologiyalari sohasi va ommaviy axborot vositalari: bir-biriga muhtoj ikki dunyo</p>
@@ -246,31 +369,35 @@
   <p>Ertalab uygʻonib birinchi qiladigan ishimiz nima? Koʻpchiligimiz telefonni qoʻlga olamiz. Yangiliklar lentasi, Telegram-kanallar, videolar... Bir necha daqiqada dunyoning narigi chetidagi voqeadan ham xabardor boʻlamiz. Lekin bu axborot qanday qilib bir zumda qoʻlimizga yetib kelishi haqida oʻylab koʻrganmisiz? Uning ortida — men tanlagan soha, <b>axborot texnologiyalari</b> turadi.</p>
   <p>Men bu sohani tasodifan tanlamadim. Bolaligimdan kompyuter oldida oʻyin oʻynash emas, balki oʻyin qanday yaratilganini bilish qiziqtirardi. Bugun esa tushunib yetdimki, dasturchi faqat kod yozmaydi — u odamlarning axborot olish, bir-biri bilan muloqot qilish, hatto fikrlash usulini oʻzgartiradi.</p>
 
-  <h3>Gazetadan smartfongacha</h3>
+  <h3 class="ah">Gazetadan smartfongacha</h3>
   <p>Bir necha oʻn yil avval yangilikni bilish uchun ertalabki gazetani yoki kechki telekoʻrsatuvni kutish kerak edi. Bugun esa har bir smartfon — kichik tahririyat. Internet nashrlari, mobil ilovalar, onlayn translyatsiyalar — bularning barchasi dasturchilar, dizaynerlar va muhandislar mehnati mahsulidir. Jurnalist soʻzni yaratadi, IT-mutaxassis esa shu soʻzni millionlab odamga yetkazuvchi yoʻlni quradi.</p>
   <p>Demak, zamonaviy OAV texnologiyasiz yashay olmaydi. Ammo savol tugʻiladi: texnologiya OAVsiz yashay oladimi? Mening javobim — yoʻq. Har qanday yangi ilova, sunʼiy intellekt yoki raqamli xizmat haqida jamiyat birinchi navbatda OAV orqali bilib oladi. Jurnalistlar texnologiyani ommaga tushuntiradi, uning foydasi va xavfini muhokama qiladi, biz — IT-mutaxassislarni esa masʼuliyatga chaqiradi.</p>
 
-  <h3>Algoritm — yangi muharrirmi?</h3>
+  <h3 class="ah">Algoritm — yangi muharrirmi?</h3>
   <p>Ilgari gazetaning birinchi sahifasiga qaysi xabar chiqishini bosh muharrir hal qilardi. Bugun esa ijtimoiy tarmoqda qaysi postni koʻrishimizni koʻpincha <i>algoritm</i> belgilaydi. Algoritm esa odamlarning eʼtiborini koʻproq tortadigan narsani tanlaydi — u har doim ham haqiqat yoki foydali axborot boʻlavermaydi. Shov-shuvli sarlavha, tekshirilmagan mish-mish, sunʼiy intellekt yasagan soxta rasm va videolar tezroq tarqalmoqda.</p>
   <p>Bunga kim javobgar? Faqat jurnalistmi? Faqat oʻquvchimi? Menimcha, bu masʼuliyatda texnologiyani yaratayotgan dasturchining ham ulushi bor. Biz yozgan har bir qator kod kimningdir ekranida nimani koʻrishini hal qiladi. Shuning uchun IT-mutaxassis uchun faqat bilim emas, <b>vijdon va masʼuliyat</b> ham zarur.</p>
 
 
-  <h3>Texnologiya haqiqatga xizmat qilganda</h3>
+  <h3 class="ah">Texnologiya haqiqatga xizmat qilganda</h3>
   <p>Albatta, rasm faqat qora rangda emas. Aynan texnologiya soxta xabarlarga qarshi kurashda ham eng kuchli qurolga aylanmoqda. Faktlarni tekshirish (fakt-cheking) platformalari, rasm va videoning haqiqiyligini aniqlovchi dasturlar, ochiq maʼlumotlar portallari jurnalistlarga haqiqatni isbotlashda yordam bermoqda. Masofadagi qishloqdagi oddiy fuqaro ham endi telefon orqali muammosini butun mamlakatga eshittira oladi. Bu — soʻz erkinligining yangi imkoniyati.</p>
   <p>Mamlakatimizda raqamli iqtisodiyot va elektron hukumat tizimlari rivojlanayotgani, IT-parklar va dasturlash kurslari koʻpayayotgani bejiz emas. Yoshlar oldida katta imkoniyat turibdi: oʻzbek tilidagi sifatli raqamli kontent, ishonchli yangiliklar ilovalari, taʼlim platformalari yaratish. Internetdagi oʻzbek tilidagi foydali axborot qanchalik koʻp boʻlsa, millatimizning raqamli dunyodagi ovozi shunchalik baland yangraydi.</p>
 
-  <h3>Men nima qila olaman?</h3>
+  <h3 class="ah">Yangi kasblar: soha va OAV tutashgan joy</h3>
+  <p>Bugun IT va jurnalistika orasidagi chegara tobora yoʻqolib bormoqda. Dunyoning yetakchi tahririyatlarida dasturchilar jurnalistlar bilan yonma-yon ishlaydi. Natijada yangi kasblar paydo boʻldi. <b>Maʼlumotlar jurnalistikasi</b> mutaxassisi minglab raqamlarni tahlil qilib, ulardan jamiyat uchun muhim xulosa chiqaradi. <b>Media-dasturchi</b> interaktiv xaritalar, infografikalar va maxsus loyihalar yaratadi. <b>SMM-mutaxassis</b> va <b>kontent-menejer</b> axborotni ijtimoiy tarmoqlar tiliga “tarjima” qiladi.</p>
+  <p>Bu kasblarning barchasida ikki koʻnikma birlashadi: texnik bilim va soʻz bilan ishlash mahorati. Yaxshi kod yozish mumkin, lekin uni odamlarga tushuntira olmasang, mehnating koʻrinmay qoladi. Chiroyli maqola yozish mumkin, lekin uni toʻgʻri auditoriyaga yetkaza olmasang, u eʼtiborsiz qoladi. Kelajak aynan shu ikki dunyoni birlashtira oladigan mutaxassislarniki.</p>
+
+  <h3 class="ah">Men nima qila olaman?</h3>
   <p>Talaba sifatida men oʻzim uchun uchta qoidani belgilab oldim.</p>
   <p><b>Birinchidan</b>, har qanday xabarni ulashishdan oldin uning manbasini tekshiraman. Bir soniyalik “ulashish” tugmasi kimningdir obroʻsini toʻkishi yoki vahima tarqatishi mumkin.</p>
   <p><b>Ikkinchidan</b>, oʻz sohamdagi bilimlarni oddiy tilda boshqalarga ham tushuntirishga harakat qilaman. Texnologiya faqat mutaxassislar uchun emas — u har bir inson hayotiga kirib kelgan. Uni tushunarli qilib yetkazish ham, aslida, publitsistik vazifadir.</p>
   <p><b>Uchinchidan</b>, kelajakda yaratadigan dasturlarim odamlarni aldash uchun emas, ularga haqiqatni topishda yordam berish uchun xizmat qilishini istayman.</p>
 
-  <h3>Soʻnggi soʻz</h3>
+  <h3 class="ah">Soʻnggi soʻz</h3>
   <p>Mahmudxoʻja Behbudiy bir asr avval yoshlarni toʻrt til oʻrganishga chaqirgan edi. Agar u bugun yashaganida, ehtimol, beshinchi tilni — texnologiya tilini ham qoʻshgan boʻlardi. Chunki bugun dunyo bilan shu tilda gaplashiladi.</p>
   <p>OAV — jamiyatning koʻzgusi, axborot texnologiyalari esa shu koʻzguning oynasi. Oyna xira boʻlsa, koʻzgu ham haqiqatni koʻrsatmaydi. Shunday ekan, keling, biz — kelajak mutaxassislari — bu oynani toza saqlaylik. Ekran ortidagi haqiqat uchun javobgarlik — bizning zimmamizda.</p>
   <p class="byline">Muxamadov Muhammadali, talaba</p>
 
-  <h3>Maqolada qoʻllangan publitsistik vositalar</h3>
+  <h3>3.3. Maqolada qoʻllangan publitsistik vositalar</h3>
   <table>
     <tr><th style="width:32%">Vosita</th><th>Maqoladagi misol</th></tr>
     <tr><td>Ritorik soʻroq</td><td>“Bunga kim javobgar? Faqat jurnalistmi?”</td></tr>
@@ -282,6 +409,20 @@
     <tr><td>Chaqiriq bilan yakun</td><td>“Ekran ortidagi haqiqat uchun javobgarlik — bizning zimmamizda”</td></tr>
   </table>
 
+  <h3>3.4. Maqolaning oʻz-oʻzini tahlili</h3>
+  <p>Yozilgan maqolani 2.1-bandda belgilangan mezonlar asosida tahlil qildik:</p>
+  <table>
+    <tr><th style="width:26%">Mezon</th><th>Maqoladagi holat</th></tr>
+    <tr><td>Mavzu va muammo</td><td>IT mutaxassisining OAV va axborot makoni oldidagi masʼuliyati — raqamli davr uchun dolzarb masala.</td></tr>
+    <tr><td>Sarlavha va lid</td><td>Sarlavha obrazli va qarama-qarshi tushunchalarga qurilgan (“kod” — “haqiqat”). Lid oʻquvchiga tanish holat (ertalab telefonni olish) va savol bilan boshlanadi.</td></tr>
+    <tr><td>Dalillar</td><td>Hayotiy misollar, kasblar tavsifi, tarixiy ishora (Behbudiy). Kamchilik: aniq statistik raqamlar keltirilmagan — bu maqolani keyingi tahrirda boyitish yoʻnalishi.</td></tr>
+    <tr><td>Til vositalari</td><td>Ritorik soʻroq, murojaat, metafora, antiteza, sanash (3.3-banddagi jadvalga qarang).</td></tr>
+    <tr><td>Muallif pozitsiyasi</td><td>Aniq ifodalangan: texnologiya neytral emas, uni yaratuvchi ham masʼul.</td></tr>
+    <tr><td>Xulosa va chaqiriq</td><td>Maqola “keling, bu oynani toza saqlaylik” chaqirigʻi bilan yakunlanadi; oʻquvchiga uchta amaliy qoida taklif etiladi.</td></tr>
+    <tr><td>Taʼsir kuchi</td><td>Mavzu tengdoshlar hayotiga yaqin, til sodda, shuning uchun maqola talabalar auditoriyasi uchun taʼsirchan.</td></tr>
+  </table>
+  <p>Tahlil shuni koʻrsatdiki, maqola publitsistik uslubning asosiy talablariga javob beradi. Shu bilan birga uni rasmiy statistik maʼlumotlar, mutaxassislar fikri va soha vakillari bilan suhbatlar orqali yanada boyitish mumkin.</p>
+
 <!-- ================= XULOSA ================= -->
 
   <h1>Xulosa</h1>
@@ -290,8 +431,11 @@
     <li>Publitsistik uslub — ijtimoiy hayotdagi dolzarb masalalarni keng ommaga yetkazuvchi, xabar berish va taʼsir koʻrsatish vazifalarini birgalikda bajaruvchi funksional uslubdir.</li>
     <li>Uning tili ilmiy uslubning mantiqiyligi, rasmiy uslubning aniqligi, badiiy uslubning obrazliligi va soʻzlashuv uslubining jonliligini oʻzida birlashtiradi. Ritorik soʻroq, murojaat, takror, metafora, antiteza — uning asosiy ifoda vositalaridir.</li>
     <li>Publitsistik janrlar axborot, tahliliy va badiiy-publitsistik guruhlarga boʻlinadi; maqola esa yetakchi tahliliy janr hisoblanadi.</li>
-    <li>M. Behbudiy va A. Qodiriy asarlari tahlili oʻzbek publitsistikasining maʼrifatparvarlik va hajviy anʼanalari boy ekanini koʻrsatdi. Zamonaviy internet nashrlari bu anʼanani yangi texnologik shakllarda davom ettirmoqda.</li>
-    <li>“Men tanlagan soha va OAV” mavzusidagi maqolada axborot texnologiyalari va OAVning oʻzaro bogʻliqligi, algoritmlar davridagi axborot masʼuliyati masalasi publitsistik uslub vositalari yordamida yoritildi.</li>
+    <li>Oʻzbek publitsistikasi ilk matbuot, jadid matbuoti, sovet davri va mustaqillik-raqamli davr bosqichlarini bosib oʻtgan. Shakl va vositalar oʻzgargan boʻlsa-da, uning jamiyatni uygʻotish va fikrlashga undash vazifasi saqlanib qolgan.</li>
+    <li>Publitsistik uslubni boshqa uslublardan ajratib turuvchi asosiy belgi — voqeaga baho berish va oʻquvchini harakatga chorlashdir. Publitsistik matn toʻgʻrilik, aniqlik, mantiqiylik kabi nutq sifatlari hamda haqqoniylik, xolislik, masʼuliyat kabi odob tamoyillariga tayanishi lozim.</li>
+    <li>M. Behbudiy, A. Fitrat, A. Avloniy va A. Qodiriy asarlari tahlili oʻzbek publitsistikasining maʼrifatparvarlik, munozara, tarbiyaviy va hajviy anʼanalari boy ekanini koʻrsatdi. Ular publitsistik taʼsirga dalil, bahs, hissiyot va kulgi kabi turli yoʻllar bilan erishgan. Zamonaviy internet nashrlari bu anʼanalarni multimedia imkoniyatlari bilan davom ettirmoqda.</li>
+    <li>Bitta faktni turli janrlarda ifodalash tajribasi publitsistning maqsadi janr va til vositalarini tanlashni belgilashini koʻrsatdi.</li>
+    <li>“Men tanlagan soha va OAV” mavzusidagi maqolada axborot texnologiyalari va OAVning oʻzaro bogʻliqligi, algoritmlar davridagi axborot masʼuliyati masalasi publitsistik uslub vositalari yordamida yoritildi. Maqolaning oʻz-oʻzini tahlili uning publitsistik uslub talablariga javob berishini koʻrsatdi.</li>
   </ol>
   <p>Xulosa qilib aytganda, publitsistik nutq madaniyatini egallash har bir talaba uchun muhim: u fikrni aniq va dalilli bayon qilish, axborotga tanqidiy yondashish va jamiyat hayotida faol ishtirok etish koʻnikmasini shakllantiradi.</p>
 
@@ -305,12 +449,62 @@
     <li>Qoʻngʻurov R., Begmatov E., Tojiyev Y. Nutq madaniyati va uslubiyat asoslari. — Toshkent: Oʻqituvchi, 1992.</li>
     <li>Karimov S. Oʻzbek tilining badiiy uslubi. — Samarqand, 1992.</li>
     <li>Behbudiy M. Ikki emas, toʻrt til lozim // Oyina. — 1913. — №1.</li>
+    <li>Fitrat A. Hind sayyohi bilan Buxoro mudarrisining yangi maktablar xususida qilgan munozarasi. — Istanbul, 1909.</li>
+    <li>Avloniy A. Turkiy guliston yoxud axloq. — Toshkent, 1913.</li>
     <li>Qodiriy A. Kalvak Mahzumning xotira daftaridan. Toshpoʻlat tajang nima deydir? — Toshkent: Gʻafur Gʻulom nomidagi nashriyot.</li>
     <li>Akademik yozuv fanidan maʼruza matnlari va oʻquv-uslubiy materiallar.</li>
     <li>www.ziyonet.uz — Axborot-taʼlim portali.</li>
     <li>www.kun.uz, www.gazeta.uz, www.daryo.uz — Internet nashrlari.</li>
     <li>www.lex.uz — Oʻzbekiston Respublikasi qonunchilik maʼlumotlari milliy bazasi.</li>
   </ol>
+
+<!-- ================= ILOVALAR ================= -->
+
+  <h1>Ilovalar</h1>
+  <h2>1-ilova. Publitsistikaga oid asosiy atamalar lugʻati</h2>
+  <table>
+    <tr><th style="width:27%">Atama</th><th>Izohi</th></tr>
+    <tr><td>Publitsistika</td><td>Jamiyat hayotidagi dolzarb masalalarni keng omma uchun yorituvchi va unga taʼsir koʻrsatuvchi ijod turi.</td></tr>
+    <tr><td>OAV</td><td>Ommaviy axborot vositalari: gazeta, jurnal, radio, televideniye, internet nashrlari.</td></tr>
+    <tr><td>Lid</td><td>Maqolaning asosiy mazmunini qisqa ifodalovchi, oʻquvchini qiziqtiruvchi birinchi abzasi.</td></tr>
+    <tr><td>Teskari piramida</td><td>Eng muhim maʼlumot boshida, kamroq muhimlari oxirida beriladigan matn tuzilishi.</td></tr>
+    <tr><td>Maqola</td><td>Ijtimoiy muammoni tahlil qilib, muallif xulosasi va yechimini taklif etuvchi tahliliy janr.</td></tr>
+    <tr><td>Felyeton</td><td>Salbiy hodisalarni hajv va yumor orqali fosh etuvchi badiiy-publitsistik janr.</td></tr>
+    <tr><td>Ocherk</td><td>Real shaxs yoki voqeani badiiy tasvir vositalari bilan hikoya qiluvchi janr.</td></tr>
+    <tr><td>Reportaj</td><td>Voqea joyidan muallif kuzatuvi asosida jonli hikoya qiluvchi axborot janri.</td></tr>
+    <tr><td>Intervyu</td><td>Savol-javob shaklidagi suhbat janri.</td></tr>
+    <tr><td>Taqriz</td><td>Asar (kitob, film, spektakl) haqida tanqidiy-tahliliy fikr bildiruvchi janr.</td></tr>
+    <tr><td>Esse</td><td>Muallifning erkin, shaxsiy mulohazalariga qurilgan janr.</td></tr>
+    <tr><td>Ritorik soʻroq</td><td>Javob kutmaydigan, oʻquvchini oʻylashga undovchi savol.</td></tr>
+    <tr><td>Antiteza</td><td>Qarama-qarshi tushunchalarni yonma-yon qoʻyish orqali taʼsir kuchaytirish usuli.</td></tr>
+    <tr><td>Parcellyatsiya</td><td>Gapni alohida boʻlaklarga ajratib, taʼkid yaratish usuli.</td></tr>
+    <tr><td>Metafora</td><td>Bir narsa belgisini oʻxshashlik asosida boshqasiga koʻchirish.</td></tr>
+    <tr><td>Kinoya</td><td>Fikrni teskari maʼnoda, yashirin kulgi bilan ifodalash.</td></tr>
+    <tr><td>Klikbeyt</td><td>Faqat bosishlar sonini oshirish uchun yozilgan shov-shuvli, chalgʻituvchi sarlavha.</td></tr>
+    <tr><td>Fakt-cheking</td><td>Xabardagi faktlarning toʻgʻriligini tekshirish jarayoni.</td></tr>
+    <tr><td>Dezinformatsiya</td><td>Ataylab tarqatiladigan yolgʻon yoki chalgʻituvchi axborot.</td></tr>
+    <tr><td>Dipfeyk</td><td>Sunʼiy intellekt yordamida yasalgan soxta video yoki ovoz yozuvi.</td></tr>
+    <tr><td>Media savodxonlik</td><td>Axborotni topish, tanqidiy baholash va masʼuliyat bilan ulashish koʻnikmasi.</td></tr>
+    <tr><td>Maʼlumotlar jurnalistikasi</td><td>Katta hajmdagi maʼlumotlarni tahlil qilish asosida material tayyorlovchi jurnalistika yoʻnalishi.</td></tr>
+  </table>
+
+  <h2>2-ilova. Publitsistik maqola yozish uchun nazorat roʻyxati</h2>
+  <table>
+    <tr><th style="width:8%">№</th><th>Savol</th><th style="width:14%">Ha / Yoʻq</th></tr>
+    <tr><td>1</td><td>Mavzu dolzarbmi va aniq bir muammoga qaratilganmi?</td><td></td></tr>
+    <tr><td>2</td><td>Maqola kimga moʻljallangani (auditoriya) aniqmi?</td><td></td></tr>
+    <tr><td>3</td><td>Sarlavha qisqa, qiziqarli va mazmunga mosmi?</td><td></td></tr>
+    <tr><td>4</td><td>Lid oʻquvchini birinchi jumladanoq qiziqtiradimi?</td><td></td></tr>
+    <tr><td>5</td><td>Asosiy fikr (tezis) bir jumlada ifodalanganmi?</td><td></td></tr>
+    <tr><td>6</td><td>Har bir fikr fakt, misol yoki raqam bilan asoslanganmi?</td><td></td></tr>
+    <tr><td>7</td><td>Barcha faktlar ishonchli manbadan olinganmi va tekshirilganmi?</td><td></td></tr>
+    <tr><td>8</td><td>Ritorik soʻroq, murojaat, metafora kabi vositalar oʻrinli qoʻllanganmi?</td><td></td></tr>
+    <tr><td>9</td><td>Gaplar sodda va tushunarli, abzaslar qisqami?</td><td></td></tr>
+    <tr><td>10</td><td>Muallif pozitsiyasi aniq ifodalanganmi?</td><td></td></tr>
+    <tr><td>11</td><td>Maqola xulosa va chaqiriq bilan yakunlanganmi?</td><td></td></tr>
+    <tr><td>12</td><td>Imlo va tinish belgilari tekshirilganmi?</td><td></td></tr>
+    <tr><td>13</td><td>Hech kimning shaʼni kamsitilmaganmi, odob meʼyorlariga rioya qilinganmi?</td><td></td></tr>
+  </table>
 </section>
 
 </body>
