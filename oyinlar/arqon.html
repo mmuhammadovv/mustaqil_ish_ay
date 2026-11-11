@@ -35,7 +35,6 @@ const SK = G.saveKey("arqon"), TIME = 30;
 let S = store.get(SK);
 
 G.header("Arqon tortish", reset);
-S && S.teams ? render() : setup();
 
 function setup() {
   let target = 4;
@@ -127,6 +126,9 @@ function finishGame() {
   G.winner(S.teams, reset, "toʻgʻri javob");
   if (S.pos !== 0) G.$(".win .sub").textContent = Math.abs(S.pos) >= S.target ? "Arqonni oʻz chizigʻigacha tortib keldi" : "Savollar tugadi — arqon shu jamoa tomonida";
 }
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
 </script>
 </body>
 </html>

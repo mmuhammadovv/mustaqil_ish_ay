@@ -17,11 +17,17 @@
   .mast .deck { color: var(--muted); max-width: 680px; margin: 0 auto; font-size: 17px; }
   [data-fan="akademik"] .mast { border-bottom: 4px double var(--line-strong); }
   [data-fan="akademik"] .mast .dateline { display: flex; justify-content: space-between; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); padding: 6px 2px; margin-top: 18px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
-  [data-fan="tarix"] .mast { padding-bottom: 30px; }
-  [data-fan="tarix"] .mast h1 { font-weight: 400; letter-spacing: -.015em; }
-  [data-fan="tarix"] .mast .orn { display: flex; align-items: center; gap: 14px; justify-content: center; color: var(--accent-2); margin: 0 auto; max-width: 420px; }
-  [data-fan="tarix"] .mast .orn::before, [data-fan="tarix"] .mast .orn::after { content: ""; flex: 1; height: 1px; background: currentColor; opacity: .6; }
+  [data-fan="tarix"] .mast { text-align: left; padding: 10px 0 30px; border-bottom: 2px solid var(--line-strong); }
+  [data-fan="tarix"] .mast .over { display: inline-block; background: var(--warn); color: #111418; padding: 3px 10px; font-weight: 700; }
+  [data-fan="tarix"] .mast h1 { font-weight: 700; letter-spacing: -.045em; text-transform: uppercase; font-size: clamp(42px, 8.5vw, 110px); line-height: .9; max-width: 1000px; margin: 18px 0; }
+  [data-fan="tarix"] .mast .deck { margin: 0; font-size: 18px; max-width: 720px; }
+  [data-fan="tarix"] .mast .orn { display: flex; height: 14px; width: 220px; margin: 0 0 4px; }
+  [data-fan="tarix"] .mast .orn i { flex: 1; } [data-fan="tarix"] .mast .orn svg { display: none; }
   [data-fan="tarix"] .mast .dateline { display: none; }
+
+
+
+
   [data-fan="akademik"] .mast .orn { display: none; }
 
   /* ---- Mustaqil ish (bosh maqola) ---- */
@@ -50,12 +56,16 @@
   [data-fan="akademik"] .game:last-child { border-right: 0; }
   [data-fan="akademik"] .game:hover { background: var(--surface); }
   [data-fan="akademik"] .game .go { text-transform: uppercase; letter-spacing: .1em; font-size: 12px; color: var(--accent); }
-  [data-fan="tarix"] .games { gap: 14px; }
-  [data-fan="tarix"] .game { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
-  [data-fan="tarix"] .game:hover { border-color: var(--accent); transform: translateY(-2px); }
-  [data-fan="tarix"] .game .no { color: var(--accent-2); font-family: var(--display); font-size: 24px; font-weight: 400; }
-  [data-fan="tarix"] .game .no svg { color: var(--accent); }
-  [data-fan="tarix"] .game .go { color: var(--accent); }
+  [data-fan="tarix"] .games { gap: 18px; }
+  [data-fan="tarix"] .game { background: var(--surface); border: 2px solid var(--line-strong); box-shadow: var(--shadow); transition: transform .12s, box-shadow .12s; }
+  [data-fan="tarix"] .game:hover { transform: translate(-3px, -3px); box-shadow: 8px 8px 0 var(--c, var(--hard)); }
+  [data-fan="tarix"] .game .no { color: var(--ink); font-family: var(--display); font-size: 44px; font-weight: 700; letter-spacing: -.04em; line-height: 1; }
+  [data-fan="tarix"] .game .no svg { color: var(--c); width: 34px; height: 34px; }
+  [data-fan="tarix"] .game h4 { font-weight: 700; letter-spacing: -.02em; }
+  [data-fan="tarix"] .game .go { color: var(--ink); text-transform: uppercase; letter-spacing: .08em; font-size: 13px; border-top: 2px solid var(--line-strong); padding-top: 10px; }
+  [data-fan="tarix"] .game::before { content: ""; height: 8px; margin: -20px -18px 6px; background: var(--c); }
+  [data-fan="tarix"] .sec-h { border-bottom: 2px solid var(--line-strong); padding-bottom: 10px; }
+  [data-fan="tarix"] .sec-h h3 { text-transform: uppercase; letter-spacing: -.02em; font-weight: 700; }
   [data-fan="tarix"] .lead { display: none; }
   footer { text-align: center; color: var(--muted); font-size: 13px; padding: 30px 0 0; }
   @media (max-width: 1100px) { .games { grid-template-columns: repeat(2, 1fr); } [data-fan="akademik"] .game { border-bottom: 1px solid var(--line); } .lead { grid-template-columns: 1fr; } .lead .facts { border-left: 0; padding-left: 0; } }
@@ -89,7 +99,7 @@ const ak = fan === "akademik";
 document.getElementById("page").innerHTML = `
   <section class="mast">
     <div class="over">${ak ? "Mustaqil ish va interaktiv oʻyinlar" : "Interaktiv oʻyinlar"}</div>
-    <div class="orn">${icon("globe")}</div>
+    <div class="orn"><i style="background:#0a9fc4"></i><i style="background:#ce1126;flex:.15"></i><i style="background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"></i><i style="background:#ce1126;flex:.15"></i><i style="background:#1eb53a"></i>${icon("globe")}</div>
     <h1>${esc(data.fan)}</h1>
     <div class="deck">Mavzu: ${ak ? "Publitsistik nutq uslubi. Publitsistik maqolalar tahlili; “Men tanlagan soha va OAV” mavzusida maqola" : "Oʻzbekiston Respublikasining BMTga aʼzo boʻlishi va jahon hamjamiyatidagi oʻziga xos oʻrni"}</div>
     <div class="dateline"><span>Muxamadov Muhammadali</span><span>2026-yil</span><span>Fan oʻqituvchisi: Yunusova Maftuna</span></div>
@@ -103,8 +113,8 @@ document.getElementById("page").innerHTML = `
   </section>` : ""}
   <div class="sec-h"><h3>Oʻyinlar</h3><span>${data.kategoriyalar.length} kategoriya · ${data.kategoriyalar.length * 5} ta test savoli</span></div>
   <div class="games">${GAMES.map((g, i) => `
-    <a class="game" href="oyinlar/${g.f}.html?fan=${fan}">
-      <div class="no"><span>${ak ? String(i + 1).padStart(2, "0") : ROMAN[i]}</span>${icon(g.ic, "")}</div>
+    <a class="game" href="oyinlar/${g.f}.html?fan=${fan}" style="--c:var(--t${i % 4})">
+      <div class="no"><span>${String(i + 1).padStart(2, "0")}</span>${icon(g.ic, "")}</div>
       <h4>${g.t}</h4><p>${g.d}</p><div class="tags">${g.tags}</div>
       <span class="go">Oʻynash ${icon("arrow")}</span>
     </a>`).join("")}</div>

@@ -66,7 +66,6 @@ const SK = G.saveKey("tavakkal"), START = 500, N = data.kategoriyalar.length;
 let S = store.get(SK), rot = 0, spinning = false;
 
 G.header("Tavakkal", reset);
-S && S.teams ? render() : setup();
 
 function setup() {
   let rounds = 5;
@@ -201,6 +200,9 @@ function nextTurn(skipOnly) {
   for (let k = 1; k <= S.teams.length; k++) { const i = (S.turn + k) % S.teams.length; if (alive(i)) { S.turn = i; break; } }
   save(); render();
 }
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
 </script>
 </body>
 </html>

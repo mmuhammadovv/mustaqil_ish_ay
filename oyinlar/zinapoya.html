@@ -51,7 +51,6 @@ const SK = G.saveKey("zinapoya"), VAL = [100, 200, 300, 400, 500];
 let S = store.get(SK), R = null;
 
 G.header("Zinapoya", reset);
-S && S.teams ? render() : setup();
 
 function setup() {
   G.setup($("#app"), {
@@ -123,6 +122,9 @@ function finish(kept, msg) {
   S.turn = (S.turn + 1) % S.teams.length; R = null; save();
   G.modal.close(); render(); G.bump($("#sc"), who); G.toast(`${msg}: +${kept}`, 2200);
 }
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
 </script>
 </body>
 </html>

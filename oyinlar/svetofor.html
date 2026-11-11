@@ -55,7 +55,6 @@ const SK = G.saveKey("svetofor"), FOUL = 50, ANSWER = 30, WAIT = 10;
 let S = store.get(SK), Q = null;
 
 G.header("Svetofor", reset);
-S && S.teams ? render() : setup();
 
 function setup() {
   let count = 12;
@@ -206,6 +205,9 @@ document.addEventListener("keydown", e => {
   if (Q.phase === "answer") { let k = "ABCD".indexOf(key); if (k < 0) k = "1234".indexOf(key); if (k >= 0 && !$$(".opt")[k].disabled) answer(k); }
   if (e.key === " " && Q.phase === "read" && $("#arm") && !$("#arm").disabled) { e.preventDefault(); arm(); }
 });
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
 </script>
 </body>
 </html>

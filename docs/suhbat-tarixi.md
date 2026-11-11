@@ -41,3 +41,8 @@ Foydalanuvchi talablari:
 - Svetofor: klaviatura olib tashlandi; jamoalarga jismoniy tugma beriladi, boshlovchi ekranda belgilaydi; qizilda chalgʻituvchi tovushlar.
 - Arqon tortish: jamoalar navbat bilan javob beradi.
 - Barcha oʻyinlarda javob vaqti kamida 30 soniya.
+
+## 8. “Oʻyinlar hali ham ishlamay qolyapti” + tarix dizayni butunlay
+- Sabab topildi: saqlangan (tugallanmagan) oʻyinga qayta kirilganda ishga tushirish qatori skript boshida edi → `Cannot access 'over/finished' before initialization` → sahifa boʻsh, “Yangi oʻyin” ham ishlamasdi. Ishga tushirish skript oxiriga koʻchirildi.
+- Savol oynasi “Menyu”/“Yangi oʻyin” tugmalarini toʻsib qoʻyardi — sarlavha paneli oyna ustiga chiqarildi.
+- Tarix dizayni butunlay yangilandi: Swiss/plakat uslubi (Space Grotesk, katakli fon, qattiq soyalar, bayroq ranglari).

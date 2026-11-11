@@ -39,7 +39,7 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 3. **Emoji ishlatilmaydi.** Faqat oʻzimiz chizgan SVG ikonlar (`core.js` → `P` obyekti, `G.icon(name)`).
 4. Dizayn “AI qilgandek” neon/gradient boʻlmasin — dizayner ishlagandek, toza, tipografik. **Har bir fanning dizayni alohida**:
    - akademik — gazeta/tahririyat uslubi (Playfair Display + IBM Plex, qogʻoz rangi, qizil urgʻu, chiziqlar, oʻtkir burchaklar);
-   - tarix — zamonaviy diplomatik uslub (DM Serif Display + Inter, chuqur koʻk #1d4f91 + yashil, nuqtali “globus” foni, sarlavha ostida bayroq ranglaridagi chiziq, yumaloq burchaklar). Avvalgi feruza/oltin varianti foydalanuvchiga yoqmagan.
+   - tarix — Swiss/plakat uslubi (Space Grotesk + Inter, katta qalin bosh harfli sarlavhalar, katakli “chizma qogʻozi” foni, 0 radius, qattiq offset soyalar, bayroq ranglari bloklari, sariq yorliqlar). Oldingi ikki varianti (feruza/oltin; DM Serif koʻk) yoqmagan.
 5. **Kunduzgi va tungi rejim** har sahifada boʻlishi shart.
 6. Oʻyinlar **internetsiz, oddiy HTML** sifatida ochilishi kerak (`file://`). `fetch` ishlatmang — maʼlumot `<script src>` orqali.
 7. Tarix savollari: **oson**, yillar kam; taxminan **50% zakovat uslubidagi mantiqiy savollar** (tarixga bogʻliq, lekin qiziqarli — dasturlash, fan va h.k.).
@@ -47,6 +47,9 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 9. Mustaqil ish: kamida 20 bet, betlarda boʻsh joy qolmasin (boʻlimlar uzluksiz oqadi), avval nazariya, keyin tahlil, keyin maqola.
 
 ## Ishonchlilik (oldin “baʼzan ishlamay qolardi”)
+
+- **Muhim:** har oʻyin sahifasida `S && S.teams ? render() : setup();` skriptning ENG OXIRIDA boʻlishi shart. Aks holda saqlangan oʻyin bilan kirilganda `const` funksiyalar hali eʼlon qilinmagan boʻlib xato beradi va sahifa boʻm-boʻsh qoladi (shu xato tuzatilgan).
+- Sarlavha paneli (`.top`, z-index 30) modal ustida turadi — savol ochiq boʻlsa ham “Menyu” va “Yangi oʻyin” bosiladi.
 
 - `core.js`: ekran almashgandan keyin 350 ms bosishlar bloklanadi (`G.swapped()` — har `render()` boshida chaqiring).
 - `G.ask()` yangi savol yoki modal ochilganda oldingisini bekor qiladi; taymer DOMdan olib tashlansa oʻzi toʻxtaydi.

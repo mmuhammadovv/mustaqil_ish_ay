@@ -57,7 +57,6 @@ const LEVEL = k => { const d = ring(k), [q] = k.split(",").map(Number); return d
 let S = store.get(SK);
 
 G.header("Hududlar", reset);
-S && S.teams ? render() : setup();
 
 function setup() {
   let moves = 8;
@@ -172,6 +171,9 @@ function advance(flash) {
   for (let k = 1; k <= S.teams.length; k++) { const i = (S.turn + k) % S.teams.length; if (S.done[i] < S.moves) { S.turn = i; break; } }
   save(); render(flash);
 }
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
 </script>
 </body>
 </html>

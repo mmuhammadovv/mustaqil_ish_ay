@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap");
 
 /* =========================================================
    TOKENLAR
@@ -25,33 +25,45 @@
 }
 
 [data-fan="tarix"] {
-  --display: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --display: "Space Grotesk", "Inter", "Segoe UI", system-ui, sans-serif;
   --body: "Inter", "Segoe UI", system-ui, sans-serif;
-  --num: "Inter", system-ui, sans-serif;
-  --r: 12px; --r-lg: 18px;
-  --bg: #f3f5f9; --surface: #ffffff; --surface-2: #e8edf5; --ink: #0c1a30; --muted: #5b6a82; --line: #d7dfeb; --line-strong: #0c1a30;
-  --accent: #1d4f91; --accent-ink: #fff; --accent-soft: #e2ebf7; --accent-2: #1d8a5a;
-  --good: #1d8a5a; --bad: #c2412d; --warn: #c08a1e;
-  --t0: #1d4f91; --t1: #c2412d; --t2: #1d8a5a; --t3: #b58316;
-  --shadow: 0 1px 2px rgba(12,26,48,.05), 0 10px 30px -16px rgba(12,26,48,.25);
-  --pattern: radial-gradient(circle at 1px 1px, rgba(29,79,145,.13) 1px, transparent 1.4px) 0 0 / 24px 24px;
-  --flag: linear-gradient(to bottom, #1eb4d4 0 3px, #ce1126 3px 4px, #ffffff 4px 7px, #ce1126 7px 8px, #1eb53a 8px 11px);
+  --num: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --r: 0px; --r-lg: 0px;
+  --bg: #e8ebee; --surface: #ffffff; --surface-2: #dce1e6; --ink: #111418; --muted: #58626c; --line: #c3cad1; --line-strong: #111418;
+  --accent: #0a7fa3; --accent-ink: #fff; --accent-soft: #d5edf4; --accent-2: #17964a;
+  --good: #17964a; --bad: #d0213a; --warn: #d99a00;
+  --t0: #0a7fa3; --t1: #d0213a; --t2: #17964a; --t3: #d99a00;
+  --hard: #111418;
+  --shadow: 5px 5px 0 var(--hard);
+  --grid: rgba(17,20,24,.06);
+  --pattern: linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 32px 32px;
+  --flag: linear-gradient(to right, #0a9fc4 0 33.3%, #ffffff 33.3% 66.6%, #1eb53a 66.6% 100%);
 }
 [data-fan="tarix"][data-theme="dark"] {
-  --bg: #08111f; --surface: #0f1b2e; --surface-2: #17263d; --ink: #e9eef7; --muted: #95a4bd; --line: #24344f; --line-strong: #e9eef7;
-  --accent: #78a8ea; --accent-ink: #07111f; --accent-soft: #142846; --accent-2: #4fc58d;
-  --good: #4fc58d; --bad: #f0806e; --warn: #e6b85c;
-  --t0: #78a8ea; --t1: #f0806e; --t2: #4fc58d; --t3: #e6b85c;
-  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px -16px rgba(0,0,0,.7);
-  --pattern: radial-gradient(circle at 1px 1px, rgba(120,168,234,.12) 1px, transparent 1.4px) 0 0 / 24px 24px;
+  --bg: #0e1012; --surface: #171a1d; --surface-2: #23272b; --ink: #f1f3f5; --muted: #98a2ac; --line: #2f353b; --line-strong: #f1f3f5;
+  --accent: #2bb7de; --accent-ink: #061015; --accent-soft: #0f2f39; --accent-2: #3cc76d;
+  --good: #3cc76d; --bad: #ff5a6d; --warn: #ffc531;
+  --t0: #2bb7de; --t1: #ff5a6d; --t2: #3cc76d; --t3: #ffc531;
+  --hard: #000000;
+  --grid: rgba(255,255,255,.045);
 }
-/* DM Serif Display faqat oddiy qalinlikda — soxta qalinlashtirishning oldini olamiz */
+/* Swiss / plakat uslubi: qalin sans, qattiq soya, rang bloklari */
 [data-fan="tarix"] h1, [data-fan="tarix"] h2, [data-fan="tarix"] h3, [data-fan="tarix"] h4,
 [data-fan="tarix"] .q-text, [data-fan="tarix"] .who, [data-fan="tarix"] .verdict, [data-fan="tarix"] .cat-picked,
-[data-fan="tarix"] .side .nm, [data-fan="tarix"] .cc .nm, [data-fan="tarix"] .top .ttl b { font-weight: 400; }
-[data-fan="tarix"] .top { border-bottom: 0; }
-[data-fan="tarix"] .top::after { content: ""; position: absolute; left: 0; right: 0; bottom: -11px; height: 11px; background: var(--flag); }
-[data-fan="tarix"] .top + main.wrap, [data-fan="tarix"] .top + .page { padding-top: 34px; }
+[data-fan="tarix"] .side .nm, [data-fan="tarix"] .cc .nm, [data-fan="tarix"] .top .ttl b { font-weight: 700; letter-spacing: -.02em; }
+[data-fan="tarix"] .panel, [data-fan="tarix"] .mcard, [data-fan="tarix"] .scores { border: 2px solid var(--line-strong); box-shadow: var(--shadow); }
+[data-fan="tarix"] .btn { border-width: 2px; font-weight: 700; box-shadow: 3px 3px 0 var(--hard); }
+[data-fan="tarix"] .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--hard); }
+[data-fan="tarix"] .btn.primary { border-color: var(--hard); }
+[data-fan="tarix"] .opt { border-width: 2px; border-color: var(--line-strong); }
+[data-fan="tarix"] .opt:hover:not(:disabled) { box-shadow: 3px 3px 0 var(--hard); transform: translate(-1px, -1px); }
+[data-fan="tarix"] .kicker { color: var(--ink); background: var(--warn); display: inline-block; padding: 2px 8px; }
+[data-fan="tarix"] .top { border-bottom: 2px solid var(--line-strong); padding-left: 28px; }
+[data-fan="tarix"] .top::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: linear-gradient(to bottom, #0a9fc4 0 33.3%, #ce1126 33.3% 36%, #ffffff 36% 64%, #ce1126 64% 66.6%, #1eb53a 66.6%); }
+[data-fan="tarix"] .team::before { width: 8px; }
+[data-fan="tarix"] .timer .bar { height: 8px; border-radius: 0; }
+[data-fan="tarix"] .timer .bar i { background: var(--accent); }
+[data-fan="tarix"] .q-text { font-size: clamp(22px, 3vw, 36px); }
 
 /* =========================================================
    ASOS
@@ -72,7 +84,7 @@ svg.i { width: 1.15em; height: 1.15em; flex: none; vertical-align: -0.18em; }
 /* =========================================================
    SARLAVHA (header)
    ========================================================= */
-.top { display: flex; align-items: center; gap: 12px; padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+.top { display: flex; align-items: center; gap: 12px; padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 30; }
 [data-fan="akademik"] .top { border-bottom: 3px double var(--line-strong); }
 .top .ttl { flex: 1; min-width: 0; }
 .top .ttl b { display: block; font-family: var(--display); font-size: clamp(17px, 2.2vw, 24px); line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -156,9 +168,9 @@ main.wrap { flex: 1; width: 100%; max-width: 1360px; margin: 0 auto; padding: 20
 /* =========================================================
    MODAL VA SAVOL
    ========================================================= */
-.modal { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; padding: 16px; background: color-mix(in srgb, var(--bg) 70%, transparent); backdrop-filter: blur(6px); }
+.modal { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; padding: 84px 16px 16px; background: color-mix(in srgb, var(--bg) 70%, transparent); backdrop-filter: blur(6px); }
 .modal.open { display: flex; animation: fade .18s ease; }
-.mcard { width: min(960px, 100%); max-height: calc(100vh - 32px); overflow: auto; padding: clamp(20px, 3vw, 36px); background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-lg); box-shadow: 0 30px 80px -30px rgba(0,0,0,.45); animation: rise .25s ease; }
+.mcard { width: min(960px, 100%); max-height: calc(100vh - 100px); overflow: auto; padding: clamp(20px, 3vw, 36px); background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-lg); box-shadow: 0 30px 80px -30px rgba(0,0,0,.45); animation: rise .25s ease; }
 @keyframes fade { from { opacity: 0; } }
 @keyframes rise { from { transform: translateY(14px); opacity: 0; } }
 .meta { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
