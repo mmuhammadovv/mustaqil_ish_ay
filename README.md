@@ -24,16 +24,18 @@ Topshiruvchi: Muxamadov Muhammadali
 
 ## Cloudflare Pages ga joylash
 
-Sayt statik, server kerak emas. `build.sh` faqat sayt fayllarini `dist/` ga yigʻadi (CLAUDE.md, docs/, tools/ chiqmaydi).
+Sayt statik, server kerak emas. `scripts/build.mjs` (Node.js) faqat sayt fayllarini `dist/` ga yigʻadi — CLAUDE.md, docs/, tools/ chiqmaydi. Kerak: Node.js 18+.
 
-**1-usul — GitHub orqali (tavsiya):** Cloudflare → Workers & Pages → Create → Pages → Connect to Git → `mustaqil_ish_ay` repozitoriyasi.
-- Production branch: `claude/wizardly-galileo-lkog9v` (yoki `main` ga birlashtirilgandan keyin `main`)
-- Framework preset: **None**
-- Build command: `bash build.sh`
-- Build output directory: `dist`
+**Terminaldan (Windows, Mac, Linux — bir xil):**
 
-Har safar GitHub'ga push qilinganda sayt avtomatik yangilanadi.
+```bash
+npm install          # bir marta: wrangler oʻrnatiladi
+npm run login        # bir marta: Cloudflare akkauntiga kirish
+npm run create       # bir marta: Pages loyihasini ochish
+npm run deploy       # har safar: yigʻish va joylash
+```
 
-**2-usul — qoʻlda yuklash:** `bash build.sh`, soʻng Cloudflare → Pages → Upload assets → `dist` papkasini sudrab tashlang.
+`npm run preview` — saytni kompyuterda Cloudflare muhitida ochib koʻrish.
 
-**3-usul — terminaldan:** `bash build.sh && npx wrangler pages deploy dist --project-name mustaqil-ishlar`
+**GitHub orqali (avtomatik):** Cloudflare → Workers & Pages → Create → Pages → Connect to Git.
+Framework preset: None · Build command: `npm run build` · Build output directory: `dist`.

@@ -66,12 +66,13 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 - PDF: `python3 tools/build_pdf.py mustaqil-ishlar/akademik-yozuv`
 - Oʻyinlarni Playwright bilan oxirigacha oʻynab tekshirish tavsiya etiladi (har ikki fan, ikkala rejim, 390px mobil kenglik).
 
-## Joylash (Cloudflare Pages)
+## Joylash (Cloudflare Pages) — Node.js orqali
 
-- `build.sh` → `dist/` (faqat index.html, fan.html, _headers, oyinlar/, mustaqil-ishlar/). `dist/` gitignore da.
-- Cloudflare Pages: Build command `bash build.sh`, output `dist`, preset None. `wrangler.toml` da `pages_build_output_dir = "dist"`.
-- Terminaldan: `npx wrangler login` (bir marta), keyin `bash deploy.sh` (Windows: `.\deploy.ps1`). `--branch main` production manzilga joylaydi.
-- `_headers` — xavfsizlik va kesh sarlavhalari. Yangi sayt fayli qoʻshilsa, `build.sh` ga ham qoʻshing.
+- `scripts/build.mjs` → `dist/` (faqat index.html, fan.html, _headers, oyinlar/, mustaqil-ishlar/). `dist/` gitignore da. Yangi sayt fayli qoʻshilsa, `files` roʻyxatiga qoʻshing.
+- `package.json` skriptlari: `npm install` → `npm run login` → `npm run create` (bir marta) → `npm run deploy` (har safar; `--branch main` = production). `npm run preview` — mahalliy koʻrish.
+- Foydalanuvchi bash/PowerShell emas, JS (Node.js) variantini soʻragan — shell skriptlar olib tashlangan.
+- Cloudflare Git integratsiyasi: Build command `npm run build`, output `dist`, preset None.
+- `_headers` — xavfsizlik va kesh sarlavhalari.
 
 ## Ochiq masalalar
 

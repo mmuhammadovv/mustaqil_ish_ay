@@ -1,0 +1,19 @@
+{
+  "name": "mustaqil-ishlar",
+  "private": true,
+  "description": "Mustaqil ishlar va interaktiv bilim oʻyinlari (statik sayt)",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "login": "wrangler login",
+    "create": "wrangler pages project create mustaqil-ishlar --production-branch main",
+    "deploy": "node scripts/build.mjs && wrangler pages deploy dist --project-name mustaqil-ishlar --branch main",
+    "preview": "node scripts/build.mjs && wrangler pages dev dist"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
