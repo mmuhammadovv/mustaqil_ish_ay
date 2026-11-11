@@ -66,6 +66,12 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 - PDF: `python3 tools/build_pdf.py mustaqil-ishlar/akademik-yozuv`
 - Oʻyinlarni Playwright bilan oxirigacha oʻynab tekshirish tavsiya etiladi (har ikki fan, ikkala rejim, 390px mobil kenglik).
 
+## Joylash (Cloudflare Pages)
+
+- `build.sh` → `dist/` (faqat index.html, fan.html, _headers, oyinlar/, mustaqil-ishlar/). `dist/` gitignore da.
+- Cloudflare Pages: Build command `bash build.sh`, output `dist`, preset None. `wrangler.toml` da `pages_build_output_dir = "dist"`.
+- `_headers` — xavfsizlik va kesh sarlavhalari. Yangi sayt fayli qoʻshilsa, `build.sh` ga ham qoʻshing.
+
 ## Ochiq masalalar
 
 - Titul varagʻida universitet/fakultet nomi va guruh raqami boʻsh qoldirilgan — foydalanuvchi aytsa toʻldirish.

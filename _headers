@@ -1,0 +1,13 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+
+/oyinlar/assets/*
+  Cache-Control: public, max-age=3600
+
+/oyinlar/savollar/*
+  Cache-Control: public, max-age=600
+
+/mustaqil-ishlar/*
+  Cache-Control: public, max-age=3600

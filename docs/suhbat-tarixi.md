@@ -46,3 +46,6 @@ Foydalanuvchi talablari:
 - Sabab topildi: saqlangan (tugallanmagan) oʻyinga qayta kirilganda ishga tushirish qatori skript boshida edi → `Cannot access 'over/finished' before initialization` → sahifa boʻsh, “Yangi oʻyin” ham ishlamasdi. Ishga tushirish skript oxiriga koʻchirildi.
 - Savol oynasi “Menyu”/“Yangi oʻyin” tugmalarini toʻsib qoʻyardi — sarlavha paneli oyna ustiga chiqarildi.
 - Tarix dizayni butunlay yangilandi: Swiss/plakat uslubi (Space Grotesk, katakli fon, qattiq soyalar, bayroq ranglari).
+
+## 9. Cloudflare'ga joylashga tayyorlash
+- `build.sh`, `wrangler.toml`, `_headers`, `.gitignore` qoʻshildi; README da 3 xil joylash usuli. HTTP orqali barcha oʻyinlar sinovdan oʻtdi.
