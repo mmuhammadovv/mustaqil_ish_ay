@@ -37,5 +37,7 @@ npm run deploy       # har safar: yigʻish va joylash
 
 `npm run preview` — saytni kompyuterda Cloudflare muhitida ochib koʻrish.
 
+**Sayt manzilini (URL) oʻzgartirish:** `package.json` dagi `"project": "mustaqil-ishlar"` ni yangi nomga almashtiring, soʻng `npm run create` va `npm run deploy`. Manzil: `https://<yangi-nom>.pages.dev`.
+
 **GitHub orqali (avtomatik):** Cloudflare → Workers & Pages → Create → Pages → Connect to Git.
 Framework preset: None · Build command: `npm run build` · Build output directory: `dist`.

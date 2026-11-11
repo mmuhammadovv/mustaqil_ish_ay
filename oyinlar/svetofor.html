@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <title>Svetofor</title>
 <script src="assets/boot.js"></script>
 <link rel="stylesheet" href="assets/theme.css">
@@ -63,7 +64,7 @@ function setup() {
     title: "Svetofor",
     desc: "Savol oʻqiladi, keyin svetofor yonadi. Qizil — kutish, yashil — bosish! Jamoalar oʻz tugmalarini bosadi, boshlovchi esa ekranda kim birinchi bosganini belgilaydi.",
     extra: `<span class="l">Savollar soni</span>
-      <div class="seg" id="cnt">${[8, 12, 16, 20].map(n => `<button type="button" data-c="${n}" class="${n === count ? "on" : ""}">${n}</button>`).join("")}</div>`,
+      <div class="seg" id="cnt">${[8, 12, 16, 20].map(n => `<button type="button" data-c="${n}" >${n}</button>`).join("")}</div>`,
     rules: [
       "Har bir jamoaga <b>alohida tugma</b> beriladi. Kompyuterni faqat boshlovchi boshqaradi.",
       "Boshlovchi savol va variantlarni oʻqiydi, soʻng <b>“Svetoforni yoqish”</b>ni bosadi. Avval <b>qizil</b> chiroq yonadi.",
@@ -71,12 +72,16 @@ function setup() {
       `Qizilda tugma bosgan jamoa — <b>falstart</b>: boshlovchi uni belgilaydi, jamoa −${FOUL} ball oladi va bu savolga javob bera olmaydi.`,
       `Yashil yonganda boshlovchi <b>birinchi bosgan jamoani</b> ekranda tanlaydi. Javob uchun ${ANSWER} soniya. Toʻgʻri — <b>+daraja×100</b>, xato — <b>−daraja×50</b>.`
     ],
+    bind(el) {
+      const sync = () => $$("#cnt button", el).forEach(x => x.classList.toggle("on", +x.dataset.c === count));
+      $$("#cnt button", el).forEach(b => b.onclick = () => { count = +b.dataset.c; sync(); });
+      sync();
+    },
     onStart(teams) {
       const pool = G.shuffle(G.all()).slice(0, count).sort((a, b) => a.li - b.li).map(x => x.id);
       S = { teams, list: pool, idx: 0 }; save(); render();
     }
   });
-  $$("#cnt button").forEach(b => b.onclick = () => { count = +b.dataset.c; $$("#cnt button").forEach(x => x.classList.toggle("on", x === b)); });
 }
 function save() { store.set(SK, S); }
 function reset() { stop(); store.del(SK); S = null; Q = null; G.modal.close(); setup(); }

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <title>Tavakkal</title>
 <script src="assets/boot.js"></script>
 <link rel="stylesheet" href="assets/theme.css">
@@ -74,21 +75,29 @@ function setup() {
     title: "Tavakkal",
     desc: `Har bir jamoa ${START} ball bilan boshlaydi. Gʻildirak kategoriyani tanlaydi, jamoa esa oʻz balansidan tikadi.`,
     extra: `<span class="l">Har bir jamoa uchun yurishlar</span>
-      <div class="seg" id="rd">${[3, 4, 5, 6, 8].map(n => `<button type="button" data-r="${n}" class="${n === rounds ? "on" : ""}">${n}</button>`).join("")}</div>`,
+      <div class="seg" id="rd">${[3, 4, 5, 6, 8].map(n => `<button type="button" data-r="${n}">${n}</button>`).join("")}</div>
+      <p class="sub" id="qn" style="margin:10px 0 0"></p>`,
+    bind(el, n) {
+      const sync = () => {
+        $$("#rd button", el).forEach(x => x.classList.toggle("on", +x.dataset.r === rounds));
+        $("#qn", el).innerHTML = `Jami savollar: <b>${n} jamoa × ${rounds} yurish = ${n * rounds} ta</b> (bazada ${N * 5} ta savol bor)`;
+      };
+      $$("#rd button", el).forEach(b => b.onclick = () => { rounds = +b.dataset.r; sync(); });
+      sync();
+    },
     rules: [
       `Har bir jamoaning boshlangʻich balansi — <b>${START} ball</b>.`,
       "Navbatdagi jamoa gʻildirakni aylantiradi — u savol kategoriyasini tanlaydi va savolning <b>qiyinlik darajasi (1–5)</b> koʻrsatiladi.",
       "Daraja qiyin boʻlsa — ehtiyotkorroq tiking, oson boʻlsa — tavakkal qilib, hatto <b>va-bank</b> qilish mumkin.",
       "Savolni koʻrishdan oldin jamoa balansidan istalgan miqdorni <b>tikadi</b> (eng kami 50).",
       "Toʻgʻri javob — tikilgan ball balansga <b>qoʻshiladi</b>. Xato javob — tikilgan ball <b>ayiriladi</b>.",
-      "Balansi nolga tushgan jamoa oʻyindan chiqadi. Yurishlar tugagach, eng katta balans gʻolib."
+      "Balansi nolga tushgan jamoa oʻyindan chiqadi. Faqat <b>bitta jamoa qolsa — u darhol gʻolib</b>. Aks holda yurishlar tugagach, eng katta balans gʻolib."
     ],
     onStart(teams) {
       teams.forEach(t => { t.score = START; t.turns = 0; });
       S = { teams, used: [], turn: 0, rounds, log: [] }; save(); render();
     }
   });
-  $$("#rd button").forEach(b => b.onclick = () => { rounds = +b.dataset.r; $$("#rd button").forEach(x => x.classList.toggle("on", x === b)); });
 }
 function save() { store.set(SK, S); }
 function reset() { store.del(SK); S = null; G.modal.close(); setup(); }
@@ -97,7 +106,9 @@ const left = ci => data.kategoriyalar[ci].savollar.findIndex((_, li) => !S.used.
 const freeLevels = ci => data.kategoriyalar[ci].savollar.map((_, li) => li).filter(li => !S.used.includes(ci + "-" + li));
 const LEVELS = ["Juda oson", "Oson", "Oʻrtacha", "Qiyin", "Juda qiyin"];
 const alive = i => S.teams[i].score > 0 && S.teams[i].turns < S.rounds;
-const finished = () => !S.teams.some((_, i) => alive(i)) || data.kategoriyalar.every((_, ci) => left(ci) < 0);
+const solvent = () => S.teams.filter(t => t.score > 0).length;
+// Oʻyin tugaydi: bitta jamoa qolsa, hammaning yurishlari tugasa yoki savollar tugasa
+const finished = () => solvent() <= 1 || !S.teams.some((_, i) => alive(i)) || data.kategoriyalar.every((_, ci) => left(ci) < 0);
 
 function wheelSVG() {
   const R = 190, segs = data.kategoriyalar.map((c, i) => {
@@ -117,7 +128,13 @@ function wheelSVG() {
 
 function render(phase = "spin", pick = null) {
   G.swapped();
-  if (finished()) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
+  if (finished()) {
+    $("#app").innerHTML = ""; G.winner(S.teams, reset);
+    const sub = G.$(".win .sub");
+    if (solvent() === 1) sub.textContent = "Qolgan yagona jamoa — boshqalarning balansi tugadi";
+    else if (solvent() === 0) sub.textContent = "Barcha jamoalarning balansi tugadi";
+    return;
+  }
   if (!alive(S.turn)) return nextTurn(true);
   const t = S.teams[S.turn];
   $("#app").innerHTML = `

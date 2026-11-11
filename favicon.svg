@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Mustaqil ishlar logosi">
+  <rect width="64" height="64" rx="12" fill="#14161a"/>
+  <path d="M11 47V17l12.5 17L36 17v30" fill="none" stroke="#f3eee4" stroke-width="6.5" stroke-linecap="square" stroke-linejoin="miter"/>
+  <rect x="44" y="17" width="9" height="10" fill="#0a9fc4"/>
+  <rect x="44" y="27" width="9" height="1.6" fill="#ce1126"/>
+  <rect x="44" y="28.6" width="9" height="6.8" fill="#ffffff"/>
+  <rect x="44" y="35.4" width="9" height="1.6" fill="#ce1126"/>
+  <rect x="44" y="37" width="9" height="10" fill="#1eb53a"/>
+  <rect x="11" y="52" width="42" height="2.5" fill="#b02a1c"/>
+</svg>

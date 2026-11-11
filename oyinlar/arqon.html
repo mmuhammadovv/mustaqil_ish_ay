@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <title>Arqon tortish</title>
 <script src="assets/boot.js"></script>
 <link rel="stylesheet" href="assets/theme.css">
@@ -44,7 +45,7 @@ function setup() {
     desc: "Ikki jamoa navbatma-navbat savollarga javob beradi. Har toʻgʻri javob arqonni bir qadam oʻz tomoningizga tortadi.",
     min: 2, max: 2, def: 2,
     extra: `<span class="l">Gʻalaba uchun qadamlar</span>
-      <div class="seg" id="tg">${[3, 4, 5, 6].map(n => `<button type="button" data-t="${n}" class="${n === target ? "on" : ""}">${n}</button>`).join("")}</div>`,
+      <div class="seg" id="tg">${[3, 4, 5, 6].map(n => `<button type="button" data-t="${n}" >${n}</button>`).join("")}</div>`,
     rules: [
       "Oʻyin ikki jamoa oʻrtasida oʻtadi. Jamoalar <b>navbat bilan</b> javob beradi: avval chap jamoa, keyin oʻng jamoa va hokazo.",
       `Navbatdagi jamoa savolni oʻqiydi va ${TIME} soniyada 4 ta variantdan birini tanlaydi.`,
@@ -52,12 +53,16 @@ function setup() {
       "Bayroqni oʻz chizigʻigacha tortib kelgan jamoa gʻolib.",
       "Savollar oson boshlanib, asta-sekin qiyinlashadi."
     ],
+    bind(el) {
+      const sync = () => $$("#tg button", el).forEach(x => x.classList.toggle("on", +x.dataset.t === target));
+      $$("#tg button", el).forEach(b => b.onclick = () => { target = +b.dataset.t; sync(); });
+      sync();
+    },
     onStart(teams) {
       const order = [1, 2, 3, 4, 5].flatMap(lv => G.shuffle(G.all().filter(x => x.li + 1 === lv))).map(x => x.id);
       S = { teams, target, pos: 0, order, idx: 0 }; save(); render();
     }
   });
-  $$("#tg button").forEach(b => b.onclick = () => { target = +b.dataset.t; $$("#tg button").forEach(x => x.classList.toggle("on", x === b)); });
 }
 function save() { store.set(SK, S); }
 function reset() { store.del(SK); S = null; G.modal.close(); setup(); }

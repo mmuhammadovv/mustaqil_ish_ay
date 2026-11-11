@@ -45,14 +45,22 @@
   const icon = (n, cls = "i") => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ""}</svg>`;
 
   /* ---------- Ovoz ---------- */
-  let ac = null, muted = !!store.get("ovozsiz");
+  let ac = null, out = null, muted = !!store.get("ovozsiz");
   function tone(f, d = .15, type = "sine", vol = .12, delay = 0) {
     if (muted) return;
     try {
-      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      if (!ac) {
+        ac = new (window.AudioContext || window.webkitAudioContext)();
+        // kompressor: baland ovozlar birga chalinganda xirillamasin
+        out = ac.createDynamicsCompressor();
+        out.threshold.value = -10; out.knee.value = 6; out.ratio.value = 8; out.attack.value = .003; out.release.value = .15;
+        out.connect(ac.destination);
+      }
+      if (ac.state === "suspended") ac.resume();
       const t = ac.currentTime + delay, o = ac.createOscillator(), g = ac.createGain();
-      o.type = type; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
-      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + d + .02);
+      o.type = type; o.frequency.setValueAtTime(f, t);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .008); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+      o.connect(g); g.connect(out); o.start(t); o.stop(t + d + .02);
     } catch (e) {}
   }
   const sound = {
@@ -62,10 +70,14 @@
     tick: () => tone(1000, .04, "square", .03),
     end: () => tone(240, .5, "triangle", .1),
     buzz: () => tone(520, .18, "square", .07),
-    red: () => tone(330, .2, "sine", .1),
-    green: () => tone(880, .3, "sine", .14),
-    // chalgʻituvchi tovush: yashil signalga juda oʻxshash
-    decoy: () => { const f = [840, 900, 860, 920][Math.floor(Math.random() * 4)]; tone(f, .26, Math.random() < .5 ? "sine" : "triangle", .13); },
+    red: () => tone(330, .25, "triangle", .2),
+    // Yashil signal: baland, aniq, ikki qavatli "start" ovozi — hech narsa bilan adashtirib boʻlmaydi
+    green: () => {
+      tone(1046, .7, "square", .34); tone(1568, .7, "triangle", .34);
+      tone(2093, .25, "sine", .22, .02); tone(1046, .35, "square", .3, .75); tone(1568, .35, "triangle", .3, .75);
+    },
+    // Chalgʻituvchi tovush: xuddi shunday baland, lekin qisqa va bir qavatli
+    decoy: () => { const f = [988, 1108, 932, 1175][Math.floor(Math.random() * 4)]; tone(f, .22, Math.random() < .5 ? "square" : "triangle", .32); },
     foul: () => { tone(200, .15, "sawtooth", .08); tone(150, .25, "sawtooth", .08, .14); },
     spin: () => tone(1200, .02, "square", .02),
     bonus: () => [523, 659, 784].forEach((f, i) => tone(f, .16, "triangle", .1, i * .09)),
@@ -85,6 +97,7 @@
   function header(title, onReset) {
     const h = document.createElement("header"); h.className = "top";
     h.innerHTML = `
+      <a class="brand" href="../index.html" title="Bosh sahifa"><img src="../favicon.svg" alt="Bosh sahifa" width="34" height="34"></a>
       <a class="ib" href="../fan.html?fan=${fan}" title="Menyu">${icon("back")}<span class="lbl">Menyu</span></a>
       <div class="ttl"><b>${esc(title)}</b><span>${data ? esc(data.fan) : ""}</span></div>
       <div class="acts">
@@ -101,7 +114,8 @@
   }
 
   /* ---------- Jamoalarni sozlash ---------- */
-  function setup(el, { kicker, title, desc, rules = [], keys = null, extra = "", min = 2, max = 4, def = 3, onStart }) {
+  // bind(el, n) — har chizilgandan keyin chaqiriladi (qoʻshimcha tugmalarni ulash uchun; jamoalar soni oʻzgarsa ham ishlaydi)
+  function setup(el, { kicker, title, desc, rules = [], keys = null, extra = "", min = 2, max = 4, def = 3, onStart, bind }) {
     let n = Math.min(max, Math.max(min, def));
     const draw = () => {
       const old = $$(".names input", el).map(i => i.value);
@@ -126,6 +140,7 @@
         const teams = $$(".names input", el).map((inp, i) => ({ name: inp.value.trim() || (i + 1) + "-jamoa", score: 0, c: i }));
         sound.click(); onStart(teams);
       };
+      if (bind) bind(el, n);
     };
     if (!data) { el.innerHTML = `<section class="setup panel"><h2>Savollar topilmadi</h2></section>`; return; }
     draw();

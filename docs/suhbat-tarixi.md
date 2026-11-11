@@ -49,3 +49,10 @@ Foydalanuvchi talablari:
 
 ## 9. Cloudflare'ga joylashga tayyorlash
 - `build.sh`, `wrangler.toml`, `_headers`, `.gitignore` qoʻshildi; README da 3 xil joylash usuli. HTTP orqali barcha oʻyinlar sinovdan oʻtdi.
+
+## 10. Cloudflare'ga joylandi; tuzatishlar
+- Sayt joylandi: mustaqil-ishlar.pages.dev (yangi loyihada SSL bir necha daqiqa kechikadi).
+- Gʻildirak: bitta jamoa qolsa darhol gʻolib; sozlashda jami savollar soni koʻrsatiladi (jamoalar × yurishlar).
+- Sozlash tugmalari jamoalar soni oʻzgarganda ishlamay qolardi — `setup({bind})` bilan tuzatildi.
+- Logo (favicon.svg) qoʻshildi; URL `package.json` → cloudflare.project orqali oʻzgartiriladi.
+- Svetofor: yashil signal baland va aniq, kompressor bilan.

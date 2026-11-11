@@ -18,9 +18,9 @@ index.html                         Bosh menyu — fan tanlash (ikki yarim ekran)
 fan.html?fan=akademik|tarix        Fan sahifasi (mustaqil ish + 5 oʻyin)
 mustaqil-ishlar/akademik-yozuv/    Mustaqil ish: index.html (A4 chop etish) + PDF (22 bet)
 oyinlar/
-  tavakkal.html   01 Gʻildirak + tikish (balans 500, ±tikish; savol darajasi 1–5 tikishdan OLDIN koʻrsatiladi)
+  tavakkal.html   01 Gʻildirak + tikish (balans 500, ±tikish; daraja 1–5 tikishdan OLDIN koʻrinadi; bitta jamoa qolsa — darhol gʻolib)
   hududlar.html   02 Olti burchakli xarita (bazadan qoʻshni kataklarni egallash, hujum +1 daraja)
-  svetofor.html   03 Reaksiya: qizil 2–10 s tasodifiy → yashil; qizilda chalgʻituvchi tovushlar (sound.decoy).
+  svetofor.html   03 Reaksiya: qizil 2–10 s tasodifiy → yashil (baland, aniq ikki qavatli signal); qizilda chalgʻituvchi tovushlar (sound.decoy).
                   Jamoalarda jismoniy tugma — klaviatura YOʻQ; boshlovchi ekranda kim bosganini belgilaydi (qizilda = falstart −50)
   zinapoya.html   04 10 kategoriya × 5 pogʻona, davom etish/toʻxtash, 50/50 va +15 s
   arqon.html      05 Arqon tortish: 2 jamoa NAVBAT BILAN javob beradi (poyga emas)
@@ -54,6 +54,10 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 - `core.js`: ekran almashgandan keyin 350 ms bosishlar bloklanadi (`G.swapped()` — har `render()` boshida chaqiring).
 - `G.ask()` yangi savol yoki modal ochilganda oldingisini bekor qiladi; taymer DOMdan olib tashlansa oʻzi toʻxtaydi.
 
+## Logo
+
+- `favicon.svg` (ildizda) — “MI” (Mustaqil Ishlar): qogʻoz rangli “M” (akademik) + bayroq ranglaridagi “I” ustuni (tarix) + qizil chiziq. Har sahifada favicon va sarlavhada `.brand` (bosh sahifaga havola). `build.mjs` roʻyxatida bor.
+
 ## Konventsiyalar
 
 - Oʻzbek lotin yozuvi: `oʻ`, `gʻ` uchun **U+02BB (ʻ)**, tutuq belgisi uchun **U+02BC (ʼ)**. Oddiy apostrof `'` ishlatmang.
@@ -69,7 +73,7 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 ## Joylash (Cloudflare Pages) — Node.js orqali
 
 - `scripts/build.mjs` → `dist/` (faqat index.html, fan.html, _headers, oyinlar/, mustaqil-ishlar/). `dist/` gitignore da. Yangi sayt fayli qoʻshilsa, `files` roʻyxatiga qoʻshing.
-- `package.json` skriptlari: `npm install` → `npm run login` → `npm run create` (bir marta) → `npm run deploy` (har safar; `--branch main` = production). `npm run preview` — mahalliy koʻrish.
+- Sayt nomi/URL faqat `package.json` → `"cloudflare": { "project": "..." }` da (manzil: `<project>.pages.dev`). `scripts/cloudflare.mjs` uni oʻqiydi. Buyruqlar: `npm install` → `npm run login` → `npm run create` (har yangi nom uchun bir marta) → `npm run deploy`.
 - Foydalanuvchi bash/PowerShell emas, JS (Node.js) variantini soʻragan — shell skriptlar olib tashlangan.
 - Cloudflare Git integratsiyasi: Build command `npm run build`, output `dist`, preset None.
 - `_headers` — xavfsizlik va kesh sarlavhalari.

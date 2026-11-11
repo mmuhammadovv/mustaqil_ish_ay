@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <title>Hududlar</title>
 <script src="assets/boot.js"></script>
 <link rel="stylesheet" href="assets/theme.css">
@@ -65,7 +66,7 @@ function setup() {
     title: "Hududlar",
     desc: "Har bir jamoa xaritaning bir chekkasidagi bazadan boshlaydi. Savollarga javob berib, hududingizni markazga — poytaxtga qarab kengaytiring.",
     extra: `<span class="l">Har bir jamoa uchun yurishlar</span>
-      <div class="seg" id="mv">${[6, 8, 10, 12].map(n => `<button type="button" data-m="${n}" class="${n === moves ? "on" : ""}">${n}</button>`).join("")}</div>`,
+      <div class="seg" id="mv">${[6, 8, 10, 12].map(n => `<button type="button" data-m="${n}" >${n}</button>`).join("")}</div>`,
     rules: [
       "Faqat <b>oʻz hududingizga qoʻshni</b> kataklarni egallash mumkin — ular xaritada ajratib koʻrsatiladi.",
       "Katakdagi nuqtalar — uning qiymati va savol darajasi (1–5). Markazdagi <b>poytaxt</b> — 5 ball.",
@@ -73,13 +74,17 @@ function setup() {
       "Xato javobda hudud oʻzgarmaydi, navbat keyingi jamoaga oʻtadi.",
       "Yurishlar tugagach, hududlari qiymati eng koʻp boʻlgan jamoa gʻolib."
     ],
+    bind(el) {
+      const sync = () => $$("#mv button", el).forEach(x => x.classList.toggle("on", +x.dataset.m === moves));
+      $$("#mv button", el).forEach(b => b.onclick = () => { moves = +b.dataset.m; sync(); });
+      sync();
+    },
     onStart(teams) {
       const own = {}; BASES[teams.length].forEach((k, i) => own[k] = i);
       S = { teams, own, bases: BASES[teams.length], used: [], turn: 0, moves, done: teams.map(() => 0) };
       recount(); save(); render();
     }
   });
-  $$("#mv button").forEach(b => b.onclick = () => { moves = +b.dataset.m; $$("#mv button").forEach(x => x.classList.toggle("on", x === b)); });
 }
 function save() { store.set(SK, S); }
 function reset() { store.del(SK); S = null; G.modal.close(); setup(); }

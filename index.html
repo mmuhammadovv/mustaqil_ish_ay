@@ -3,12 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>Mustaqil ishlar va oʻyinlar</title>
 <script src="oyinlar/assets/boot.js"></script>
 <link rel="stylesheet" href="oyinlar/assets/theme.css">
 <style>
   body { background: var(--bg); }
   .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 22px; }
+  .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+  .brand img { border-radius: 8px; display: block; }
+  .bar .who small { display: block; font-size: 11px; letter-spacing: .1em; font-weight: 600; }
   .bar .who { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
   .split { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 66px); }
   .half { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 30px; padding: clamp(28px, 5vw, 64px); text-decoration: none; background: var(--pattern), var(--bg); color: var(--ink); font-family: var(--body); overflow: hidden; transition: filter .2s; }
@@ -34,7 +38,7 @@
 </style>
 </head>
 <body>
-<div class="bar"><span class="who">Muxamadov Muhammadali · Mustaqil ishlar</span><button class="ib" id="thm" type="button"></button></div>
+<div class="bar"><a class="brand" href="index.html"><img src="favicon.svg" alt="" width="36" height="36"><span class="who">Mustaqil ishlar<small>Muxamadov Muhammadali</small></span></a><button class="ib" id="thm" type="button"></button></div>
 <div class="split">
   <a class="half" data-fan="akademik" href="fan.html?fan=akademik">
     <div>
