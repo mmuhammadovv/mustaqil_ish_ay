@@ -11,7 +11,7 @@
   .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 22px; }
   .bar .who { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
   .split { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 66px); }
-  .half { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 30px; padding: clamp(28px, 5vw, 64px); text-decoration: none; background: var(--bg) var(--pattern); color: var(--ink); font-family: var(--body); overflow: hidden; transition: filter .2s; }
+  .half { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 30px; padding: clamp(28px, 5vw, 64px); text-decoration: none; background: var(--pattern), var(--bg); color: var(--ink); font-family: var(--body); overflow: hidden; transition: filter .2s; }
   .half:hover { filter: brightness(1.02); }
   .half .over { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
   .half h2 { font-family: var(--display); font-size: clamp(40px, 6vw, 84px); line-height: .95; margin: 14px 0 18px; }
@@ -23,7 +23,9 @@
   .half[data-fan="akademik"] { border-right: 1px solid var(--line-strong); }
   .half[data-fan="akademik"] h2 { border-top: 4px double var(--line-strong); border-bottom: 1px solid var(--line-strong); padding: 16px 0; }
   .half[data-fan="akademik"] .enter { text-transform: uppercase; letter-spacing: .12em; font-size: 13px; }
-  .half[data-fan="tarix"] .mark { position: absolute; right: -60px; bottom: -60px; width: 340px; height: 340px; color: var(--accent); opacity: .08; }
+  .half[data-fan="tarix"] .mark { position: absolute; right: -70px; bottom: -70px; width: 380px; height: 380px; color: var(--accent); opacity: .1; }
+  .half[data-fan="tarix"]::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 11px; background: var(--flag); }
+  .half[data-fan="tarix"] h2 { font-weight: 400; }
   .half[data-fan="tarix"] .enter { border-radius: 999px; }
   @media (max-width: 860px) { .split { grid-template-columns: 1fr; } .half[data-fan="akademik"] { border-right: 0; border-bottom: 1px solid var(--line-strong); } }
 </style>
@@ -41,7 +43,7 @@
     <span class="enter">Kirish <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
   </a>
   <a class="half" data-fan="tarix" href="fan.html?fan=tarix">
-    <svg class="mark" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M50 4l11 28 29 11-29 11-11 29-11-29-29-11 29-11z"/><path d="M50 22l18 18-18 18-18-18z"/><circle cx="50" cy="50" r="46"/></svg>
+    <svg class="mark" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1"><circle cx="50" cy="50" r="46"/><ellipse cx="50" cy="50" rx="20" ry="46"/><ellipse cx="50" cy="50" rx="38" ry="46"/><path d="M4 50h92M10 28h80M10 72h80"/></svg>
     <div>
       <div class="over">Fan 02</div>
       <h2>Oʻzbekistonning eng yangi tarixi</h2>

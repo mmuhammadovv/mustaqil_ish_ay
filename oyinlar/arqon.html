@@ -7,31 +7,21 @@
 <script src="assets/boot.js"></script>
 <link rel="stylesheet" href="assets/theme.css">
 <style>
-  .qbox { padding: clamp(16px, 2.6vw, 28px); }
-  .qbox .q-text { margin: 12px 0 10px; }
-  .legend-opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 18px; font-size: clamp(15px, 1.6vw, 19px); }
-  .legend-opts div { display: flex; gap: 10px; align-items: baseline; padding: 6px 0; border-top: 1px solid var(--line); }
-  .legend-opts b { font-family: var(--num); color: var(--accent); }
-  .legend-opts .r { color: var(--good); font-weight: 700; }
   .arena { padding: 8px 10px; }
-  .arena svg { width: 100%; height: auto; max-height: 26vh; display: block; }
-  .rope-g { transition: transform .7s cubic-bezier(.3,1.4,.5,1); }
-  .sides { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  .side { padding: 16px; border-top: 6px solid var(--c); }
-  .side .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-  .side .nm { font-family: var(--display); font-size: clamp(20px, 2.4vw, 28px); }
-  .side .ct { font-family: var(--num); color: var(--muted); font-size: 13px; }
-  .pad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
-  .pad button { padding: 16px 0; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--bg); font-family: var(--num); font-size: 22px; font-weight: 600; }
-  .pad button small { display: block; font-size: 11px; color: var(--muted); font-weight: 500; }
-  .pad button:hover:not(:disabled) { background: color-mix(in srgb, var(--c) 15%, var(--bg)); }
-  .pad button.wrong { background: color-mix(in srgb, var(--bad) 18%, var(--bg)); border-color: var(--bad); }
-  .pad button.right { background: color-mix(in srgb, var(--good) 18%, var(--bg)); border-color: var(--good); }
-  .pad button:disabled { cursor: default; }
-  .side .msg { min-height: 1.4em; margin-top: 10px; font-weight: 600; font-size: 14px; }
-  .side.lock { opacity: .55; }
-  .bar2 { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-  @media (max-width: 700px) { .sides { grid-template-columns: 1fr; } .legend-opts { grid-template-columns: 1fr; } .pad button { padding: 12px 0; font-size: 18px; } }
+  .arena svg { width: 100%; height: auto; max-height: 30vh; display: block; }
+  .rope-g { transition: transform .8s cubic-bezier(.3,1.4,.5,1); }
+  .duel { display: grid; grid-template-columns: 220px minmax(0, 1fr) 220px; gap: 18px; align-items: start; }
+  .side { padding: 18px; border-top: 6px solid var(--c); transition: opacity .2s, box-shadow .2s; }
+  .side .nm { font-family: var(--display); font-size: clamp(20px, 2.2vw, 28px); line-height: 1.1; }
+  .side .ct { font-family: var(--num); font-size: 40px; font-weight: 600; margin-top: 8px; }
+  .side .lb { font-size: 12px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+  .side .now { margin-top: 12px; font-size: 13px; font-weight: 700; color: var(--c); min-height: 1.4em; }
+  .side.wait { opacity: .45; }
+  .side.turn { box-shadow: 0 0 0 2px var(--c); }
+  .qbox { padding: clamp(16px, 2.6vw, 28px); }
+  .qbox .q-text { margin-top: 8px; }
+  .nextbar { display: flex; justify-content: flex-end; margin-top: 14px; }
+  @media (max-width: 960px) { .duel { grid-template-columns: 1fr 1fr; } .qbox { grid-column: 1 / -1; order: 3; } }
 </style>
 </head>
 <body>
@@ -41,8 +31,8 @@
 <script src="assets/core.js"></script>
 <script>
 const { $, $$, esc, store, data, icon, sound } = G;
-const SK = G.saveKey("arqon"), KEYS = [["1", "2", "3", "4"], ["7", "8", "9", "0"]], TIME = 20;
-let S = store.get(SK), Q = null;
+const SK = G.saveKey("arqon"), TIME = 30;
+let S = store.get(SK);
 
 G.header("Arqon tortish", reset);
 S && S.teams ? render() : setup();
@@ -52,16 +42,16 @@ function setup() {
   G.setup($("#app"), {
     kicker: "Oʻyin 05 · Duel",
     title: "Arqon tortish",
-    desc: "Ikki jamoa bir vaqtning oʻzida bitta savolga javob beradi. Kim birinchi toʻgʻri topsa, arqonni bir qadam oʻziga tortadi.",
+    desc: "Ikki jamoa navbatma-navbat savollarga javob beradi. Har toʻgʻri javob arqonni bir qadam oʻz tomoningizga tortadi.",
     min: 2, max: 2, def: 2,
     extra: `<span class="l">Gʻalaba uchun qadamlar</span>
       <div class="seg" id="tg">${[3, 4, 5, 6].map(n => `<button type="button" data-t="${n}" class="${n === target ? "on" : ""}">${n}</button>`).join("")}</div>`,
     rules: [
-      "Oʻyin ikki jamoa oʻrtasida oʻtadi. Har jamoaning oʻz tugmalari bor: chap jamoa — <b>1 2 3 4</b>, oʻng jamoa — <b>7 8 9 0</b> (yoki ekrandagi tugmalar).",
-      "Savol va 4 ta variant ekranda chiqadi. Ikkala jamoa <b>bir vaqtda</b> javob beradi.",
-      "Birinchi <b>toʻgʻri</b> javob bergan jamoa arqonni bir qadam oʻziga tortadi.",
-      "Xato javob bergan jamoa shu savolda boshqa javob bera olmaydi — raqib bemalol oʻylab topishi mumkin.",
-      "Bayroqni oʻz chizigʻigacha tortib kelgan jamoa gʻolib. Savollar oson boshlanib, asta-sekin qiyinlashadi."
+      "Oʻyin ikki jamoa oʻrtasida oʻtadi. Jamoalar <b>navbat bilan</b> javob beradi: avval chap jamoa, keyin oʻng jamoa va hokazo.",
+      `Navbatdagi jamoa savolni oʻqiydi va ${TIME} soniyada 4 ta variantdan birini tanlaydi.`,
+      "Toʻgʻri javob — arqon <b>bir qadam</b> shu jamoa tomonga tortiladi. Xato javob — arqon joyida qoladi.",
+      "Bayroqni oʻz chizigʻigacha tortib kelgan jamoa gʻolib.",
+      "Savollar oson boshlanib, asta-sekin qiyinlashadi."
     ],
     onStart(teams) {
       const order = [1, 2, 3, 4, 5].flatMap(lv => G.shuffle(G.all().filter(x => x.li + 1 === lv))).map(x => x.id);
@@ -71,10 +61,9 @@ function setup() {
   $$("#tg button").forEach(b => b.onclick = () => { target = +b.dataset.t; $$("#tg button").forEach(x => x.classList.toggle("on", x === b)); });
 }
 function save() { store.set(SK, S); }
-function reset() { if (Q && Q.t) Q.t.stop(); store.del(SK); S = null; Q = null; G.modal.close(); setup(); }
+function reset() { store.del(SK); S = null; G.modal.close(); setup(); }
 
 function figure(x, dir, c) {
-  // tortayotgan odamning soddalashtirilgan siluyeti
   const lean = dir * -14;
   return `<g stroke="${c}" stroke-width="5" stroke-linecap="round" fill="none">
     <circle cx="${x + lean}" cy="92" r="11" fill="${c}" stroke="none"/>
@@ -85,7 +74,7 @@ function arena() {
   const step = 380 / S.target, off = S.pos * step;
   const c0 = `var(--t${S.teams[0].c})`, c1 = `var(--t${S.teams[1].c})`;
   const ticks = Array.from({ length: S.target * 2 + 1 }, (_, k) => { const x = 500 + (k - S.target) * step; return `<line x1="${x}" y1="182" x2="${x}" y2="${k === S.target ? 196 : 190}" stroke="var(--line-strong)" stroke-width="${k === S.target ? 2 : 1}"/>`; }).join("");
-  return `<svg viewBox="0 0 1000 210" role="img" aria-label="Arqon holati">
+  return `<svg viewBox="0 0 1000 200" role="img" aria-label="Arqon holati">
     <rect x="0" y="0" width="120" height="180" fill="${c0}" opacity=".08"/><rect x="880" y="0" width="120" height="180" fill="${c1}" opacity=".08"/>
     <line x1="120" y1="20" x2="120" y2="180" stroke="${c0}" stroke-width="3" stroke-dasharray="6 6"/>
     <line x1="880" y1="20" x2="880" y2="180" stroke="${c1}" stroke-width="3" stroke-dasharray="6 6"/>
@@ -97,60 +86,40 @@ function arena() {
       <path d="M500 62 L540 74 L500 86 Z" fill="var(--accent)"/>
       ${figure(70, -1, c0)}${figure(130, -1, c0)}${figure(870, 1, c1)}${figure(930, 1, c1)}
     </g>
-    <text x="60" y="205" text-anchor="middle" font-size="13" fill="var(--muted)" font-family="var(--num)">${esc(S.teams[0].name)}</text>
-    <text x="940" y="205" text-anchor="middle" font-size="13" fill="var(--muted)" font-family="var(--num)">${esc(S.teams[1].name)}</text>
   </svg>`;
 }
 
-function over() { return Math.abs(S.pos) >= S.target || S.idx >= S.order.length; }
+const over = () => Math.abs(S.pos) >= S.target || S.idx >= S.order.length;
 
 function render() {
+  G.swapped();
   if (over()) return finishGame();
+  const who = S.idx % 2, t = S.teams[who];
   const [ci, li] = S.order[S.idx].split("-").map(Number), item = data.kategoriyalar[ci].savollar[li];
-  const opts = G.shuffle([item.j, ...item.x]);
-  Q = { item, opts, right: opts.indexOf(item.j), lock: [false, false], done: false };
+  const side = s => `<div class="panel side ${s === who ? "turn" : "wait"}" style="--c:${G.tc(S.teams[s])}">
+      <div class="nm">${esc(S.teams[s].name)}</div><div class="ct">${S.teams[s].score}</div><div class="lb">toʻgʻri javob</div>
+      <div class="now">${s === who ? "Navbat shu jamoada" : "Kutmoqda"}</div></div>`;
   $("#app").innerHTML = `
-    <div class="panel qbox">
-      <div class="meta"><span>Savol ${S.idx + 1}</span><span>${esc(data.kategoriyalar[ci].nomi)}</span><span class="acc">${li + 1}-daraja</span></div>
-      <div class="q-text">${item.s}</div>
-      <div id="tm"></div>
-      <div class="legend-opts" id="lo">${opts.map((o, k) => `<div><b>${"ABCD"[k]}</b><span>${o}</span></div>`).join("")}</div>
-    </div>
     <div class="panel arena">${arena()}</div>
-    <div class="sides">${S.teams.map((t, s) => `
-      <div class="panel side" id="side${s}" style="--c:${G.tc(t)}">
-        <div class="hd"><span class="nm">${esc(t.name)}</span><span class="ct">Toʻgʻri javoblar: ${t.score}</span></div>
-        <div class="pad">${[0, 1, 2, 3].map(k => `<button type="button" data-s="${s}" data-k="${k}">${"ABCD"[k]}<small>tugma ${KEYS[s][k]}</small></button>`).join("")}</div>
-        <div class="msg"></div>
-      </div>`).join("")}</div>
-    <div class="bar2"><span class="hint" style="margin:0">Chap jamoa: 1 2 3 4 · Oʻng jamoa: 7 8 9 0</span><span id="nx"></span></div>`;
-  $$(".pad button").forEach(b => b.onclick = () => pick(+b.dataset.s, +b.dataset.k));
-  Q.t = G.timer($("#tm"), TIME, () => endQ(null));
-}
-
-function pick(s, k) {
-  if (!Q || Q.done || Q.lock[s]) return;
-  const side = $("#side" + s), btn = side.querySelectorAll(".pad button")[k];
-  if (k === Q.right) {
-    btn.classList.add("right"); S.teams[s].score++;
-    S.pos += s === 0 ? -1 : 1; sound.ok();
-    side.querySelector(".msg").textContent = "Toʻgʻri! Arqon tortildi";
-    return endQ(s);
-  }
-  btn.classList.add("wrong"); Q.lock[s] = true; side.classList.add("lock"); sound.bad();
-  side.querySelectorAll(".pad button").forEach(b => b.disabled = true);
-  side.querySelector(".msg").textContent = "Xato — bu savolda javob bera olmaysiz";
-  if (Q.lock[0] && Q.lock[1]) endQ(null);
-}
-
-function endQ(winner) {
-  Q.done = true; Q.t.stop(); S.idx++; save();
-  $$(".pad button").forEach(b => b.disabled = true);
-  $$("#lo div")[Q.right].querySelector("span").classList.add("r");
-  $(".rope-g").style.transform = `translateX(${S.pos * 380 / S.target}px)`;
-  if (winner === null) { sound.end(); $$(".side .msg").forEach(m => { if (!m.textContent) m.textContent = "Arqon joyida qoldi"; }); }
-  $("#nx").innerHTML = `<button class="btn primary lg" id="next" type="button">${over() ? "Natija" : "Keyingi savol"} ${icon("arrow")}</button>`;
-  $("#next").onclick = render;
+    <div class="duel">
+      ${side(0)}
+      <div class="panel qbox">
+        <div class="meta" style="--c:${G.tc(t)}"><span class="tm-name">${esc(t.name)}</span><span>Savol ${S.idx + 1}</span><span>${esc(data.kategoriyalar[ci].nomi)}</span><span class="acc">${li + 1}-daraja</span></div>
+        <div id="q"></div>
+        <div class="nextbar" id="nx"></div>
+      </div>
+      ${side(1)}
+    </div>`;
+  G.ask($("#q"), item, { time: TIME, onResult(ok) {
+    if (ok) { t.score++; S.pos += who === 0 ? -1 : 1; }
+    S.idx++; save();
+    $(".rope-g").style.transform = `translateX(${S.pos * 380 / S.target}px)`;
+    $$(".side .ct")[who].textContent = t.score;
+    $$(".side .now")[who].textContent = ok ? "Arqon tortildi" : "Arqon joyida qoldi";
+    $("#nx").innerHTML = `<button class="btn primary lg" id="next" type="button">${over() ? "Natija" : "Keyingi savol"} ${icon("arrow")}</button>`;
+    G.swapped();
+    $("#next").onclick = render;
+  }});
 }
 
 function finishGame() {
@@ -158,11 +127,6 @@ function finishGame() {
   G.winner(S.teams, reset, "toʻgʻri javob");
   if (S.pos !== 0) G.$(".win .sub").textContent = Math.abs(S.pos) >= S.target ? "Arqonni oʻz chizigʻigacha tortib keldi" : "Savollar tugadi — arqon shu jamoa tomonida";
 }
-
-document.addEventListener("keydown", e => {
-  if (!Q || Q.done || e.repeat) return;
-  for (let s = 0; s < 2; s++) { const k = KEYS[s].indexOf(e.key); if (k >= 0) { e.preventDefault(); pick(s, k); } }
-});
 </script>
 </body>
 </html>

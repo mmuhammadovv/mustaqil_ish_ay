@@ -33,3 +33,11 @@ Foydalanuvchi talablari:
 - Claude Code terminalida davom ettirish uchun maxsus fayl → `CLAUDE.md`.
 
 **Qilingan:** yuqoridagilarning barchasi (tuzilma `CLAUDE.md` da).
+
+## 7. Tuzatishlar va yangi talablar
+- Tarix dizayni almashtirildi (chuqur koʻk + yashil, DM Serif Display + Inter, bayroq chizigʻi, nuqtali fon).
+- Tavakkal: gʻildirakdan keyin savolning qiyinlik darajasi (1–5) koʻrsatiladi — jamoa shunga qarab tikadi.
+- “Oʻyinlar baʼzan ishlamay qolyapti” — sabab: tez ikki marta bosish va eski taymerlar. Tuzatildi (bosish himoyasi, savolni bekor qilish, taymer oʻzini toʻxtatadi).
+- Svetofor: klaviatura olib tashlandi; jamoalarga jismoniy tugma beriladi, boshlovchi ekranda belgilaydi; qizilda chalgʻituvchi tovushlar.
+- Arqon tortish: jamoalar navbat bilan javob beradi.
+- Barcha oʻyinlarda javob vaqti kamida 30 soniya.

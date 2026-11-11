@@ -73,6 +73,7 @@ function save() { store.set(SK, S); }
 function reset() { store.del(SK); S = null; R = null; G.modal.close(); setup(); }
 
 function render() {
+  G.swapped();
   const t = S.teams[S.turn], cats = data.kategoriyalar;
   if (Object.keys(S.played).length >= cats.length) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
   $("#app").innerHTML = `

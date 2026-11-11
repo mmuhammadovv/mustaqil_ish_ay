@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap");
 
 /* =========================================================
    TOKENLAR
@@ -25,25 +25,33 @@
 }
 
 [data-fan="tarix"] {
-  --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --body: "Manrope", "Segoe UI", system-ui, sans-serif;
-  --num: "Manrope", system-ui, sans-serif;
-  --r: 10px; --r-lg: 16px;
-  --bg: #edf1ef; --surface: #ffffff; --surface-2: #e2e9e6; --ink: #0f2a33; --muted: #577078; --line: #cfdcd8; --line-strong: #0f2a33;
-  --accent: #0d6a86; --accent-ink: #fff; --accent-soft: #d6ebf0; --accent-2: #a8864d;
-  --good: #1c7a4c; --bad: #b6452c; --warn: #a8864d;
-  --t0: #0d6a86; --t1: #b6452c; --t2: #1c7a4c; --t3: #8a6a2c;
-  --shadow: 0 1px 2px rgba(15,42,51,.06), 0 8px 24px -12px rgba(15,42,51,.18);
-  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%230d6a86' stroke-opacity='.08' stroke-width='1'%3E%3Cpath d='M28 6l6 16 16 6-16 6-6 16-6-16-16-6 16-6z'/%3E%3Cpath d='M28 16l12 12-12 12-12-12z'/%3E%3C/g%3E%3C/svg%3E");
+  --display: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --num: "Inter", system-ui, sans-serif;
+  --r: 12px; --r-lg: 18px;
+  --bg: #f3f5f9; --surface: #ffffff; --surface-2: #e8edf5; --ink: #0c1a30; --muted: #5b6a82; --line: #d7dfeb; --line-strong: #0c1a30;
+  --accent: #1d4f91; --accent-ink: #fff; --accent-soft: #e2ebf7; --accent-2: #1d8a5a;
+  --good: #1d8a5a; --bad: #c2412d; --warn: #c08a1e;
+  --t0: #1d4f91; --t1: #c2412d; --t2: #1d8a5a; --t3: #b58316;
+  --shadow: 0 1px 2px rgba(12,26,48,.05), 0 10px 30px -16px rgba(12,26,48,.25);
+  --pattern: radial-gradient(circle at 1px 1px, rgba(29,79,145,.13) 1px, transparent 1.4px) 0 0 / 24px 24px;
+  --flag: linear-gradient(to bottom, #1eb4d4 0 3px, #ce1126 3px 4px, #ffffff 4px 7px, #ce1126 7px 8px, #1eb53a 8px 11px);
 }
 [data-fan="tarix"][data-theme="dark"] {
-  --bg: #0b1a20; --surface: #10242c; --surface-2: #163039; --ink: #e5eeec; --muted: #8ea7ac; --line: #234049; --line-strong: #e5eeec;
-  --accent: #52b3cf; --accent-ink: #06171d; --accent-soft: #143a46; --accent-2: #d3b47c;
-  --good: #5cc08b; --bad: #e0866a; --warn: #d3b47c;
-  --t0: #52b3cf; --t1: #e0866a; --t2: #5cc08b; --t3: #d3b47c;
-  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
-  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%2352b3cf' stroke-opacity='.07' stroke-width='1'%3E%3Cpath d='M28 6l6 16 16 6-16 6-6 16-6-16-16-6 16-6z'/%3E%3Cpath d='M28 16l12 12-12 12-12-12z'/%3E%3C/g%3E%3C/svg%3E");
+  --bg: #08111f; --surface: #0f1b2e; --surface-2: #17263d; --ink: #e9eef7; --muted: #95a4bd; --line: #24344f; --line-strong: #e9eef7;
+  --accent: #78a8ea; --accent-ink: #07111f; --accent-soft: #142846; --accent-2: #4fc58d;
+  --good: #4fc58d; --bad: #f0806e; --warn: #e6b85c;
+  --t0: #78a8ea; --t1: #f0806e; --t2: #4fc58d; --t3: #e6b85c;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px -16px rgba(0,0,0,.7);
+  --pattern: radial-gradient(circle at 1px 1px, rgba(120,168,234,.12) 1px, transparent 1.4px) 0 0 / 24px 24px;
 }
+/* DM Serif Display faqat oddiy qalinlikda — soxta qalinlashtirishning oldini olamiz */
+[data-fan="tarix"] h1, [data-fan="tarix"] h2, [data-fan="tarix"] h3, [data-fan="tarix"] h4,
+[data-fan="tarix"] .q-text, [data-fan="tarix"] .who, [data-fan="tarix"] .verdict, [data-fan="tarix"] .cat-picked,
+[data-fan="tarix"] .side .nm, [data-fan="tarix"] .cc .nm, [data-fan="tarix"] .top .ttl b { font-weight: 400; }
+[data-fan="tarix"] .top { border-bottom: 0; }
+[data-fan="tarix"] .top::after { content: ""; position: absolute; left: 0; right: 0; bottom: -11px; height: 11px; background: var(--flag); }
+[data-fan="tarix"] .top + main.wrap, [data-fan="tarix"] .top + .page { padding-top: 34px; }
 
 /* =========================================================
    ASOS
@@ -52,7 +60,7 @@
 html, body { margin: 0; }
 body {
   min-height: 100vh; display: flex; flex-direction: column;
-  background: var(--bg) var(--pattern); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5;
+  background: var(--pattern), var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5;
   transition: background-color .25s, color .25s;
 }
 button { font: inherit; color: inherit; cursor: pointer; }

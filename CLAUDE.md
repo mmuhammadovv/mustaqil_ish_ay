@@ -18,11 +18,12 @@ index.html                         Bosh menyu — fan tanlash (ikki yarim ekran)
 fan.html?fan=akademik|tarix        Fan sahifasi (mustaqil ish + 5 oʻyin)
 mustaqil-ishlar/akademik-yozuv/    Mustaqil ish: index.html (A4 chop etish) + PDF (22 bet)
 oyinlar/
-  tavakkal.html   01 Gʻildirak + tikish (boshlangʻich balans 500, ±tikish, nolga tushsa chiqadi)
+  tavakkal.html   01 Gʻildirak + tikish (balans 500, ±tikish; savol darajasi 1–5 tikishdan OLDIN koʻrsatiladi)
   hududlar.html   02 Olti burchakli xarita (bazadan qoʻshni kataklarni egallash, hujum +1 daraja)
-  svetofor.html   03 Reaksiya: qizil 2–10 s tasodifiy → yashil; qizilda bosish = falstart (−50, savoldan chetlatiladi)
+  svetofor.html   03 Reaksiya: qizil 2–10 s tasodifiy → yashil; qizilda chalgʻituvchi tovushlar (sound.decoy).
+                  Jamoalarda jismoniy tugma — klaviatura YOʻQ; boshlovchi ekranda kim bosganini belgilaydi (qizilda = falstart −50)
   zinapoya.html   04 10 kategoriya × 5 pogʻona, davom etish/toʻxtash, 50/50 va +15 s
-  arqon.html      05 Arqon tortish: 2 jamoa bir vaqtda (1-2-3-4 va 7-8-9-0 tugmalari)
+  arqon.html      05 Arqon tortish: 2 jamoa NAVBAT BILAN javob beradi (poyga emas)
   savollar/akademik.js, savollar/tarix.js   Savollar bazasi (10 kategoriya × 5 daraja, faqat test)
   assets/boot.js   <head> da: fan va tun/kun rejimini oʻrnatadi (localStorage: fan, tema)
   assets/theme.css Dizayn tokenlari: [data-fan] × [data-theme]
@@ -38,11 +39,17 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 3. **Emoji ishlatilmaydi.** Faqat oʻzimiz chizgan SVG ikonlar (`core.js` → `P` obyekti, `G.icon(name)`).
 4. Dizayn “AI qilgandek” neon/gradient boʻlmasin — dizayner ishlagandek, toza, tipografik. **Har bir fanning dizayni alohida**:
    - akademik — gazeta/tahririyat uslubi (Playfair Display + IBM Plex, qogʻoz rangi, qizil urgʻu, chiziqlar, oʻtkir burchaklar);
-   - tarix — diplomatik/arxiv uslubi (Cormorant Garamond + Manrope, feruza-koʻk, oltin, oʻzbekona naqsh foni, yumaloq burchaklar).
+   - tarix — zamonaviy diplomatik uslub (DM Serif Display + Inter, chuqur koʻk #1d4f91 + yashil, nuqtali “globus” foni, sarlavha ostida bayroq ranglaridagi chiziq, yumaloq burchaklar). Avvalgi feruza/oltin varianti foydalanuvchiga yoqmagan.
 5. **Kunduzgi va tungi rejim** har sahifada boʻlishi shart.
 6. Oʻyinlar **internetsiz, oddiy HTML** sifatida ochilishi kerak (`file://`). `fetch` ishlatmang — maʼlumot `<script src>` orqali.
 7. Tarix savollari: **oson**, yillar kam; taxminan **50% zakovat uslubidagi mantiqiy savollar** (tarixga bogʻliq, lekin qiziqarli — dasturlash, fan va h.k.).
-8. Mustaqil ish: kamida 20 bet, betlarda boʻsh joy qolmasin (boʻlimlar uzluksiz oqadi), avval nazariya, keyin tahlil, keyin maqola.
+8. **Javob vaqti har bir oʻyinda kamida 30 soniya.**
+9. Mustaqil ish: kamida 20 bet, betlarda boʻsh joy qolmasin (boʻlimlar uzluksiz oqadi), avval nazariya, keyin tahlil, keyin maqola.
+
+## Ishonchlilik (oldin “baʼzan ishlamay qolardi”)
+
+- `core.js`: ekran almashgandan keyin 350 ms bosishlar bloklanadi (`G.swapped()` — har `render()` boshida chaqiring).
+- `G.ask()` yangi savol yoki modal ochilganda oldingisini bekor qiladi; taymer DOMdan olib tashlansa oʻzi toʻxtaydi.
 
 ## Konventsiyalar
 

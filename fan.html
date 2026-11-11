@@ -18,7 +18,7 @@
   [data-fan="akademik"] .mast { border-bottom: 4px double var(--line-strong); }
   [data-fan="akademik"] .mast .dateline { display: flex; justify-content: space-between; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); padding: 6px 2px; margin-top: 18px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
   [data-fan="tarix"] .mast { padding-bottom: 30px; }
-  [data-fan="tarix"] .mast h1 { font-weight: 700; }
+  [data-fan="tarix"] .mast h1 { font-weight: 400; letter-spacing: -.015em; }
   [data-fan="tarix"] .mast .orn { display: flex; align-items: center; gap: 14px; justify-content: center; color: var(--accent-2); margin: 0 auto; max-width: 420px; }
   [data-fan="tarix"] .mast .orn::before, [data-fan="tarix"] .mast .orn::after { content: ""; flex: 1; height: 1px; background: currentColor; opacity: .6; }
   [data-fan="tarix"] .mast .dateline { display: none; }
@@ -53,7 +53,7 @@
   [data-fan="tarix"] .games { gap: 14px; }
   [data-fan="tarix"] .game { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
   [data-fan="tarix"] .game:hover { border-color: var(--accent); transform: translateY(-2px); }
-  [data-fan="tarix"] .game .no { color: var(--accent-2); font-family: var(--display); font-size: 22px; }
+  [data-fan="tarix"] .game .no { color: var(--accent-2); font-family: var(--display); font-size: 24px; font-weight: 400; }
   [data-fan="tarix"] .game .no svg { color: var(--accent); }
   [data-fan="tarix"] .game .go { color: var(--accent); }
   [data-fan="tarix"] .lead { display: none; }
@@ -77,11 +77,11 @@ const { icon, esc, fan, data } = G;
 G.themeButton(document.getElementById("thm"));
 const ROMAN = ["I", "II", "III", "IV", "V"];
 const GAMES = [
-  { f: "tavakkal", ic: "wheel", t: "Tavakkal", tags: "2–4 jamoa · gʻildirak · tikish", d: "Gʻildirak kategoriyani tanlaydi. Har jamoa 500 ballik balansdan tikadi: toʻgʻri javob — tikish qoʻshiladi, xato — ayiriladi." },
+  { f: "tavakkal", ic: "wheel", t: "Tavakkal", tags: "2–4 jamoa · gʻildirak · tikish", d: "Gʻildirak kategoriyani tanlaydi, savol darajasi (1–5) oldindan koʻrinadi. Har jamoa 500 ballik balansdan tikadi: toʻgʻri javob — tikish qoʻshiladi, xato — ayiriladi." },
   { f: "hududlar", ic: "hex", t: "Hududlar", tags: "2–4 jamoa · xarita · strategiya", d: "Olti burchakli kataklardan iborat xarita. Bazadan boshlab qoʻshni hududlarni egallang, raqibga hujum qiling, poytaxtga yeting." },
-  { f: "svetofor", ic: "light", t: "Svetofor", tags: "2–4 jamoa · reaksiya · tugmalar", d: "Qizil chiroqda kuting, yashilda bosing. Qizilda bosgan jamoa falstart oladi. Kim birinchi bossa — oʻsha javob beradi." },
+  { f: "svetofor", ic: "light", t: "Svetofor", tags: "2–4 jamoa · reaksiya · boshlovchi", d: "Qizil chiroqda chalgʻituvchi tovushlar, yashilda bosish. Boshlovchi kim birinchi bosganini belgilaydi, qizilda bosgan — falstart." },
   { f: "zinapoya", ic: "ladder", t: "Zinapoya", tags: "2–4 jamoa · 10 kategoriya · xavf", d: "Kategoriyani tanlang va 100 dan 500 gacha koʻtariling. Har pogʻonada qaror: davom etish yoki yutuqni saqlash." },
-  { f: "arqon", ic: "rope", t: "Arqon tortish", tags: "2 jamoa · duel · bir vaqtda", d: "Ikki jamoa bir savolga bir vaqtda javob beradi. Birinchi toʻgʻri javob arqonni bir qadam tortadi." }
+  { f: "arqon", ic: "rope", t: "Arqon tortish", tags: "2 jamoa · duel · navbat bilan", d: "Ikki jamoa navbatma-navbat javob beradi. Har toʻgʻri javob arqonni bir qadam oʻz tomoningizga tortadi." }
 ];
 document.title = data.fan;
 document.getElementById("crumb").textContent = data.fan;
@@ -89,7 +89,7 @@ const ak = fan === "akademik";
 document.getElementById("page").innerHTML = `
   <section class="mast">
     <div class="over">${ak ? "Mustaqil ish va interaktiv oʻyinlar" : "Interaktiv oʻyinlar"}</div>
-    <div class="orn">${icon("star")}</div>
+    <div class="orn">${icon("globe")}</div>
     <h1>${esc(data.fan)}</h1>
     <div class="deck">Mavzu: ${ak ? "Publitsistik nutq uslubi. Publitsistik maqolalar tahlili; “Men tanlagan soha va OAV” mavzusida maqola" : "Oʻzbekiston Respublikasining BMTga aʼzo boʻlishi va jahon hamjamiyatidagi oʻziga xos oʻrni"}</div>
     <div class="dateline"><span>Muxamadov Muhammadali</span><span>2026-yil</span><span>Fan oʻqituvchisi: Yunusova Maftuna</span></div>

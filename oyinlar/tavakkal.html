@@ -44,6 +44,14 @@
   .log li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); }
   .log li span:first-child { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .log .p { color: var(--good); font-family: var(--num); } .log .m { color: var(--bad); font-family: var(--num); }
+  .lvl { display: flex; align-items: center; gap: 14px; margin: 12px 0 2px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); font-size: 15px; }
+  .lvl b { font-family: var(--num); }
+  .lvl-bars { display: flex; align-items: flex-end; gap: 4px; height: 30px; }
+  .lvl-bars i { width: 9px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 1px; }
+  .lvl-bars i:nth-child(1) { height: 30%; } .lvl-bars i:nth-child(2) { height: 45%; } .lvl-bars i:nth-child(3) { height: 62%; } .lvl-bars i:nth-child(4) { height: 80%; } .lvl-bars i:nth-child(5) { height: 100%; }
+  .lvl-bars i.on { background: var(--good); border-color: var(--good); }
+  .lvl.lv3 .lvl-bars i.on { background: var(--warn); border-color: var(--warn); }
+  .lvl.lv4 .lvl-bars i.on, .lvl.lv5 .lvl-bars i.on { background: var(--bad); border-color: var(--bad); }
   @media (max-width: 900px) { .stage { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -70,7 +78,8 @@ function setup() {
       <div class="seg" id="rd">${[3, 4, 5, 6, 8].map(n => `<button type="button" data-r="${n}" class="${n === rounds ? "on" : ""}">${n}</button>`).join("")}</div>`,
     rules: [
       `Har bir jamoaning boshlangʻich balansi — <b>${START} ball</b>.`,
-      "Navbatdagi jamoa gʻildirakni aylantiradi — u savol kategoriyasini tanlaydi.",
+      "Navbatdagi jamoa gʻildirakni aylantiradi — u savol kategoriyasini tanlaydi va savolning <b>qiyinlik darajasi (1–5)</b> koʻrsatiladi.",
+      "Daraja qiyin boʻlsa — ehtiyotkorroq tiking, oson boʻlsa — tavakkal qilib, hatto <b>va-bank</b> qilish mumkin.",
       "Savolni koʻrishdan oldin jamoa balansidan istalgan miqdorni <b>tikadi</b> (eng kami 50).",
       "Toʻgʻri javob — tikilgan ball balansga <b>qoʻshiladi</b>. Xato javob — tikilgan ball <b>ayiriladi</b>.",
       "Balansi nolga tushgan jamoa oʻyindan chiqadi. Yurishlar tugagach, eng katta balans gʻolib."
@@ -86,6 +95,8 @@ function save() { store.set(SK, S); }
 function reset() { store.del(SK); S = null; G.modal.close(); setup(); }
 
 const left = ci => data.kategoriyalar[ci].savollar.findIndex((_, li) => !S.used.includes(ci + "-" + li));
+const freeLevels = ci => data.kategoriyalar[ci].savollar.map((_, li) => li).filter(li => !S.used.includes(ci + "-" + li));
+const LEVELS = ["Juda oson", "Oson", "Oʻrtacha", "Qiyin", "Juda qiyin"];
 const alive = i => S.teams[i].score > 0 && S.teams[i].turns < S.rounds;
 const finished = () => !S.teams.some((_, i) => alive(i)) || data.kategoriyalar.every((_, ci) => left(ci) < 0);
 
@@ -106,6 +117,7 @@ function wheelSVG() {
 }
 
 function render(phase = "spin", pick = null) {
+  G.swapped();
   if (finished()) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
   if (!alive(S.turn)) return nextTurn(true);
   const t = S.teams[S.turn];
@@ -147,15 +159,18 @@ function spin() {
   rot += 360 * 5 + ((360 - center - rot % 360) % 360 + 360) % 360;
   const w = $("svg.wheel"); w.style.transform = `rotate(${rot}deg)`;
   let n = 0; const tk = setInterval(() => { sound.spin(); if (++n > 40) clearInterval(tk); }, 60 + n);
-  setTimeout(() => { spinning = false; sound.bonus(); render("bet", k); }, 4500);
+  setTimeout(() => { spinning = false; sound.bonus(); const fl = freeLevels(k); render("bet", { ci: k, li: fl[Math.floor(Math.random() * fl.length)] }); }, 4500);
 }
 
-function betPanel(ci) {
+function betPanel(pick) {
+  const { ci, li } = pick;
   const t = S.teams[S.turn], max = t.score, min = Math.min(50, max);
   let bet = Math.min(max, Math.max(min, Math.round(max / 4 / 50) * 50));
   $("#act").innerHTML = `<div class="kicker">2-qadam · Kategoriya</div>
     <div class="cat-picked">${esc(data.kategoriyalar[ci].nomi)}</div>
-    <p style="margin:0;color:var(--muted)">${left(ci) + 1}-darajali savol. Qancha tikasiz?</p>
+    <div class="lvl lv${li + 1}"><div class="lvl-bars">${[1, 2, 3, 4, 5].map(n => `<i class="${n <= li + 1 ? "on" : ""}"></i>`).join("")}</div>
+      <div><b>${li + 1}-daraja</b> · ${LEVELS[li]}</div></div>
+    <p style="margin:6px 0 0;color:var(--muted)">Savol qiyinligini koʻrib, qancha tikishni hal qiling.</p>
     <div class="bet"><div class="amount" id="amt">${bet}</div>
       <input type="range" id="rg" min="${min}" max="${max}" step="${max >= 100 ? 50 : 10}" value="${bet}">
       <div class="chips">
@@ -167,11 +182,11 @@ function betPanel(ci) {
   const upd = () => { $("#amt").textContent = bet; $("#rg").value = bet; $("#op").textContent = "+" + bet; $("#om").textContent = "−" + bet; };
   $("#rg").oninput = e => { bet = +e.target.value; upd(); };
   $$(".chips button").forEach(b => b.onclick = () => { bet = Math.max(min, Math.min(max, +b.dataset.b)); sound.click(); upd(); });
-  $("#go").onclick = () => question(ci, bet);
+  $("#go").onclick = () => question(ci, li, bet);
 }
 
-function question(ci, bet) {
-  const li = left(ci), t = S.teams[S.turn], who = S.turn;
+function question(ci, li, bet) {
+  const t = S.teams[S.turn], who = S.turn;
   const c = G.modal(`<div class="meta" style="--c:${G.tc(t)}"><span class="tm-name">${esc(t.name)}</span><span>${esc(data.kategoriyalar[ci].nomi)}</span><span>${li + 1}-daraja</span><span class="acc">Tikish: ${bet}${bet === t.score ? " · Va-bank" : ""}</span></div><div id="q"></div>`);
   G.ask($("#q", c), data.kategoriyalar[ci].savollar[li], { onResult(ok) {
     const d = ok ? bet : -bet;

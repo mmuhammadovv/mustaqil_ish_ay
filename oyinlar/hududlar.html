@@ -100,6 +100,7 @@ const over = () => S.done.every(d => d >= S.moves) || !G.all().some(x => !S.used
 function hexPts(cx, cy, s) { return Array.from({ length: 6 }, (_, k) => { const a = Math.PI / 180 * (60 * k - 30); return (cx + s * Math.cos(a)).toFixed(1) + "," + (cy + s * Math.sin(a)).toFixed(1); }).join(" "); }
 
 function render(flash) {
+  G.swapped();
   if (over()) { $("#app").innerHTML = ""; return G.winner(S.teams, reset, "ball"); }
   const t = S.teams[S.turn], opt = options(S.turn), s = 46, W = Math.sqrt(3) * s;
   const cells = CELLS.map(k => {

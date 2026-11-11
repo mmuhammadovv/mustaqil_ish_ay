@@ -64,6 +64,8 @@
     buzz: () => tone(520, .18, "square", .07),
     red: () => tone(330, .2, "sine", .1),
     green: () => tone(880, .3, "sine", .14),
+    // chalgʻituvchi tovush: yashil signalga juda oʻxshash
+    decoy: () => { const f = [840, 900, 860, 920][Math.floor(Math.random() * 4)]; tone(f, .26, Math.random() < .5 ? "sine" : "triangle", .13); },
     foul: () => { tone(200, .15, "sawtooth", .08); tone(150, .25, "sawtooth", .08, .14); },
     spin: () => tone(1200, .02, "square", .02),
     bonus: () => [523, 659, 784].forEach((f, i) => tone(f, .16, "triangle", .1, i * .09)),
@@ -143,14 +145,25 @@
   }
   function bump(el, i) { if (!el) return; const t = $$(".team", el)[i]; if (t) { t.classList.remove("bump"); void t.offsetWidth; t.classList.add("bump"); } }
 
+  /* ---------- Ikki marta bosishdan himoya ----------
+     Ekran almashgandan keyin 350 ms davomida bosishlar qabul qilinmaydi:
+     aks holda ikkinchi bosish yangi chiqqan tugmaga (masalan, javob variantiga) tushib qoladi. */
+  let lastSwap = 0, current = null;
+  const swapped = () => { lastSwap = Date.now(); };
+  document.addEventListener("click", e => {
+    if (Date.now() - lastSwap < 350 && e.target.closest && e.target.closest(".modal, #app")) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
+  function dropAsk() { if (current) { current.stop(); current = null; } }
+
   /* ---------- Modal ---------- */
   let modalEl = null;
   function modal(inner) {
+    swapped(); dropAsk();
     if (!modalEl) { modalEl = document.createElement("div"); modalEl.className = "modal"; modalEl.innerHTML = `<div class="mcard"></div>`; document.body.appendChild(modalEl); }
     modalEl.classList.add("open");
     const c = $(".mcard", modalEl); c.innerHTML = inner; c.scrollTop = 0; return c;
   }
-  modal.close = () => modalEl && modalEl.classList.remove("open");
+  modal.close = () => { swapped(); dropAsk(); modalEl && modalEl.classList.remove("open"); };
 
   /* ---------- Taymer ---------- */
   function timer(el, sec, onEnd) {
@@ -158,6 +171,7 @@
     const bar = $(".bar i", el), num = $(".tn", el), tp = $(".tp", el);
     let total = sec, left = sec, last = 0, id = null, shown = sec;
     const tick = () => {
+      if (!el.isConnected) return stop();
       const now = Date.now(); left -= (now - last) / 1000; last = now;
       if (left <= 0) { left = 0; stop(); sound.end(); onEnd && onEnd(); }
       const w = Math.ceil(left);
@@ -173,7 +187,8 @@
 
   /* ---------- Test savoli ---------- */
   function ask(el, item, { time = 30, onResult } = {}) {
-    let done = false;
+    dropAsk();
+    let done = false, aborted = false;
     const opts = shuffle([item.j, ...item.x]);
     el.innerHTML = `<div class="q-text">${item.s}</div><div class="tm"></div>
       <div class="opts">${opts.map((o, i) => `<button type="button" class="opt" data-k="${i}"><span class="k">${"ABCD"[i]}</span><span>${o}</span></button>`).join("")}</div>
@@ -188,17 +203,19 @@
       btns[right].classList.add("right");
       ok ? sound.ok() : sound.bad();
       $(".after", el).innerHTML = `<div class="verdict ${ok ? "ok" : "bad"}">${icon(ok ? "check" : "cross")} ${ok ? "Toʻgʻri" : k < 0 ? "Vaqt tugadi" : "Notoʻgʻri"}</div>${item.izoh ? `<div class="izoh">${item.izoh}</div>` : ""}`;
-      setTimeout(() => onResult && onResult(ok), item.izoh ? 2300 : 1500);
+      setTimeout(() => { if (!aborted && el.isConnected && onResult) { if (current === api) current = null; onResult(ok); } }, item.izoh ? 2300 : 1500);
     };
     const t = timer($(".tm", el), time, () => finish(-1));
     btns.forEach((b, k) => b.onclick = () => finish(k));
     const onKey = e => { if (!el.isConnected) return document.removeEventListener("keydown", onKey); const k = "ABCD".indexOf(e.key.toUpperCase()); if (k >= 0 && !btns[k].disabled) finish(k); };
     document.addEventListener("keydown", onKey);
-    return {
+    const api = {
       timer: t,
       fifty() { shuffle(btns.filter((_, k) => k !== right)).slice(0, 2).forEach(b => { b.classList.add("gone"); b.disabled = true; }); },
-      stop() { done = true; t.stop(); document.removeEventListener("keydown", onKey); }
+      stop() { done = true; aborted = true; t.stop(); document.removeEventListener("keydown", onKey); }
     };
+    current = api;
+    return api;
   }
 
   /* ---------- Savollar hovuzi ---------- */
@@ -229,6 +246,6 @@
   }
   function toast(msg, ms = 1900) { const t = document.createElement("div"); t.className = "toast"; t.innerHTML = msg; document.body.appendChild(t); setTimeout(() => t.remove(), ms); }
 
-  window.G = { $, $$, esc, shuffle, store, fan, data, icon, sound, header, setup, tc, scores, bump, modal, timer, ask, all, confetti, winner, toast, themeButton,
+  window.G = { swapped, $, $$, esc, shuffle, store, fan, data, icon, sound, header, setup, tc, scores, bump, modal, timer, ask, all, confetti, winner, toast, themeButton,
     saveKey: g => "oyin2-" + g + "-" + fan };
 })();
