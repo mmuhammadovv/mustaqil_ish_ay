@@ -2,7 +2,6 @@
   "name": "mustaqil-ishlar",
   "private": true,
   "description": "Mustaqil ishlar va interaktiv bilim oʻyinlari (statik sayt)",
-  "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
     "login": "wrangler login",
