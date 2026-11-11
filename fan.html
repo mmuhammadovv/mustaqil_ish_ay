@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fan sahifasi</title>
+<script src="oyinlar/assets/boot.js"></script>
+<link rel="stylesheet" href="oyinlar/assets/theme.css">
+<style>
+  .top .ttl b { font-size: 15px; font-family: var(--body); font-weight: 700; }
+  .page { width: 100%; max-width: 1240px; margin: 0 auto; padding: 28px 20px 50px; }
+
+  /* ---- Masthead ---- */
+  .mast { text-align: center; padding: 10px 0 22px; }
+  .mast .over { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+  .mast h1 { font-family: var(--display); font-size: clamp(40px, 8vw, 96px); line-height: .95; margin: 12px 0; letter-spacing: -.01em; }
+  .mast .deck { color: var(--muted); max-width: 680px; margin: 0 auto; font-size: 17px; }
+  [data-fan="akademik"] .mast { border-bottom: 4px double var(--line-strong); }
+  [data-fan="akademik"] .mast .dateline { display: flex; justify-content: space-between; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); padding: 6px 2px; margin-top: 18px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+  [data-fan="tarix"] .mast { padding-bottom: 30px; }
+  [data-fan="tarix"] .mast h1 { font-weight: 700; }
+  [data-fan="tarix"] .mast .orn { display: flex; align-items: center; gap: 14px; justify-content: center; color: var(--accent-2); margin: 0 auto; max-width: 420px; }
+  [data-fan="tarix"] .mast .orn::before, [data-fan="tarix"] .mast .orn::after { content: ""; flex: 1; height: 1px; background: currentColor; opacity: .6; }
+  [data-fan="tarix"] .mast .dateline { display: none; }
+  [data-fan="akademik"] .mast .orn { display: none; }
+
+  /* ---- Mustaqil ish (bosh maqola) ---- */
+  .lead { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; padding: 26px 0; border-bottom: 1px solid var(--line-strong); }
+  .lead h2 { font-family: var(--display); font-size: clamp(26px, 3.4vw, 40px); line-height: 1.1; margin: 8px 0 12px; }
+  .lead p { color: var(--muted); margin: 0 0 16px; }
+  .lead .facts { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--line); padding-left: 24px; }
+  .lead .facts li { padding: 10px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 10px; }
+  .lead .facts li b { font-family: var(--num); }
+  .lead .acts { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* ---- Oʻyinlar ---- */
+  .sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 34px 0 16px; }
+  .sec-h h3 { font-family: var(--display); font-size: clamp(24px, 3vw, 34px); margin: 0; }
+  .sec-h span { color: var(--muted); font-size: 14px; }
+  .games { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .game { display: flex; flex-direction: column; gap: 10px; padding: 20px 18px 18px; text-decoration: none; min-height: 290px; transition: background .15s; }
+  .game .no { font-family: var(--num); font-size: 13px; font-weight: 700; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
+  .game .no svg { width: 30px; height: 30px; color: var(--ink); }
+  .game h4 { font-family: var(--display); font-size: 24px; margin: 6px 0 0; line-height: 1.1; }
+  .game p { margin: 0; color: var(--muted); font-size: 14.5px; flex: 1; }
+  .game .go { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; }
+  .game .tags { font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+  [data-fan="akademik"] .games { border-top: 1px solid var(--line-strong); }
+  [data-fan="akademik"] .game { border-right: 1px solid var(--line); }
+  [data-fan="akademik"] .game:last-child { border-right: 0; }
+  [data-fan="akademik"] .game:hover { background: var(--surface); }
+  [data-fan="akademik"] .game .go { text-transform: uppercase; letter-spacing: .1em; font-size: 12px; color: var(--accent); }
+  [data-fan="tarix"] .games { gap: 14px; }
+  [data-fan="tarix"] .game { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
+  [data-fan="tarix"] .game:hover { border-color: var(--accent); transform: translateY(-2px); }
+  [data-fan="tarix"] .game .no { color: var(--accent-2); font-family: var(--display); font-size: 22px; }
+  [data-fan="tarix"] .game .no svg { color: var(--accent); }
+  [data-fan="tarix"] .game .go { color: var(--accent); }
+  [data-fan="tarix"] .lead { display: none; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 30px 0 0; }
+  @media (max-width: 1100px) { .games { grid-template-columns: repeat(2, 1fr); } [data-fan="akademik"] .game { border-bottom: 1px solid var(--line); } .lead { grid-template-columns: 1fr; } .lead .facts { border-left: 0; padding-left: 0; } }
+  @media (max-width: 620px) { .games { grid-template-columns: 1fr; } [data-fan="akademik"] .game { border-right: 0; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="ib" href="index.html"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span class="lbl">Fanlar</span></a>
+  <div class="ttl"><b id="crumb"></b></div>
+  <div class="acts"><button class="ib" id="thm" type="button"></button></div>
+</header>
+<div class="page" id="page"></div>
+<script src="oyinlar/savollar/akademik.js"></script>
+<script src="oyinlar/savollar/tarix.js"></script>
+<script src="oyinlar/assets/core.js"></script>
+<script>
+const { icon, esc, fan, data } = G;
+G.themeButton(document.getElementById("thm"));
+const ROMAN = ["I", "II", "III", "IV", "V"];
+const GAMES = [
+  { f: "tavakkal", ic: "wheel", t: "Tavakkal", tags: "2–4 jamoa · gʻildirak · tikish", d: "Gʻildirak kategoriyani tanlaydi. Har jamoa 500 ballik balansdan tikadi: toʻgʻri javob — tikish qoʻshiladi, xato — ayiriladi." },
+  { f: "hududlar", ic: "hex", t: "Hududlar", tags: "2–4 jamoa · xarita · strategiya", d: "Olti burchakli kataklardan iborat xarita. Bazadan boshlab qoʻshni hududlarni egallang, raqibga hujum qiling, poytaxtga yeting." },
+  { f: "svetofor", ic: "light", t: "Svetofor", tags: "2–4 jamoa · reaksiya · tugmalar", d: "Qizil chiroqda kuting, yashilda bosing. Qizilda bosgan jamoa falstart oladi. Kim birinchi bossa — oʻsha javob beradi." },
+  { f: "zinapoya", ic: "ladder", t: "Zinapoya", tags: "2–4 jamoa · 10 kategoriya · xavf", d: "Kategoriyani tanlang va 100 dan 500 gacha koʻtariling. Har pogʻonada qaror: davom etish yoki yutuqni saqlash." },
+  { f: "arqon", ic: "rope", t: "Arqon tortish", tags: "2 jamoa · duel · bir vaqtda", d: "Ikki jamoa bir savolga bir vaqtda javob beradi. Birinchi toʻgʻri javob arqonni bir qadam tortadi." }
+];
+document.title = data.fan;
+document.getElementById("crumb").textContent = data.fan;
+const ak = fan === "akademik";
+document.getElementById("page").innerHTML = `
+  <section class="mast">
+    <div class="over">${ak ? "Mustaqil ish va interaktiv oʻyinlar" : "Interaktiv oʻyinlar"}</div>
+    <div class="orn">${icon("star")}</div>
+    <h1>${esc(data.fan)}</h1>
+    <div class="deck">Mavzu: ${ak ? "Publitsistik nutq uslubi. Publitsistik maqolalar tahlili; “Men tanlagan soha va OAV” mavzusida maqola" : "Oʻzbekiston Respublikasining BMTga aʼzo boʻlishi va jahon hamjamiyatidagi oʻziga xos oʻrni"}</div>
+    <div class="dateline"><span>Muxamadov Muhammadali</span><span>2026-yil</span><span>Fan oʻqituvchisi: Yunusova Maftuna</span></div>
+  </section>
+  ${ak ? `<section class="lead">
+    <div><div class="kicker">Mustaqil ish</div>
+      <h2>Publitsistik nutq uslubi va “Men tanlagan soha va OAV” maqolasi</h2>
+      <p>Nazariy qism, Behbudiy, Fitrat, Avloniy, Qodiriy asarlari va zamonaviy internet maqolasi tahlili hamda mustaqil yozilgan publitsistik maqola.</p>
+      <div class="acts"><a class="btn primary" href="mustaqil-ishlar/akademik-yozuv/index.html">${icon("doc")} Oʻqish va chop etish</a><a class="btn" href="mustaqil-ishlar/akademik-yozuv/Mustaqil_ish_Muxamadov_Muhammadali.pdf">PDF fayl</a></div></div>
+    <ul class="facts"><li>Hajmi<b>22 bet</b></li><li>Format<b>A4 · 14 pt · 1,5</b></li><li>Qismlar<b>3 qism, 2 ilova</b></li><li>Tahlil qilingan matnlar<b>5 ta</b></li></ul>
+  </section>` : ""}
+  <div class="sec-h"><h3>Oʻyinlar</h3><span>${data.kategoriyalar.length} kategoriya · ${data.kategoriyalar.length * 5} ta test savoli</span></div>
+  <div class="games">${GAMES.map((g, i) => `
+    <a class="game" href="oyinlar/${g.f}.html?fan=${fan}">
+      <div class="no"><span>${ak ? String(i + 1).padStart(2, "0") : ROMAN[i]}</span>${icon(g.ic, "")}</div>
+      <h4>${g.t}</h4><p>${g.d}</p><div class="tags">${g.tags}</div>
+      <span class="go">Oʻynash ${icon("arrow")}</span>
+    </a>`).join("")}</div>
+  <footer>Topshiruvchi: Muxamadov Muhammadali</footer>`;
+</script>
+</body>
+</html>

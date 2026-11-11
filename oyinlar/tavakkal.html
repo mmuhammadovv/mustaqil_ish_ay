@@ -3,127 +3,188 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tavakkal bellashuvi</title>
-<link rel="stylesheet" href="assets/style.css">
+<title>Tavakkal</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
 <style>
-  .bet { max-width: 520px; margin: 0 auto; }
-  .bet .val { font-family: var(--display); font-size: clamp(40px, 7vw, 72px); color: var(--gold); margin: 6px 0; }
-  .bet input[type=range] { width: 100%; accent-color: var(--gold); height: 28px; }
-  .bet .quick { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
-  .bet .info { color: var(--muted); line-height: 1.6; }
-  .bet .info b { color: var(--text); }
-  .pick { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 16px; }
-  .pick button { padding: 16px; border-radius: 16px; border: 2px solid var(--c); background: var(--glass); font-weight: 800; font-size: 18px; }
-  .pick button:hover { background: var(--glass2); }
-  .cat-cell { font-size: clamp(18px, 3vw, 40px); }
+  .stage { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 22px; align-items: stretch; }
+  .wheel-box { position: relative; padding: 24px; display: grid; place-items: center; }
+  .wheel-wrap { position: relative; width: min(100%, 520px); aspect-ratio: 1; }
+  .wheel-wrap svg.wheel { width: 100%; height: 100%; transition: transform 4.4s cubic-bezier(.15,.7,.1,1); }
+  .wheel .seg-a { fill: var(--surface); } .wheel .seg-b { fill: var(--surface-2); }
+  .wheel path { stroke: var(--line-strong); stroke-width: 1.2; }
+  .wheel .done { fill: url(#hatch); }
+  .wheel text { fill: var(--ink); font-family: var(--body); font-weight: 600; font-size: 13px; letter-spacing: .02em; }
+  .wheel text.no { font-family: var(--num); font-size: 11px; fill: var(--accent); font-weight: 700; }
+  .wheel .hub { fill: var(--ink); } .wheel .hub2 { fill: var(--surface); }
+  .pointer { position: absolute; left: 50%; top: -6px; transform: translateX(-50%); width: 34px; height: 44px; color: var(--accent); filter: drop-shadow(0 2px 2px rgba(0,0,0,.2)); }
+  [data-fan="tarix"] .wheel path { stroke: var(--line); }
+  [data-fan="tarix"] .wheel .seg-b { fill: var(--accent-soft); }
+  .side { display: flex; flex-direction: column; gap: 16px; }
+  .side .panel { padding: 22px; }
+  .bal { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+  .bal .v { font-family: var(--num); font-size: clamp(34px, 5vw, 56px); font-weight: 600; line-height: 1; }
+  .bal small { color: var(--muted); }
+  .rounds { display: flex; gap: 4px; margin-top: 10px; }
+  .rounds i { flex: 1; height: 6px; background: var(--surface-2); border-radius: 2px; }
+  .rounds i.on { background: var(--c); }
+  .cat-picked { font-family: var(--display); font-size: clamp(24px, 3vw, 34px); line-height: 1.1; margin: 4px 0 2px; }
+  .bet .amount { font-family: var(--num); font-size: clamp(40px, 6vw, 68px); font-weight: 600; text-align: center; line-height: 1; margin: 10px 0; }
+  .bet input[type=range] { width: 100%; accent-color: var(--accent); }
+  .chips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; }
+  .chips button { padding: 9px 4px; border: 1px solid var(--line); border-radius: var(--r); background: transparent; font-family: var(--num); font-weight: 600; font-size: 14px; }
+  .chips button:hover { border-color: var(--ink); }
+  .chips button.allin { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .outcome { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: var(--r); margin-top: 12px; }
+  .outcome div { padding: 10px; text-align: center; font-size: 13px; color: var(--muted); }
+  .outcome div + div { border-left: 1px solid var(--line); }
+  .outcome b { display: block; font-family: var(--num); font-size: 20px; }
+  .outcome .p b { color: var(--good); } .outcome .m b { color: var(--bad); }
+  .log { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+  .log li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); }
+  .log li span:first-child { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .log .p { color: var(--good); font-family: var(--num); } .log .m { color: var(--bad); font-family: var(--num); }
+  @media (max-width: 900px) { .stage { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 <main class="wrap" id="app"></main>
-<script src="savollar.js"></script>
-<script src="assets/oyin.js"></script>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="assets/core.js"></script>
 <script>
-const { $, $$, esc, store, topic, VALUES, sound } = G;
-const SK = G.saveKey("tavakkal");
-const CATS = 2; // "Mushuk qopda" kataklari soni
-let S = store.get(SK);
+const { $, $$, esc, store, data, icon, sound } = G;
+const SK = G.saveKey("tavakkal"), START = 500, N = data.kategoriyalar.length;
+let S = store.get(SK), rot = 0, spinning = false;
 
-G.header("Tavakkal bellashuvi", reset);
+G.header("Tavakkal", reset);
 S && S.teams ? render() : setup();
 
 function setup() {
+  let rounds = 5;
   G.setup($("#app"), {
-    title: "🎲 Tavakkal bellashuvi",
-    desc: "Har savoldan oldin jamoa oʻz balidan tikadi. Toʻgʻri javob — katak narxi va tikilgan ball qoʻshiladi. Xato — tikilgan ball yonadi.",
-    extra: `<label class="l">Savol turi</label><label class="check"><input type="checkbox" id="mc"> Test rejimi (4 ta variantdan tanlash)</label>`,
+    kicker: "Oʻyin 01 · Gʻildirak va tikish",
+    title: "Tavakkal",
+    desc: `Har bir jamoa ${START} ball bilan boshlaydi. Gʻildirak kategoriyani tanlaydi, jamoa esa oʻz balansidan tikadi.`,
+    extra: `<span class="l">Har bir jamoa uchun yurishlar</span>
+      <div class="seg" id="rd">${[3, 4, 5, 6, 8].map(n => `<button type="button" data-r="${n}" class="${n === rounds ? "on" : ""}">${n}</button>`).join("")}</div>`,
     rules: [
-      "Jamoalar navbat bilan katak tanlaydi.",
-      "Savoldan oldin <b>tikish</b> qilinadi: 0 dan oʻz balingizgacha (balingiz kam boʻlsa — katak narxigacha).",
-      "Toʻgʻri javob: <b>+ narx + tikish</b>. Xato javob: <b>− tikish</b>.",
-      `Jadvalda ${CATS} ta yashirin <b>🐱 “Mushuk qopda”</b> katagi bor: savolni raqib jamoaga berasiz, u tikishsiz javob beradi.`,
-      "Hammasini tikish — <b>“Va-bank”</b>!"
+      `Har bir jamoaning boshlangʻich balansi — <b>${START} ball</b>.`,
+      "Navbatdagi jamoa gʻildirakni aylantiradi — u savol kategoriyasini tanlaydi.",
+      "Savolni koʻrishdan oldin jamoa balansidan istalgan miqdorni <b>tikadi</b> (eng kami 50).",
+      "Toʻgʻri javob — tikilgan ball balansga <b>qoʻshiladi</b>. Xato javob — tikilgan ball <b>ayiriladi</b>.",
+      "Balansi nolga tushgan jamoa oʻyindan chiqadi. Yurishlar tugagach, eng katta balans gʻolib."
     ],
     onStart(teams) {
-      const ids = []; topic.kategoriyalar.forEach((_, c) => VALUES.forEach((_, v) => ids.push(c + "-" + v)));
-      S = { teams, used: [], cats: G.shuffle(ids).slice(0, CATS), turn: 0, mc: $("#mc").checked };
-      save(); render();
+      teams.forEach(t => { t.score = START; t.turns = 0; });
+      S = { teams, used: [], turn: 0, rounds, log: [] }; save(); render();
     }
   });
+  $$("#rd button").forEach(b => b.onclick = () => { rounds = +b.dataset.r; $$("#rd button").forEach(x => x.classList.toggle("on", x === b)); });
 }
-
 function save() { store.set(SK, S); }
 function reset() { store.del(SK); S = null; G.modal.close(); setup(); }
 
-function render() {
+const left = ci => data.kategoriyalar[ci].savollar.findIndex((_, li) => !S.used.includes(ci + "-" + li));
+const alive = i => S.teams[i].score > 0 && S.teams[i].turns < S.rounds;
+const finished = () => !S.teams.some((_, i) => alive(i)) || data.kategoriyalar.every((_, ci) => left(ci) < 0);
+
+function wheelSVG() {
+  const R = 190, segs = data.kategoriyalar.map((c, i) => {
+    const a0 = (i * 360 / N - 90) * Math.PI / 180, a1 = ((i + 1) * 360 / N - 90) * Math.PI / 180, mid = (i + .5) * 360 / N;
+    const p = `M0 0 L${R * Math.cos(a0)} ${R * Math.sin(a0)} A${R} ${R} 0 0 1 ${R * Math.cos(a1)} ${R * Math.sin(a1)}Z`;
+    const cls = left(i) < 0 ? "done" : i % 2 ? "seg-b" : "seg-a";
+    return `<path class="${cls}" d="${p}"/>
+      <g transform="rotate(${mid - 90})"><text x="${R - 14}" y="4" text-anchor="end">${esc(c.qisqa || c.nomi)}</text><text class="no" x="52" y="4">${String(i + 1).padStart(2, "0")}</text></g>`;
+  }).join("");
+  return `<svg class="wheel" viewBox="-200 -200 400 400" style="transform:rotate(${rot}deg)">
+    <defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--surface-2)"/><path d="M0 0v6" stroke="var(--line)" stroke-width="2"/></pattern></defs>
+    <circle r="196" fill="none" stroke="var(--line-strong)" stroke-width="2"/>
+    ${segs}
+    <circle class="hub" r="30"/><circle class="hub2" r="22"/><circle class="hub" r="5"/>
+  </svg>`;
+}
+
+function render(phase = "spin", pick = null) {
+  if (finished()) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
+  if (!alive(S.turn)) return nextTurn(true);
   const t = S.teams[S.turn];
   $("#app").innerHTML = `
-    <div class="turn-banner" style="--c:${t.color}">Navbat: <b>${esc(t.name)}</b> — katak tanlang</div>
-    <div class="board">
-      ${topic.kategoriyalar.map(c => `<div class="cat">${c.nomi}</div>`).join("")}
-      ${VALUES.map((v, vi) => topic.kategoriyalar.map((_, ci) => {
-        const id = ci + "-" + vi, used = S.used.includes(id);
-        return `<button class="cell" data-id="${id}" ${used ? "disabled" : ""}>${used ? "" : v}</button>`;
-      }).join("")).join("")}
+    <div class="stage">
+      <div class="panel wheel-box">
+        <div class="wheel-wrap"><svg class="pointer" viewBox="0 0 34 44"><path d="M17 44L2 10a15 15 0 1 1 30 0z" fill="currentColor"/><circle cx="17" cy="15" r="5" fill="var(--surface)"/></svg>${wheelSVG()}</div>
+      </div>
+      <div class="side">
+        <div class="panel" style="--c:${G.tc(t)}">
+          <div class="kicker">Navbat</div>
+          <div class="turn"><span class="who">${esc(t.name)}</span></div>
+          <div class="rounds">${Array.from({ length: S.rounds }, (_, k) => `<i class="${k < t.turns ? "on" : ""}"></i>`).join("")}</div>
+          <div class="bal"><small>Balans</small><span class="v">${t.score}</span></div>
+        </div>
+        <div class="panel" id="act"></div>
+        <div class="panel"><div class="kicker">Oxirgi tikishlar</div>
+          <ul class="log">${S.log.slice(-5).reverse().map(l => `<li><span>${esc(l.n)} · ${esc(l.c)}</span><span class="${l.d >= 0 ? "p" : "m"}">${l.d >= 0 ? "+" : "−"}${Math.abs(l.d)}</span></li>`).join("") || `<li><span>Hali tikish qilinmadi</span><span></span></li>`}</ul></div>
+      </div>
     </div>
     <div class="scores" id="sc"></div>`;
-  G.scores($("#sc"), S.teams, { active: S.turn, onAdjust: (i, d) => { S.teams[i].score += d; save(); render(); } });
-  $$(".cell:not(:disabled)").forEach(b => b.onclick = () => open(b.dataset.id));
-  if (S.used.length === topic.kategoriyalar.length * VALUES.length) G.winner(S.teams, reset);
+  G.scores($("#sc"), S.teams, { active: S.turn, out: S.teams.map((_, i) => i).filter(i => S.teams[i].score <= 0),
+    onAdjust: (i, d) => { S.teams[i].score = Math.max(0, S.teams[i].score + d); save(); render(); },
+    tag: tm => tm.score <= 0 ? "Oʻyindan chiqdi" : `${tm.turns}/${S.rounds} yurish` });
+  phase === "spin" ? spinPanel() : betPanel(pick);
 }
 
-function open(id) {
-  sound.click();
-  const [ci, vi] = id.split("-").map(Number);
-  if (S.cats.includes(id)) return catInBag(id, ci, vi);
-  const t = S.teams[S.turn], value = VALUES[vi];
-  const max = Math.max(t.score, value);
-  let bet = Math.min(Math.round(max / 2 / 50) * 50, max);
-  const c = G.modal(`
-    <div class="meta"><span class="pill">${topic.kategoriyalar[ci].nomi}</span><span class="pill gold">${value}</span><span class="pill team-pill" style="--c:${t.color}">${esc(t.name)}</span></div>
-    <div class="bet">
-      <h2 style="margin:16px 0 4px">Qancha tikasiz?</h2>
-      <p class="info">Balingiz: <b>${t.score}</b> · Maksimal tikish: <b>${max}</b></p>
-      <div class="val" id="bv">${bet}</div>
-      <input type="range" id="rg" min="0" max="${max}" step="50" value="${bet}">
-      <div class="quick">
-        <button class="btn" data-b="0" type="button">0</button>
-        <button class="btn" data-b="${Math.round(max / 4 / 50) * 50}" type="button">25%</button>
-        <button class="btn" data-b="${Math.round(max / 2 / 50) * 50}" type="button">50%</button>
-        <button class="btn gold" data-b="${max}" type="button">Va-bank!</button>
+function spinPanel() {
+  $("#act").innerHTML = `<div class="kicker">1-qadam</div><p style="margin:6px 0 16px;color:var(--muted)">Gʻildirakni aylantiring — u savol kategoriyasini tanlaydi.</p>
+    <button class="btn primary block lg" id="spin" type="button">${icon("wheel")} Gʻildirakni aylantirish</button>`;
+  $("#spin").onclick = spin;
+}
+
+function spin() {
+  if (spinning) return; spinning = true; $("#spin").disabled = true;
+  const avail = data.kategoriyalar.map((_, i) => i).filter(i => left(i) >= 0);
+  const k = avail[Math.floor(Math.random() * avail.length)];
+  const center = (k + .5) * 360 / N + (Math.random() - .5) * (360 / N) * .6;
+  rot += 360 * 5 + ((360 - center - rot % 360) % 360 + 360) % 360;
+  const w = $("svg.wheel"); w.style.transform = `rotate(${rot}deg)`;
+  let n = 0; const tk = setInterval(() => { sound.spin(); if (++n > 40) clearInterval(tk); }, 60 + n);
+  setTimeout(() => { spinning = false; sound.bonus(); render("bet", k); }, 4500);
+}
+
+function betPanel(ci) {
+  const t = S.teams[S.turn], max = t.score, min = Math.min(50, max);
+  let bet = Math.min(max, Math.max(min, Math.round(max / 4 / 50) * 50));
+  $("#act").innerHTML = `<div class="kicker">2-qadam · Kategoriya</div>
+    <div class="cat-picked">${esc(data.kategoriyalar[ci].nomi)}</div>
+    <p style="margin:0;color:var(--muted)">${left(ci) + 1}-darajali savol. Qancha tikasiz?</p>
+    <div class="bet"><div class="amount" id="amt">${bet}</div>
+      <input type="range" id="rg" min="${min}" max="${max}" step="${max >= 100 ? 50 : 10}" value="${bet}">
+      <div class="chips">
+        <button type="button" data-b="50">50</button><button type="button" data-b="100">100</button><button type="button" data-b="250">250</button>
+        <button type="button" data-b="${Math.round(max / 2 / 10) * 10}">½</button><button type="button" class="allin" data-b="${max}">Va-bank</button>
       </div>
-      <p class="info" id="pv"></p>
-      <button class="btn primary block lg" id="ok" type="button">Savolni ochish ▶</button>
-    </div>`);
-  const upd = () => { $("#bv", c).textContent = bet; $("#pv", c).innerHTML = `Toʻgʻri: <b style="color:var(--ok)">+${value + bet}</b> · Xato: <b style="color:var(--bad)">−${bet}</b>`; };
-  $("#rg", c).oninput = e => { bet = +e.target.value; upd(); };
-  $$("[data-b]", c).forEach(b => b.onclick = () => { bet = +b.dataset.b; $("#rg", c).value = bet; sound.click(); upd(); });
-  $("#ok", c).onclick = () => question(id, ci, vi, S.turn, ok => ok ? value + bet : -bet, bet === max && bet > 0 ? "VA-BANK" : "Tikish: " + bet);
-  upd();
+      <div class="outcome"><div class="p">Toʻgʻri<b id="op">+${bet}</b></div><div class="m">Xato<b id="om">−${bet}</b></div></div>
+      <button class="btn primary block lg" id="go" type="button" style="margin-top:14px">Savolni ochish ${icon("arrow")}</button></div>`;
+  const upd = () => { $("#amt").textContent = bet; $("#rg").value = bet; $("#op").textContent = "+" + bet; $("#om").textContent = "−" + bet; };
+  $("#rg").oninput = e => { bet = +e.target.value; upd(); };
+  $$(".chips button").forEach(b => b.onclick = () => { bet = Math.max(min, Math.min(max, +b.dataset.b)); sound.click(); upd(); });
+  $("#go").onclick = () => question(ci, bet);
 }
 
-function catInBag(id, ci, vi) {
-  sound.bonus();
-  const value = VALUES[vi];
-  const c = G.modal(`
-    <div class="meta"><span class="pill">${topic.kategoriyalar[ci].nomi}</span><span class="pill gold">${value}</span></div>
-    <div class="big">🐱 Mushuk qopda!</div>
-    <p style="color:var(--muted)">Bu savolni qaysi raqib jamoaga berasiz? U tikishsiz javob beradi: toʻgʻri — <b>+${value}</b>, xato — 0.</p>
-    <div class="pick">${S.teams.map((t, i) => i === S.turn ? "" : `<button type="button" data-i="${i}" style="--c:${t.color}">${esc(t.name)}</button>`).join("")}</div>`);
-  $$(".pick button", c).forEach(b => b.onclick = () => question(id, ci, vi, +b.dataset.i, ok => ok ? value : 0, "Mushuk qopda"));
-}
-
-function question(id, ci, vi, who, delta, label) {
-  const t = S.teams[who], item = topic.kategoriyalar[ci].savollar[vi];
-  const c = G.modal(`
-    <div class="meta"><span class="pill">${topic.kategoriyalar[ci].nomi}</span><span class="pill gold">${VALUES[vi]}</span>
-      <span class="pill team-pill" style="--c:${t.color}">${esc(t.name)}</span><span class="pill">${label}</span></div>
-    <div id="q"></div>`);
-  G.ask($("#q", c), item, { mc: S.mc, onResult(ok) {
-    const d = delta(ok);
-    S.teams[who].score += d; S.used.push(id); S.turn = (S.turn + 1) % S.teams.length; save();
-    G.modal.close(); render(); G.bump($("#sc"), who);
-    G.toast(`${esc(t.name)}: <b style="color:${d >= 0 ? "var(--ok)" : "var(--bad)"}">${d >= 0 ? "+" : ""}${d}</b>`);
+function question(ci, bet) {
+  const li = left(ci), t = S.teams[S.turn], who = S.turn;
+  const c = G.modal(`<div class="meta" style="--c:${G.tc(t)}"><span class="tm-name">${esc(t.name)}</span><span>${esc(data.kategoriyalar[ci].nomi)}</span><span>${li + 1}-daraja</span><span class="acc">Tikish: ${bet}${bet === t.score ? " · Va-bank" : ""}</span></div><div id="q"></div>`);
+  G.ask($("#q", c), data.kategoriyalar[ci].savollar[li], { onResult(ok) {
+    const d = ok ? bet : -bet;
+    t.score += d; t.turns++; S.used.push(ci + "-" + li);
+    S.log.push({ n: t.name, c: data.kategoriyalar[ci].qisqa || data.kategoriyalar[ci].nomi, d });
+    G.modal.close(); nextTurn(); G.bump($("#sc"), who);
+    G.toast(`${esc(t.name)}: ${d >= 0 ? "+" : "−"}${Math.abs(d)}${t.score <= 0 ? " — balans tugadi" : ""}`);
   }});
+}
+
+function nextTurn(skipOnly) {
+  for (let k = 1; k <= S.teams.length; k++) { const i = (S.turn + k) % S.teams.length; if (alive(i)) { S.turn = i; break; } }
+  save(); render();
 }
 </script>
 </body>

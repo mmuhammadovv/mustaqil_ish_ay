@@ -1,0 +1,62 @@
+# CLAUDE.md — loyiha boʻyicha yoʻriqnoma
+
+Bu fayl Claude Code uchun. Terminalda `claude` ishga tushirilganda u avtomatik oʻqiladi va oldingi ishlarni davom ettirish uchun kerakli kontekstni beradi. Suhbatlar tarixi: `docs/suhbat-tarixi.md`.
+
+## Foydalanuvchi va loyiha
+
+- Talaba: **Muxamadov Muhammadali**. Oʻzbek tilida (lotin yozuvi) muloqot qiladi — javoblar ham oʻzbek tilida, sodda va qisqa boʻlsin.
+- Loyiha: universitet mustaqil ishlari va ular uchun interaktiv bilim oʻyinlari.
+- Fanlar:
+  1. **Akademik yozuv** — oʻqituvchi: Yunusova Maftuna. Mavzu: “Publitsistik nutq uslubi. Publitsistik maqolalar bilan tanishish va tahlil qilish; ‘Men tanlagan soha va OAV’ mavzusida publitsistik maqola tayyorlash”. Mustaqil ish matni + 5 ta oʻyin.
+  2. **Oʻzbekistonning eng yangi tarixi** — mavzu: “Oʻzbekiston Respublikasining BMTga aʼzo boʻlishi va jahon hamjamiyatidagi oʻziga xos oʻrni”. **Faqat oʻyinlar kerak, mustaqil ish matni kerak emas** (foydalanuvchi aniq aytgan).
+- Git branch: `claude/wizardly-galileo-lkog9v`.
+
+## Tuzilma
+
+```
+index.html                         Bosh menyu — fan tanlash (ikki yarim ekran)
+fan.html?fan=akademik|tarix        Fan sahifasi (mustaqil ish + 5 oʻyin)
+mustaqil-ishlar/akademik-yozuv/    Mustaqil ish: index.html (A4 chop etish) + PDF (22 bet)
+oyinlar/
+  tavakkal.html   01 Gʻildirak + tikish (boshlangʻich balans 500, ±tikish, nolga tushsa chiqadi)
+  hududlar.html   02 Olti burchakli xarita (bazadan qoʻshni kataklarni egallash, hujum +1 daraja)
+  svetofor.html   03 Reaksiya: qizil 2–10 s tasodifiy → yashil; qizilda bosish = falstart (−50, savoldan chetlatiladi)
+  zinapoya.html   04 10 kategoriya × 5 pogʻona, davom etish/toʻxtash, 50/50 va +15 s
+  arqon.html      05 Arqon tortish: 2 jamoa bir vaqtda (1-2-3-4 va 7-8-9-0 tugmalari)
+  savollar/akademik.js, savollar/tarix.js   Savollar bazasi (10 kategoriya × 5 daraja, faqat test)
+  assets/boot.js   <head> da: fan va tun/kun rejimini oʻrnatadi (localStorage: fan, tema)
+  assets/theme.css Dizayn tokenlari: [data-fan] × [data-theme]
+  assets/core.js   Umumiy dvigatel (window.G): ikonlar, ovoz, sozlash, ballar, modal, taymer, ask(), winner()
+tools/build_pdf.py, tools/pdf.js   Mustaqil ish PDF yasash (reja sahifa raqamlari avtomatik)
+docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
+```
+
+## Foydalanuvchining qatʼiy talablari (buzmang!)
+
+1. **Barcha savollar test shaklida** (4 variant: `j` toʻgʻri + `x` 3 ta xato). Ochiq savol-javob yoʻq.
+2. **Har bir oʻyinning shakli boshqacha** boʻlsin — hammasi “Своя игра” jadvaliga oʻxshab qolmasin.
+3. **Emoji ishlatilmaydi.** Faqat oʻzimiz chizgan SVG ikonlar (`core.js` → `P` obyekti, `G.icon(name)`).
+4. Dizayn “AI qilgandek” neon/gradient boʻlmasin — dizayner ishlagandek, toza, tipografik. **Har bir fanning dizayni alohida**:
+   - akademik — gazeta/tahririyat uslubi (Playfair Display + IBM Plex, qogʻoz rangi, qizil urgʻu, chiziqlar, oʻtkir burchaklar);
+   - tarix — diplomatik/arxiv uslubi (Cormorant Garamond + Manrope, feruza-koʻk, oltin, oʻzbekona naqsh foni, yumaloq burchaklar).
+5. **Kunduzgi va tungi rejim** har sahifada boʻlishi shart.
+6. Oʻyinlar **internetsiz, oddiy HTML** sifatida ochilishi kerak (`file://`). `fetch` ishlatmang — maʼlumot `<script src>` orqali.
+7. Tarix savollari: **oson**, yillar kam; taxminan **50% zakovat uslubidagi mantiqiy savollar** (tarixga bogʻliq, lekin qiziqarli — dasturlash, fan va h.k.).
+8. Mustaqil ish: kamida 20 bet, betlarda boʻsh joy qolmasin (boʻlimlar uzluksiz oqadi), avval nazariya, keyin tahlil, keyin maqola.
+
+## Konventsiyalar
+
+- Oʻzbek lotin yozuvi: `oʻ`, `gʻ` uchun **U+02BB (ʻ)**, tutuq belgisi uchun **U+02BC (ʼ)**. Oddiy apostrof `'` ishlatmang.
+- Fakt va sanalarga ehtiyot boʻling — faqat ishonchli maʼlumot.
+- Yangi fan qoʻshish: `oyinlar/savollar/<kalit>.js` (shablon — mavjud fayllar), `theme.css` da `[data-fan="<kalit>"]` tokenlari, `boot.js` dagi ruxsat etilgan fanlar, `index.html` va `fan.html` ga havola, har bir oʻyin sahifasiga `<script src="savollar/<kalit>.js">`.
+- Oʻyin holati `localStorage` da (`oyin2-<oʻyin>-<fan>`) saqlanadi.
+
+## Tekshirish
+
+- PDF: `python3 tools/build_pdf.py mustaqil-ishlar/akademik-yozuv`
+- Oʻyinlarni Playwright bilan oxirigacha oʻynab tekshirish tavsiya etiladi (har ikki fan, ikkala rejim, 390px mobil kenglik).
+
+## Ochiq masalalar
+
+- Titul varagʻida universitet/fakultet nomi va guruh raqami boʻsh qoldirilgan — foydalanuvchi aytsa toʻldirish.
+- Tarix fani oʻqituvchisining ismi nomaʼlum (hozircha kerak emas, chunki tarix uchun matn yoʻq).

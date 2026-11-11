@@ -3,108 +3,173 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hududlar xaritasi</title>
-<link rel="stylesheet" href="assets/style.css">
+<title>Hududlar</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
 <style>
-  .map .cell.own { color: #fff; border-style: solid; border-color: var(--c); cursor: default;
-    background: linear-gradient(150deg, color-mix(in srgb, var(--c) 75%, transparent), color-mix(in srgb, var(--c) 30%, transparent));
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.15), 0 0 24px -8px var(--c); }
-  .map .cell.own .o { font-family: var(--font); font-weight: 800; font-size: clamp(10px, 1.1vw, 15px); display: block; opacity: .95; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
-  .map .cell.own .v { font-size: clamp(12px, 1.6vw, 22px); opacity: .7; }
-  .map .cell.burn { background: repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 8px, transparent 8px 16px); color: rgba(255,255,255,.25); border-style: dashed; cursor: default; }
-  .map .cell.line { animation: glow 1.2s ease 2; }
-  @keyframes glow { 50% { transform: scale(1.06); box-shadow: 0 0 40px var(--c); } }
-  .map .cell.capt { animation: cap .6s cubic-bezier(.2,.9,.3,1.4); }
-  @keyframes cap { from { transform: rotateY(90deg) scale(.8); } }
-  .legend { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; color: var(--muted); font-size: 13px; }
+  .stage { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr); gap: 22px; }
+  .mapbox { padding: 16px; display: grid; place-items: center; }
+  svg.map { width: 100%; max-height: calc(100vh - 260px); min-height: 360px; }
+  .hx polygon { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.2; transition: fill .3s, opacity .2s; }
+  [data-fan="tarix"] .hx polygon { stroke: var(--line); stroke-width: 1.5; }
+  .hx.own polygon { fill: var(--c); fill-opacity: .82; }
+  .hx.base polygon { fill-opacity: 1; }
+  .hx.lake polygon { fill: url(#water); stroke: none; }
+  .hx.can { cursor: pointer; }
+  .hx.can polygon { stroke: var(--accent); stroke-width: 3; }
+  .hx.can:hover polygon { fill: var(--accent-soft); }
+  .hx.can.atk polygon { stroke-dasharray: 6 4; }
+  .hx.own.can:hover polygon { fill-opacity: .55; }
+  .hx .pip { fill: var(--ink); }
+  .hx.own .pip, .hx.own .lbl { fill: var(--surface); }
+  .hx .lbl { font-family: var(--num); font-size: 11px; font-weight: 700; fill: var(--muted); }
+  .hx .cap { color: var(--accent); }
+  .hx.own .cap { color: var(--surface); }
+  .hx.flash polygon { animation: flash .8s ease; }
+  @keyframes flash { 0% { fill-opacity: .1; } 100% { fill-opacity: .82; } }
+  .side { display: flex; flex-direction: column; gap: 16px; }
+  .side .panel { padding: 20px; }
+  .legend { list-style: none; margin: 10px 0 0; padding: 0; font-size: 14px; }
+  .legend li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); color: var(--muted); }
+  .legend svg { width: 26px; height: 26px; flex: none; }
+  .moves { font-family: var(--num); font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .terr { display: grid; gap: 8px; margin-top: 10px; }
+  .terr .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; font-size: 14px; }
+  .terr .bar { grid-column: 1 / -1; height: 6px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
+  .terr .bar i { display: block; height: 100%; background: var(--c); }
+  @media (max-width: 900px) { .stage { grid-template-columns: 1fr; } svg.map { max-height: none; min-height: 0; } }
 </style>
 </head>
 <body>
 <main class="wrap" id="app"></main>
-<script src="savollar.js"></script>
-<script src="assets/oyin.js"></script>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="assets/core.js"></script>
 <script>
-const { $, $$, esc, store, topic, VALUES, sound } = G;
+const { $, $$, esc, store, data, icon, sound } = G;
 const SK = G.saveKey("hududlar");
-const COLS = 6, ROWS = 5, BONUS = 200;
+const RAD = 3, LAKES = ["1,-2", "-1,2", "2,1", "-2,-1"];
+const BASES = { 2: ["-3,0", "3,0"], 3: ["-3,0", "3,-3", "0,3"], 4: ["-3,0", "3,0", "0,-3", "0,3"] };
+const DIRS = [[1, 0], [1, -1], [0, -1], [-1, 0], [-1, 1], [0, 1]];
+const CELLS = []; for (let q = -RAD; q <= RAD; q++) for (let r = -RAD; r <= RAD; r++) if (Math.abs(q + r) <= RAD) CELLS.push(q + "," + r);
+const ring = k => { const [q, r] = k.split(",").map(Number); return Math.max(Math.abs(q), Math.abs(r), Math.abs(q + r)); };
+const LEVEL = k => { const d = ring(k), [q] = k.split(",").map(Number); return d === 0 ? 5 : d === 1 ? 4 : d === 2 ? 2 + (Math.abs(q) % 2) : 1 + (Math.abs(q) % 2 ? 0 : 1); };
 let S = store.get(SK);
 
-G.header("Hududlar xaritasi", reset);
+G.header("Hududlar", reset);
 S && S.teams ? render() : setup();
 
 function setup() {
+  let moves = 8;
   G.setup($("#app"), {
-    title: "🗺️ Hududlar xaritasi",
-    desc: "Har bir katak — bitta hudud. Toʻgʻri javob bering va hududni oʻz rangingizga boʻyang! Ketma-ket 3 ta hudud egallasangiz — bonus.",
-    extra: `<label class="l">Savol turi</label><label class="check"><input type="checkbox" id="mc"> Test rejimi (4 ta variantdan tanlash)</label>`,
+    kicker: "Oʻyin 02 · Xarita",
+    title: "Hududlar",
+    desc: "Har bir jamoa xaritaning bir chekkasidagi bazadan boshlaydi. Savollarga javob berib, hududingizni markazga — poytaxtga qarab kengaytiring.",
+    extra: `<span class="l">Har bir jamoa uchun yurishlar</span>
+      <div class="seg" id="mv">${[6, 8, 10, 12].map(n => `<button type="button" data-m="${n}" class="${n === moves ? "on" : ""}">${n}</button>`).join("")}</div>`,
     rules: [
-      "Jamoalar navbat bilan boʻsh hududni tanlaydi.",
-      "Toʻgʻri javob — hudud sizniki, uning narxi balingizga qoʻshiladi.",
-      "Xato javob — hudud <b>yonib ketadi</b> va hech kimga tegmaydi.",
-      `Gorizontal, vertikal yoki diagonal boʻyicha <b>ketma-ket 3 ta</b> hudud egallasangiz — <b>+${BONUS}</b> bonus (har bir chiziq uchun).`,
-      "Barcha hududlar tugagach, eng koʻp ball toʻplagan jamoa gʻolib."
+      "Faqat <b>oʻz hududingizga qoʻshni</b> kataklarni egallash mumkin — ular xaritada ajratib koʻrsatiladi.",
+      "Katakdagi nuqtalar — uning qiymati va savol darajasi (1–5). Markazdagi <b>poytaxt</b> — 5 ball.",
+      "Raqibning qoʻshni hududiga <b>hujum</b> qilish mumkin: savol bir daraja qiyinroq boʻladi. Bazalarga hujum qilib boʻlmaydi.",
+      "Xato javobda hudud oʻzgarmaydi, navbat keyingi jamoaga oʻtadi.",
+      "Yurishlar tugagach, hududlari qiymati eng koʻp boʻlgan jamoa gʻolib."
     ],
-    onStart(teams) { S = { teams, cells: {}, lines: [], turn: 0, mc: $("#mc").checked }; save(); render(); }
+    onStart(teams) {
+      const own = {}; BASES[teams.length].forEach((k, i) => own[k] = i);
+      S = { teams, own, bases: BASES[teams.length], used: [], turn: 0, moves, done: teams.map(() => 0) };
+      recount(); save(); render();
+    }
   });
+  $$("#mv button").forEach(b => b.onclick = () => { moves = +b.dataset.m; $$("#mv button").forEach(x => x.classList.toggle("on", x === b)); });
 }
 function save() { store.set(SK, S); }
 function reset() { store.del(SK); S = null; G.modal.close(); setup(); }
+function recount() { S.teams.forEach((t, i) => t.score = Object.entries(S.own).filter(([, o]) => o === i).reduce((a, [k]) => a + (S.bases.includes(k) ? 1 : LEVEL(k)), 0)); }
 
-function render(hl = []) {
-  const t = S.teams[S.turn];
+const nb = k => { const [q, r] = k.split(",").map(Number); return DIRS.map(([dq, dr]) => (q + dq) + "," + (r + dr)).filter(x => CELLS.includes(x) && !LAKES.includes(x)); };
+function options(i) {
+  const res = {};
+  Object.entries(S.own).filter(([, o]) => o === i).forEach(([k]) => nb(k).forEach(n => {
+    if (S.own[n] === undefined) res[n] = "take";
+    else if (S.own[n] !== i && !S.bases.includes(n)) res[n] = "attack";
+  }));
+  return res;
+}
+const over = () => S.done.every(d => d >= S.moves) || !G.all().some(x => !S.used.includes(x.id));
+
+function hexPts(cx, cy, s) { return Array.from({ length: 6 }, (_, k) => { const a = Math.PI / 180 * (60 * k - 30); return (cx + s * Math.cos(a)).toFixed(1) + "," + (cy + s * Math.sin(a)).toFixed(1); }).join(" "); }
+
+function render(flash) {
+  if (over()) { $("#app").innerHTML = ""; return G.winner(S.teams, reset, "ball"); }
+  const t = S.teams[S.turn], opt = options(S.turn), s = 46, W = Math.sqrt(3) * s;
+  const cells = CELLS.map(k => {
+    const [q, r] = k.split(",").map(Number), x = W * (q + r / 2), y = 1.5 * s * r;
+    if (LAKES.includes(k)) return `<g class="hx lake"><polygon points="${hexPts(x, y, s - 2)}"/></g>`;
+    const o = S.own[k], lv = LEVEL(k), base = S.bases.includes(k), can = opt[k];
+    const pips = base ? "" : k === "0,0"
+      ? `<g class="cap" transform="translate(${x - 12} ${y - 12})">${icon("star").replace('class="i"', 'width="24" height="24"')}</g>`
+      : Array.from({ length: lv }, (_, p) => `<circle class="pip" cx="${x + (p - (lv - 1) / 2) * 9}" cy="${y}" r="3"/>`).join("");
+    const lbl = base ? `<text class="lbl" x="${x}" y="${y + 4}" text-anchor="middle">BAZA</text>` : "";
+    return `<g class="hx ${o !== undefined ? "own" : ""} ${base ? "base" : ""} ${can ? "can" : ""} ${can === "attack" ? "atk" : ""} ${flash === k ? "flash" : ""}" data-k="${k}" ${o !== undefined ? `style="--c:var(--t${S.teams[o].c})"` : ""}>
+      <polygon points="${hexPts(x, y, s - 2)}"/>${pips}${lbl}</g>`;
+  }).join("");
+  const vb = `${-W * 3.5 - 10} ${-1.5 * s * 3 - s - 10} ${W * 7 + 20} ${3 * s * 3 + 2 * s + 20}`;
+  const total = S.teams.reduce((a, x) => a + x.score, 0) || 1;
   $("#app").innerHTML = `
-    <div class="turn-banner" style="--c:${t.color}">Navbat: <b>${esc(t.name)}</b> — hudud tanlang</div>
-    <div class="board map">
-      ${topic.kategoriyalar.map(c => `<div class="cat">${c.nomi}</div>`).join("")}
-      ${VALUES.map((v, r) => topic.kategoriyalar.map((_, c) => {
-        const id = c + "-" + r, own = S.cells[id];
-        if (own === undefined) return `<button class="cell" data-id="${id}">${v}</button>`;
-        if (own === -1) return `<button class="cell burn" disabled>✕</button>`;
-        const tm = S.teams[own];
-        return `<button class="cell own ${hl.includes(id) ? "line" : ""} ${hl[0] === "cap:" + id ? "capt" : ""}" style="--c:${tm.color}" disabled><span class="o">${esc(tm.name)}</span><span class="v">${v}</span></button>`;
-      }).join("")).join("")}
-    </div>
-    <div class="legend"><span>✕ — yonib ketgan hudud</span><span>3 ta ketma-ket = +${BONUS}</span></div>
-    <div class="scores" id="sc"></div>`;
-  G.scores($("#sc"), S.teams, { active: S.turn, onAdjust: (i, d) => { S.teams[i].score += d; save(); render(); },
-    tag: (_, i) => `${Object.values(S.cells).filter(o => o === i).length} ta hudud` });
-  $$(".cell[data-id]").forEach(b => b.onclick = () => open(b.dataset.id));
-  if (Object.keys(S.cells).length === COLS * ROWS) setTimeout(() => G.winner(S.teams, reset), 600);
+    <div class="stage">
+      <div class="panel mapbox"><svg class="map" viewBox="${vb}">
+        <defs><pattern id="water" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="var(--surface-2)"/><path d="M0 4q2-2 4 0t4 0" fill="none" stroke="var(--line)" stroke-width="1"/></pattern></defs>
+        ${cells}</svg></div>
+      <div class="side">
+        <div class="panel" style="--c:${G.tc(t)}">
+          <div class="kicker">Navbat</div>
+          <div class="turn"><span class="who">${esc(t.name)}</span></div>
+          <div class="moves">Yurish ${S.done[S.turn] + 1} / ${S.moves} · Mumkin boʻlgan kataklar: ${Object.keys(opt).length}</div>
+          ${Object.keys(opt).length ? "" : `<button class="btn block" id="pass" type="button" style="margin-top:12px">Yurishni oʻtkazib yuborish</button>`}
+        </div>
+        <div class="panel"><div class="kicker">Hududlar ulushi</div>
+          <div class="terr">${S.teams.map(x => `<div class="row" style="--c:${G.tc(x)}"><span>${esc(x.name)}</span><b class="num">${x.score}</b><div class="bar"><i style="width:${x.score / total * 100}%"></i></div></div>`).join("")}</div></div>
+        <div class="panel"><div class="kicker">Belgilar</div>
+          <ul class="legend">
+            <li><svg viewBox="-12 -12 24 24"><polygon points="${hexPts(0, 0, 11)}" fill="none" stroke="var(--accent)" stroke-width="2.5"/></svg>Egallash mumkin</li>
+            <li><svg viewBox="-12 -12 24 24"><polygon points="${hexPts(0, 0, 11)}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="4 3"/></svg>Hujum: savol +1 daraja</li>
+            <li><svg viewBox="-12 -12 24 24"><polygon points="${hexPts(0, 0, 11)}" fill="var(--surface)" stroke="var(--line-strong)"/><circle cx="-4" r="2.2" fill="var(--ink)"/><circle cx="4" r="2.2" fill="var(--ink)"/></svg>Nuqtalar — qiymat va daraja</li>
+            <li><svg viewBox="-12 -12 24 24"><polygon points="${hexPts(0, 0, 11)}" fill="url(#water)"/></svg>Koʻl — oʻtib boʻlmaydi</li>
+          </ul></div>
+      </div>
+    </div>`;
+  $$(".hx.can").forEach(g => g.onclick = () => play(g.dataset.k, opt[g.dataset.k]));
+  const p = $("#pass"); if (p) p.onclick = () => advance();
 }
 
-function open(id) {
+function pickQuestion(level) {
+  const free = G.all().filter(x => !S.used.includes(x.id));
+  for (let d = 0; d < 5; d++) {
+    const c = G.shuffle(free.filter(x => Math.abs(x.li + 1 - level) === d));
+    if (c.length) return c[0];
+  }
+  return null;
+}
+
+function play(k, kind) {
   sound.click();
-  const [c, r] = id.split("-").map(Number), t = S.teams[S.turn], who = S.turn;
-  const m = G.modal(`
-    <div class="meta"><span class="pill">${topic.kategoriyalar[c].nomi}</span><span class="pill gold">${VALUES[r]}</span><span class="pill team-pill" style="--c:${t.color}">${esc(t.name)}</span></div>
-    <div id="q"></div>`);
-  G.ask($("#q", m), topic.kategoriyalar[c].savollar[r], { mc: S.mc, onResult(ok) {
-    S.cells[id] = ok ? who : -1;
-    let gained = 0, hl = [];
-    if (ok) {
-      S.teams[who].score += VALUES[r]; gained = VALUES[r];
-      const nl = newLines(who);
-      nl.forEach(l => { S.lines.push(l.key); hl.push(...l.cells); });
-      if (nl.length) { S.teams[who].score += BONUS * nl.length; gained += BONUS * nl.length; setTimeout(sound.bonus, 300); }
-      if (!nl.length) hl = ["cap:" + id];
-    }
-    S.turn = (S.turn + 1) % S.teams.length; save();
-    G.modal.close(); render(hl); G.bump($("#sc"), who);
-    G.toast(ok ? `${esc(t.name)} hududni egalladi: <b style="color:var(--ok)">+${gained}</b>${gained > VALUES[r] ? " (chiziq bonusi!)" : ""}` : `Hudud yonib ketdi ✕`);
+  const lv = Math.min(5, LEVEL(k) + (kind === "attack" ? 1 : 0)), q = pickQuestion(lv), who = S.turn, t = S.teams[who];
+  if (!q) return render();
+  const def = kind === "attack" ? S.teams[S.own[k]] : null;
+  const c = G.modal(`<div class="meta" style="--c:${G.tc(t)}"><span class="tm-name">${esc(t.name)}</span><span>${kind === "attack" ? "Hujum: " + esc(def.name) : "Yangi hudud"}</span><span>${esc(data.kategoriyalar[q.ci].nomi)}</span><span class="acc">${q.li + 1}-daraja</span></div><div id="q"></div>`);
+  G.ask($("#q", c), q.item, { onResult(ok) {
+    S.used.push(q.id);
+    if (ok) S.own[k] = who;
+    recount(); G.modal.close();
+    G.toast(ok ? `${esc(t.name)} hududni egalladi` : "Hudud egallanmadi");
+    advance(ok ? k : null);
   }});
 }
 
-function newLines(who) {
-  const own = (c, r) => S.cells[c + "-" + r] === who, out = [];
-  const dirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
-  for (let c = 0; c < COLS; c++) for (let r = 0; r < ROWS; r++) for (const [dc, dr] of dirs) {
-    const cells = [0, 1, 2].map(k => [c + dc * k, r + dr * k]);
-    if (cells.some(([x, y]) => x < 0 || y < 0 || x >= COLS || y >= ROWS)) continue;
-    if (!cells.every(([x, y]) => own(x, y))) continue;
-    const key = cells.map(([x, y]) => x + "-" + y).join("|");
-    if (!S.lines.includes(key)) out.push({ key, cells: cells.map(([x, y]) => x + "-" + y) });
-  }
-  return out;
+function advance(flash) {
+  S.done[S.turn]++;
+  for (let k = 1; k <= S.teams.length; k++) { const i = (S.turn + k) % S.teams.length; if (S.done[i] < S.moves) { S.turn = i; break; } }
+  save(); render(flash);
 }
 </script>
 </body>

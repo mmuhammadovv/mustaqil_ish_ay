@@ -58,7 +58,7 @@
   .article-head .lead { font-style: italic; text-align: center; text-indent: 0; margin-top: 4pt; }
   .byline { text-align: right; text-indent: 0; font-style: italic; margin-top: 6pt; }
 
-  .print-btn {
+  .print-btn { display: inline-flex; align-items: center; gap: 8px;
     position: fixed; right: 16px; bottom: 16px; z-index: 5;
     font: 600 15px/1 system-ui, sans-serif; padding: 12px 18px; border: 0; border-radius: 8px;
     background: #1d4ed8; color: #fff; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.25);
@@ -81,14 +81,14 @@
     .page:not(.title-page) h1 { margin-top: 14pt; }
     .page h1:first-child { margin-top: 0; }
     .title-page { height: 25.6cm; }
-    .print-btn { display: none; }
+    .print-btn { display: inline-flex; align-items: center; gap: 8px; display: none; }
     h1, h2, h3 { break-after: avoid; }
     tr, blockquote { break-inside: avoid; }
   }
 </style>
 </head>
 <body>
-<button class="print-btn" onclick="window.print()">🖨 Chop etish</button>
+<button class="print-btn" onclick="window.print()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg> Chop etish</button>
 
 <!-- ================= TITUL VARAG'I ================= -->
 <section class="page title-page">

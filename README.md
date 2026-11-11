@@ -1,16 +1,23 @@
-# Akademik yozuv — mustaqil ish va interaktiv oʻyinlar
+# Mustaqil ishlar va interaktiv oʻyinlar
 
-`index.html` ni brauzerda oching — bosh menyu (internetsiz ishlaydi).
+`index.html` ni brauzerda oching — bosh menyuda fanni tanlang. Hammasi internetsiz ishlaydi.
 
-| Fayl | Nima |
+**Fanlar**
+- **Akademik yozuv** — mustaqil ish (22 bet, `mustaqil-ishlar/akademik-yozuv/`) + 5 ta oʻyin
+- **Oʻzbekistonning eng yangi tarixi** (BMT va Oʻzbekiston) — 5 ta oʻyin
+
+**Oʻyinlar** (`oyinlar/`, har bir fan uchun 50 ta test savoli)
+
+| Oʻyin | Shakli |
 |---|---|
-| `index.html` | Bosh menyu: mavzu tanlash va oʻyinlar |
-| `oyinlar/tavakkal.html` | 🎲 Tavakkal bellashuvi — tikish bilan, “Mushuk qopda” kataklari |
-| `oyinlar/hududlar.html` | 🗺️ Hududlar xaritasi — maydon egallash, 3 ta ketma-ket = bonus |
-| `oyinlar/tezkor.html` | ⚡ Tezkor tugma — kim birinchi bossa (Q, P, Z, M), final raund |
-| `oyinlar/zinapoya.html` | 🪜 Zinapoya — 100→500, davom etish yoki saqlash, 50/50 |
-| `oyinlar/klassik.html` | 🎯 Klassik bellashuv — 6×5 jadval, BONUS ×2 |
-| `oyinlar/savollar.js` | **Barcha savollar** — yangi mavzu shu yerga qoʻshiladi (fayl oxirida shablon bor) |
-| `mustaqil-ish/` | Mustaqil ish (HTML + printerga tayyor PDF, 22 bet) |
+| Tavakkal | Gʻildirak kategoriyani tanlaydi; 500 ballik balansdan tikish |
+| Hududlar | Olti burchakli kataklar xaritasi; bazadan kengayish va hujum |
+| Svetofor | Qizil → tasodifiy vaqtda yashil; falstart jarimasi |
+| Zinapoya | 10 kategoriya, 5 pogʻona, davom etish yoki saqlash |
+| Arqon tortish | 2 jamoa bir vaqtda javob beradi, arqon tortiladi |
 
-Topshiruvchi: Muxamadov Muhammadali · Fan oʻqituvchisi: Yunusova Maftuna
+Kunduzgi/tungi rejim, har fan uchun alohida dizayn.
+
+Claude Code bilan davom ettirish uchun: `CLAUDE.md` va `docs/suhbat-tarixi.md`.
+
+Topshiruvchi: Muxamadov Muhammadali

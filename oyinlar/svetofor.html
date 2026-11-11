@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Svetofor</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .progress { display: flex; gap: 3px; }
+  .progress i { flex: 1; height: 5px; background: var(--surface-2); border-radius: 1px; }
+  .progress i.done { background: var(--ink); } .progress i.cur { background: var(--accent); }
+  .stage { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 22px; align-items: start; }
+  .qcard { padding: clamp(18px, 3vw, 32px); }
+  .qcard .opt:disabled { cursor: default; }
+  .qcard.armed .opt { opacity: .55; }
+  .tower { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .light { width: 150px; padding: 16px; border-radius: 26px; background: #1a1a1a; display: flex; flex-direction: column; gap: 14px; box-shadow: inset 0 0 0 3px #2c2c2c, 0 20px 40px -20px rgba(0,0,0,.6); }
+  [data-fan="tarix"] .light { background: #0b2027; box-shadow: inset 0 0 0 3px #17414d, 0 20px 40px -20px rgba(0,0,0,.6); }
+  .lamp { aspect-ratio: 1; border-radius: 50%; background: #2b2b2b; box-shadow: inset 0 6px 14px rgba(0,0,0,.6); transition: background .08s, box-shadow .08s; }
+  .lamp.r.on { background: radial-gradient(circle at 40% 35%, #ff8a7a, #d62d1a 60%); box-shadow: 0 0 40px #e23b25, inset 0 -6px 12px rgba(0,0,0,.3); }
+  .lamp.y.on { background: radial-gradient(circle at 40% 35%, #ffe08a, #e0a512 60%); box-shadow: 0 0 34px #e0a512; }
+  .lamp.g.on { background: radial-gradient(circle at 40% 35%, #a6f5b8, #1fa74a 60%); box-shadow: 0 0 46px #22b552, inset 0 -6px 12px rgba(0,0,0,.3); }
+  .state { font-family: var(--display); font-size: 22px; text-align: center; min-height: 1.3em; }
+  .state.g { color: var(--good); } .state.r { color: var(--bad); }
+  .lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+  .lane { position: relative; padding: 18px 16px 16px; border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); text-align: left; overflow: hidden; transition: transform .08s, background .2s; }
+  .lane::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--c); }
+  .lane .nm { font-weight: 700; font-size: 17px; }
+  .lane .k { font-family: var(--num); font-size: 12px; color: var(--muted); }
+  .lane .st { font-size: 13px; margin-top: 6px; min-height: 1.4em; color: var(--muted); }
+  .lane .sc { position: absolute; right: 14px; bottom: 12px; font-family: var(--num); font-size: 26px; font-weight: 600; }
+  .lane:active { transform: scale(.98); }
+  .lane.win { background: color-mix(in srgb, var(--c) 18%, var(--surface)); }
+  .lane.foul { opacity: .45; }
+  .lane.foul .st { color: var(--bad); font-weight: 700; }
+  .ctrl { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+  .react { font-family: var(--num); font-size: 13px; color: var(--muted); }
+  @media (max-width: 800px) { .stage { grid-template-columns: 1fr; } .tower { flex-direction: row; justify-content: center; } .light { flex-direction: row; width: auto; } .lamp { width: 52px; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="assets/core.js"></script>
+<script>
+const { $, $$, esc, store, data, icon, sound } = G;
+const SK = G.saveKey("svetofor"), KEYS = ["Q", "P", "Z", "M"], FOUL = 50, ANSWER = 15;
+let S = store.get(SK), Q = null;
+
+G.header("Svetofor", reset);
+S && S.teams ? render() : setup();
+
+function setup() {
+  let count = 12;
+  G.setup($("#app"), {
+    kicker: "Oʻyin 03 · Reaksiya",
+    title: "Svetofor",
+    desc: "Savol oʻqiladi, keyin svetofor yonadi. Qizil — kutish, yashil — bosish! Kim birinchi bossa, oʻsha javob beradi.",
+    keys: KEYS,
+    extra: `<span class="l">Savollar soni</span>
+      <div class="seg" id="cnt">${[8, 12, 16, 20].map(n => `<button type="button" data-c="${n}" class="${n === count ? "on" : ""}">${n}</button>`).join("")}</div>`,
+    rules: [
+      "Boshlovchi savolni va variantlarni ovoz chiqarib oʻqiydi, soʻng <b>“Svetoforni yoqish”</b> tugmasini bosadi.",
+      "Avval <b>qizil</b> chiroq yonadi. Yashil chiroq <b>2 dan 10 soniyagacha</b> boʻlgan tasodifiy vaqtda yonadi.",
+      `Qizilda bosgan jamoa — <b>falstart</b>: −${FOUL} ball va bu savolga javob bera olmaydi.`,
+      `Yashil yonganda birinchi bosgan jamoa ${ANSWER} soniyada variantni tanlaydi. Toʻgʻri — <b>+daraja×100</b>, xato — <b>−daraja×50</b>.`,
+      `Jamoa tugmalari: <b>${KEYS.join(", ")}</b> yoki ekrandagi katta tugmalar. Javob variantlari: A, B, C, D.`
+    ],
+    onStart(teams) {
+      const pool = G.shuffle(G.all()).slice(0, count).sort((a, b) => a.li - b.li).map(x => x.id);
+      S = { teams, list: pool, idx: 0 }; save(); render();
+    }
+  });
+  $$("#cnt button").forEach(b => b.onclick = () => { count = +b.dataset.c; $$("#cnt button").forEach(x => x.classList.toggle("on", x === b)); });
+}
+function save() { store.set(SK, S); }
+function reset() { stop(); store.del(SK); S = null; Q = null; G.modal.close(); setup(); }
+function stop() { if (Q) { clearTimeout(Q.to); Q.t && Q.t.stop(); } }
+
+function render() {
+  if (S.idx >= S.list.length) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
+  const [ci, li] = S.list[S.idx].split("-").map(Number), item = data.kategoriyalar[ci].savollar[li];
+  const opts = G.shuffle([item.j, ...item.x]);
+  Q = { ci, li, item, opts, right: opts.indexOf(item.j), value: (li + 1) * 100, out: [], wrongOpts: [], phase: "read", who: -1 };
+  $("#app").innerHTML = `
+    <div class="progress">${S.list.map((_, k) => `<i class="${k < S.idx ? "done" : k === S.idx ? "cur" : ""}"></i>`).join("")}</div>
+    <div class="stage">
+      <div class="panel qcard" id="qc">
+        <div class="meta"><span>Savol ${S.idx + 1} / ${S.list.length}</span><span>${esc(data.kategoriyalar[ci].nomi)}</span><span class="acc">${li + 1}-daraja · ${Q.value} ball</span></div>
+        <div class="q-text">${item.s}</div>
+        <div id="tm"></div>
+        <div class="opts">${opts.map((o, k) => `<button type="button" class="opt" data-k="${k}" disabled><span class="k">${"ABCD"[k]}</span><span>${o}</span></button>`).join("")}</div>
+        <div id="after"></div>
+        <div class="ctrl" style="margin-top:18px">
+          <span class="react" id="react">Variantlar oʻqilgach, svetoforni yoqing</span>
+          <span><button class="btn" id="skip" type="button">Oʻtkazib yuborish</button> <button class="btn primary lg" id="arm" type="button">${icon("light")} Svetoforni yoqish</button></span>
+        </div>
+      </div>
+      <div class="tower"><div class="light"><div class="lamp r"></div><div class="lamp y"></div><div class="lamp g"></div></div><div class="state" id="st"></div></div>
+    </div>
+    <div class="lanes" id="lanes">${S.teams.map((t, i) => `<button class="lane" type="button" data-i="${i}" style="--c:${G.tc(t)}"><div class="nm">${esc(t.name)}</div><div class="k">Tugma: ${KEYS[i]}</div><div class="st"></div><div class="sc">${t.score}</div></button>`).join("")}</div>`;
+  $("#arm").onclick = arm;
+  $("#skip").onclick = () => reveal(null);
+  $$(".lane").forEach(b => b.onclick = () => press(+b.dataset.i));
+  $$(".opt").forEach(b => b.onclick = () => answer(+b.dataset.k));
+}
+
+function lamps(r, y, g) { $(".lamp.r").classList.toggle("on", r); $(".lamp.y").classList.toggle("on", y); $(".lamp.g").classList.toggle("on", g); }
+function laneState(i, txt, cls) { const l = $$(".lane")[i]; l.querySelector(".st").textContent = txt; if (cls) l.classList.add(cls); }
+
+function arm() {
+  if (!Q || (Q.phase !== "read")) return;
+  $("#arm").disabled = true; $("#qc").classList.add("armed");
+  Q.phase = "red"; lamps(true, false, false); sound.red();
+  $("#st").textContent = "Kuting"; $("#st").className = "state r";
+  $("#react").textContent = "Qizil chiroqda bosmang!";
+  const delay = 2000 + Math.random() * 8000;
+  Q.to = setTimeout(() => {
+    Q.phase = "green"; Q.greenAt = performance.now(); lamps(false, false, true); sound.green();
+    $("#st").textContent = "Bosing!"; $("#st").className = "state g";
+    $("#react").textContent = "Yashil! Birinchi bosgan javob beradi";
+    Q.to = setTimeout(() => { if (Q.phase === "green") reveal(null, "Hech kim bosmadi"); }, 7000);
+  }, delay);
+}
+
+function press(i) {
+  if (!Q || !S.teams[i] || Q.out.includes(i)) return;
+  if (Q.phase === "red") {
+    Q.out.push(i); S.teams[i].score -= FOUL; save(); sound.foul();
+    laneState(i, `Falstart · −${FOUL}`, "foul"); $$(".lane .sc")[i].textContent = S.teams[i].score;
+    if (Q.out.length >= S.teams.length) { clearTimeout(Q.to); reveal(null, "Hamma falstart qildi"); }
+    return;
+  }
+  if (Q.phase !== "green") return;
+  clearTimeout(Q.to);
+  const ms = Math.round(performance.now() - Q.greenAt);
+  Q.phase = "answer"; Q.who = i; sound.buzz();
+  lamps(false, true, false); $("#st").textContent = "Javob"; $("#st").className = "state";
+  $$(".lane").forEach((l, k) => l.classList.toggle("win", k === i));
+  laneState(i, `Reaksiya: ${(ms / 1000).toFixed(3)} s`);
+  $("#react").innerHTML = `<b style="color:var(--t${S.teams[i].c})">${esc(S.teams[i].name)}</b> javob beradi · reaksiya ${(ms / 1000).toFixed(3)} s`;
+  $("#qc").classList.remove("armed");
+  $$(".opt").forEach((b, k) => b.disabled = Q.wrongOpts.includes(k));
+  Q.t = G.timer($("#tm"), ANSWER, () => answer(-1));
+}
+
+function answer(k) {
+  if (!Q || Q.phase !== "answer") return;
+  Q.t.stop(); $("#tm").innerHTML = "";
+  const i = Q.who, ok = k === Q.right;
+  $$(".opt").forEach(b => b.disabled = true);
+  if (ok) {
+    S.teams[i].score += Q.value; save(); sound.ok();
+    $$(".opt")[k].classList.add("right");
+    return reveal(i);
+  }
+  if (k >= 0) { $$(".opt")[k].classList.add("wrong"); Q.wrongOpts.push(k); }
+  S.teams[i].score -= Q.value / 2; Q.out.push(i); save(); sound.bad();
+  laneState(i, k < 0 ? `Vaqt tugadi · −${Q.value / 2}` : `Xato · −${Q.value / 2}`, "foul"); $$(".lane .sc")[i].textContent = S.teams[i].score;
+  $$(".lane").forEach(l => l.classList.remove("win"));
+  if (Q.out.length >= S.teams.length || Q.wrongOpts.length >= 3) return reveal(null, "Hech kim topa olmadi");
+  // qolgan jamoalar uchun svetofor qayta yonadi
+  Q.phase = "read"; lamps(false, false, false); $("#st").textContent = "";
+  $("#react").textContent = "Qolgan jamoalar uchun svetofor qayta yonadi…";
+  Q.to = setTimeout(arm, 1600);
+}
+
+function reveal(winner, why) {
+  stop(); Q.phase = "done"; lamps(false, false, false);
+  $$(".opt").forEach(b => b.disabled = true); $$(".opt")[Q.right].classList.add("right");
+  $("#st").textContent = ""; $("#tm").innerHTML = "";
+  $("#after").innerHTML = `<div class="verdict ${winner !== null ? "ok" : "bad"}">${icon(winner !== null ? "check" : "cross")} ${winner !== null ? esc(S.teams[winner].name) + ": +" + Q.value : why || "Javob koʻrsatildi"}</div>${Q.item.izoh ? `<div class="izoh">${Q.item.izoh}</div>` : ""}`;
+  $(".ctrl").innerHTML = `<span class="react"></span><button class="btn primary lg" id="next" type="button">${S.idx + 1 >= S.list.length ? "Natijalar" : "Keyingi savol"} ${icon("arrow")}</button>`;
+  if (winner !== null) $$(".lane .sc")[winner].textContent = S.teams[winner].score;
+  S.idx++; save();
+  $("#next").onclick = () => render();
+}
+
+document.addEventListener("keydown", e => {
+  if (e.repeat || !Q || G.$(".modal.open")) return;
+  const key = e.key.toUpperCase(), i = KEYS.indexOf(key);
+  if (i >= 0) { e.preventDefault(); return press(i); }
+  if (Q.phase === "answer") { let k = "ABCD".indexOf(key); if (k < 0) k = "1234".indexOf(key); if (k >= 0 && !$$(".opt")[k].disabled) answer(k); }
+  if (e.key === " " && Q.phase === "read" && !$("#arm").disabled) { e.preventDefault(); arm(); }
+});
+</script>
+</body>
+</html>

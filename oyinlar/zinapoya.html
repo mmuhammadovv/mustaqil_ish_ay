@@ -4,38 +4,50 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Zinapoya</title>
-<link rel="stylesheet" href="assets/style.css">
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
 <style>
-  .cats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-  .catcard { text-align: left; padding: 20px; border-radius: 20px; border: 1px solid var(--stroke); min-height: 130px;
-    background: linear-gradient(150deg, rgba(139,92,246,.22), rgba(34,211,238,.06)); transition: transform .15s, box-shadow .15s; }
-  .catcard:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 16px 40px -14px rgba(139,92,246,.7); }
-  .catcard .ic { font-size: 28px; }
-  .catcard .nm { font-family: var(--display); font-size: 17px; margin-top: 8px; }
-  .catcard .st { color: var(--muted); font-size: 13px; margin-top: 6px; }
-  .catcard:disabled { cursor: default; background: var(--glass); opacity: .55; border-color: var(--c, var(--stroke)); }
-  .round { display: grid; grid-template-columns: 170px 1fr; gap: 20px; text-align: left; }
-  .ladder { display: flex; flex-direction: column-reverse; gap: 6px; }
-  .step { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--stroke); background: var(--glass); font-family: var(--display); font-size: 15px; display: flex; justify-content: space-between; color: var(--muted); }
-  .step.done { background: rgba(34,197,94,.2); border-color: var(--ok); color: var(--text); }
-  .step.cur { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border-color: transparent; transform: scale(1.04); }
-  .bank { margin-top: 10px; padding: 12px; border-radius: 14px; border: 1px dashed var(--gold); text-align: center; }
-  .bank b { display: block; font-family: var(--display); font-size: 26px; color: var(--gold); }
-  .lifes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-  .lifes .btn { padding: 8px 12px; font-size: 14px; }
-  .choice { text-align: center; padding: 10px 0; }
-  .round .q-text { text-align: left; margin-top: 0; }
-  @media (max-width: 700px) { .round { grid-template-columns: 1fr; } .ladder { flex-direction: row-reverse; } .step { flex: 1; justify-content: center; font-size: 12px; padding: 8px 4px; } .step span:first-child { display: none; } }
+  .cats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line-strong); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); }
+  [data-fan="tarix"] .cats { gap: 12px; border: 0; background: transparent; overflow: visible; }
+  .cc { position: relative; text-align: left; padding: 18px 16px 16px; min-height: 150px; border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface); display: flex; flex-direction: column; gap: 8px; transition: background .15s; }
+  .cc:nth-child(5n) { border-right: 0; }
+  .cc:nth-last-child(-n+5) { border-bottom: 0; }
+  [data-fan="tarix"] .cc { border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
+  .cc:hover:not(:disabled) { background: var(--accent-soft); }
+  .cc .no { font-family: var(--num); font-size: 13px; font-weight: 700; color: var(--accent); }
+  .cc .nm { font-family: var(--display); font-size: clamp(17px, 1.8vw, 22px); line-height: 1.15; flex: 1; }
+  .cc .ft { font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+  .cc:disabled { cursor: default; background: var(--surface-2); }
+  .cc:disabled .nm { color: var(--muted); }
+  .cc .stamp { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--c); }
+  .cc .steps { display: flex; gap: 3px; }
+  .cc .steps i { flex: 1; height: 4px; background: var(--line); }
+  .cc .steps i.on { background: var(--c); }
+  .round { display: grid; grid-template-columns: 190px 1fr; gap: 26px; }
+  .ladder { display: flex; flex-direction: column-reverse; }
+  .step { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-bottom: 0; font-family: var(--num); font-size: 15px; color: var(--muted); }
+  .step:first-child { border-bottom: 1px solid var(--line); }
+  .step.done { color: var(--good); }
+  .step.done::after { content: ""; }
+  .step.cur { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .bank { margin-top: 14px; padding: 14px; border: 1px solid var(--line-strong); text-align: center; border-radius: var(--r); }
+  .bank small { display: block; color: var(--muted); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+  .bank b { font-family: var(--num); font-size: 30px; }
+  .helps { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .choice { text-align: center; padding: 20px 0; }
+  .choice p { color: var(--muted); font-size: 18px; }
+  .round .q-text { margin-top: 0; }
+  @media (max-width: 900px) { .cats { grid-template-columns: repeat(2, 1fr); } .cc:nth-child(n) { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); } .round { grid-template-columns: 1fr; } .ladder { flex-direction: row-reverse; } .step { flex: 1; justify-content: center; border-bottom: 1px solid var(--line); border-right: 0; } .step span:first-child { display: none; } }
 </style>
 </head>
 <body>
 <main class="wrap" id="app"></main>
-<script src="savollar.js"></script>
-<script src="assets/oyin.js"></script>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="assets/core.js"></script>
 <script>
-const { $, $$, esc, store, topic, VALUES, sound } = G;
-const SK = G.saveKey("zinapoya");
-const ICONS = ["📘", "🧩", "✒️", "🏛️", "🧱", "🔎", "🎯", "💡"];
+const { $, $$, esc, store, data, icon, sound } = G;
+const SK = G.saveKey("zinapoya"), VAL = [100, 200, 300, 400, 500];
 let S = store.get(SK), R = null;
 
 G.header("Zinapoya", reset);
@@ -43,89 +55,72 @@ S && S.teams ? render() : setup();
 
 function setup() {
   G.setup($("#app"), {
-    title: "🪜 Zinapoya",
-    desc: "Kategoriya tanlang va 100 dan 500 gacha zinapoyadan koʻtariling. Har pogʻonadan keyin qaror qiling: davom etasizmi yoki yutuqni saqlaysizmi?",
+    kicker: "Oʻyin 04 · Xavf va qaror",
+    title: "Zinapoya",
+    desc: `Jamoa ${data.kategoriyalar.length} ta kategoriyadan birini tanlab, beshta pogʻonadan koʻtariladi. Har pogʻonadan keyin qaror qiladi: davom etish yoki yutuqni saqlash.`,
     rules: [
-      "Har bir jamoa navbati bilan bitta kategoriyani tanlaydi va uning 5 ta savoliga ketma-ket javob beradi.",
-      "Savollar test shaklida: 4 ta variantdan bittasi toʻgʻri.",
-      "Har toʻgʻri javobdan keyin: <b>“Davom etish”</b> yoki <b>“Toʻxtash”</b> (toʻplangan ballar saqlanadi).",
-      "Xato javob — shu raundda toʻplangan <b>barcha ballar yonadi</b>.",
-      "Har jamoada bir martalik yordamchilar bor: <b>50/50</b> va <b>+15 soniya</b>.",
-      "Barcha kategoriyalar tugagach, eng koʻp ball toʻplagan jamoa gʻolib."
+      `Jadvalda <b>${data.kategoriyalar.length} ta kategoriya</b> bor. Jamoalar navbat bilan bittadan tanlaydi.`,
+      "Har kategoriyada 5 ta savol: 100, 200, 300, 400, 500 ball.",
+      "Toʻgʻri javobdan keyin <b>“Davom etish”</b> yoki <b>“Toʻxtash”</b> — toʻplangan ball saqlanadi.",
+      "Xato javob — shu raundda toʻplangan <b>barcha ball yonadi</b>.",
+      "Har jamoada bir martalik yordam: <b>50/50</b> va <b>+15 soniya</b>.",
+      "Barcha kategoriyalar oʻynalgach, eng koʻp ball toʻplagan jamoa gʻolib."
     ],
-    onStart(teams) {
-      S = { teams, played: {}, turn: 0, life: teams.map(() => ({ fifty: true, time: true })) };
-      save(); render();
-    }
+    onStart(teams) { S = { teams, played: {}, turn: 0, help: teams.map(() => ({ f: 1, t: 1 })) }; save(); render(); }
   });
 }
 function save() { store.set(SK, S); }
 function reset() { store.del(SK); S = null; R = null; G.modal.close(); setup(); }
 
 function render() {
-  const t = S.teams[S.turn], cats = topic.kategoriyalar;
+  const t = S.teams[S.turn], cats = data.kategoriyalar;
+  if (Object.keys(S.played).length >= cats.length) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
   $("#app").innerHTML = `
-    <div class="turn-banner" style="--c:${t.color}">Navbat: <b>${esc(t.name)}</b> — kategoriya tanlang</div>
+    <div class="turn" style="--c:${G.tc(t)}"><span class="kicker">Navbat</span><span class="who">${esc(t.name)}</span><span class="what">— kategoriyani tanlang</span></div>
     <div class="cats">${cats.map((c, i) => {
       const p = S.played[i];
-      if (p) { const tm = S.teams[p.team]; return `<button class="catcard" disabled style="--c:${tm.color}"><div class="ic">${ICONS[i % ICONS.length]}</div><div class="nm">${c.nomi}</div><div class="st"><b style="color:${tm.color}">${esc(tm.name)}</b> · ${p.steps}/5 pogʻona · +${p.kept}</div></button>`; }
-      return `<button class="catcard" data-c="${i}"><div class="ic">${ICONS[i % ICONS.length]}</div><div class="nm">${c.nomi}</div><div class="st">5 pogʻona · 1500 ballgacha</div></button>`;
+      if (p) { const tm = S.teams[p.team]; return `<button class="cc" disabled style="--c:${G.tc(tm)}"><span class="no">${String(i + 1).padStart(2, "0")}</span><span class="nm">${esc(c.nomi)}</span>
+        <span class="stamp">${icon(p.kept ? "check" : "cross")} ${esc(tm.name)} · +${p.kept}</span><span class="steps">${VAL.map((_, k) => `<i class="${k < p.steps ? "on" : ""}"></i>`).join("")}</span></button>`; }
+      return `<button class="cc" data-c="${i}"><span class="no">${String(i + 1).padStart(2, "0")}</span><span class="nm">${esc(c.nomi)}</span><span class="ft">5 pogʻona · 1500 ballgacha</span></button>`;
     }).join("")}</div>
     <div class="scores" id="sc"></div>`;
   G.scores($("#sc"), S.teams, { active: S.turn, onAdjust: (i, d) => { S.teams[i].score += d; save(); render(); },
-    tag: (_, i) => `${S.life[i].fifty ? "50/50 ✓" : "50/50 ✗"} · ${S.life[i].time ? "+15s ✓" : "+15s ✗"}` });
-  $$(".catcard[data-c]").forEach(b => b.onclick = () => { sound.click(); R = { ci: +b.dataset.c, step: 0, bank: 0, team: S.turn }; step(); });
-  if (Object.keys(S.played).length === cats.length) G.winner(S.teams, reset);
+    tag: (_, i) => `50/50 ${S.help[i].f ? "bor" : "ishlatilgan"} · +15 s ${S.help[i].t ? "bor" : "ishlatilgan"}` });
+  $$(".cc[data-c]").forEach(b => b.onclick = () => { sound.click(); R = { ci: +b.dataset.c, step: 0, bank: 0, team: S.turn }; step(); });
 }
 
 function shell(inner) {
-  const t = S.teams[R.team], c = topic.kategoriyalar[R.ci];
-  return G.modal(`
-    <div class="meta" style="margin-bottom:14px"><span class="pill">${c.nomi}</span><span class="pill team-pill" style="--c:${t.color}">${esc(t.name)}</span></div>
-    <div class="round">
-      <div>
-        <div class="ladder">${VALUES.map((v, i) => `<div class="step ${i < R.step ? "done" : i === R.step ? "cur" : ""}"><span>${i + 1}-pogʻona</span><span>${v}</span></div>`).join("")}</div>
-        <div class="bank">Raund yutugʻi<b>${R.bank}</b></div>
-      </div>
-      <div>${inner}</div>
-    </div>`);
+  const t = S.teams[R.team];
+  return G.modal(`<div class="meta" style="--c:${G.tc(t)};margin-bottom:18px"><span class="tm-name">${esc(t.name)}</span><span>${esc(data.kategoriyalar[R.ci].nomi)}</span><span class="acc">${R.step + 1}-pogʻona</span></div>
+    <div class="round"><div><div class="ladder">${VAL.map((v, i) => `<div class="step ${i < R.step ? "done" : i === R.step ? "cur" : ""}"><span>${i + 1}-pogʻona</span><span>${v}</span></div>`).join("")}</div>
+      <div class="bank"><small>Raund yutugʻi</small><b>${R.bank}</b></div></div><div>${inner}</div></div>`);
 }
 
 function step() {
-  const life = S.life[R.team];
-  const c = shell(`<div id="q"></div>
-    <div class="lifes">
-      <button class="btn" id="f50" type="button" ${life.fifty ? "" : "disabled"}>✂️ 50/50</button>
-      <button class="btn" id="t15" type="button" ${life.time ? "" : "disabled"}>⏱ +15 soniya</button>
-    </div>`);
-  const a = G.ask($("#q", c), topic.kategoriyalar[R.ci].savollar[R.step], { mc: true, onResult: ok => ok ? correct() : wrong() });
-  $("#f50", c).onclick = e => { life.fifty = false; save(); a.fifty(); e.currentTarget.disabled = true; sound.click(); };
-  $("#t15", c).onclick = e => { life.time = false; save(); a.timer.add(15); e.currentTarget.disabled = true; sound.click(); };
+  const h = S.help[R.team];
+  const c = shell(`<div id="q"></div><div class="helps">
+    <button class="btn" id="f50" type="button" ${h.f ? "" : "disabled"}>${icon("half")} 50/50</button>
+    <button class="btn" id="t15" type="button" ${h.t ? "" : "disabled"}>${icon("clock")} +15 soniya</button></div>`);
+  const a = G.ask($("#q", c), data.kategoriyalar[R.ci].savollar[R.step], { onResult: ok => ok ? correct() : finish(0, "Raund yutugʻi yonib ketdi") });
+  $("#f50", c).onclick = e => { h.f = 0; save(); a.fifty(); e.currentTarget.disabled = true; };
+  $("#t15", c).onclick = e => { h.t = 0; save(); a.timer.add(15); e.currentTarget.disabled = true; };
 }
 
 function correct() {
-  R.bank += VALUES[R.step]; R.step++;
-  if (R.step >= VALUES.length) { sound.bonus(); return finish(R.bank, "🏔️ Zinapoya choʻqqisi zabt etildi!"); }
-  const c = shell(`<div class="choice">
-    <div class="result-flash ok">Toʻgʻri! +${VALUES[R.step - 1]}</div>
-    <p style="color:var(--muted);font-size:18px">Keyingi pogʻona: <b style="color:var(--gold)">${VALUES[R.step]}</b> ball. Xato qilsangiz, <b>${R.bank}</b> ball yonadi.</p>
-    <div class="row-btns">
-      <button class="btn primary lg" id="go" type="button">Davom etish ⬆</button>
-      <button class="btn gold lg" id="stop" type="button">Toʻxtash va ${R.bank} ni saqlash</button>
-    </div></div>`);
-  $("#go", c).onclick = () => { sound.click(); step(); };
-  $("#stop", c).onclick = () => finish(R.bank, "Ballar saqlandi");
+  R.bank += VAL[R.step]; R.step++;
+  if (R.step >= VAL.length) { sound.bonus(); return finish(R.bank, "Zinapoya choʻqqisi zabt etildi"); }
+  const c = shell(`<div class="choice"><div class="verdict ok">${icon("check")} Toʻgʻri · +${VAL[R.step - 1]}</div>
+    <p>Keyingi pogʻona — <b>${VAL[R.step]}</b> ball. Xato qilsangiz, <b>${R.bank}</b> ball yonadi.</p>
+    <div class="row-btns"><button class="btn primary lg" id="go" type="button">Davom etish ${icon("arrow")}</button><button class="btn lg" id="stop" type="button">Toʻxtash va ${R.bank} ni saqlash</button></div></div>`);
+  $("#go", c).onclick = step;
+  $("#stop", c).onclick = () => finish(R.bank, "Ball saqlandi");
 }
-
-function wrong() { finish(0, "🔥 Raund yutugʻi yonib ketdi"); }
 
 function finish(kept, msg) {
   const who = R.team;
-  S.teams[who].score += kept;
-  S.played[R.ci] = { team: who, steps: R.step, kept };
+  S.teams[who].score += kept; S.played[R.ci] = { team: who, steps: R.step, kept };
   S.turn = (S.turn + 1) % S.teams.length; R = null; save();
-  G.modal.close(); render(); G.bump($("#sc"), who);
-  G.toast(`${msg}: <b style="color:${kept ? "var(--ok)" : "var(--bad)"}">+${kept}</b>`, 2400);
+  G.modal.close(); render(); G.bump($("#sc"), who); G.toast(`${msg}: +${kept}`, 2200);
 }
 </script>
 </body>
