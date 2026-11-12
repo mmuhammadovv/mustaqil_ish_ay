@@ -7,15 +7,16 @@
 <title>Josus — chop etish uchun</title>
 <link rel="stylesheet" href="chop.css">
 <style>
-  .jgrid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 58mm; }
-  .jc { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4mm; margin: -0.6px; }
-  .jc .set { font-size: 8pt; letter-spacing: .16em; text-transform: uppercase; color: #8a7660; }
-  .jc .nm { font-family: "Alegreya", Georgia, serif; font-size: 18pt; font-weight: 800; line-height: 1.1; margin: 3mm 0 2mm; }
-  .jc .role { font-size: 10pt; color: #4a3424; }
-  .jc.spy { background: #2b1d13; color: #efe3c8; }
-  .jc.spy .nm { font-size: 24pt; letter-spacing: .1em; color: #e0b65a; }
-  .jc.spy .role, .jc.spy .set { color: #cdbb9c; }
-  .places { columns: 2; column-gap: 8mm; padding-left: 5mm; }
+  /* Har bir kartochka ikki yarim: tashqi (hammada bir xil) va ichki (joy yoki josus). Buklanganda ichi koʻrinmaydi. */
+  .jgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; }
+  .jc { height: 82mm; display: grid; grid-template-rows: 1fr 1fr; margin: -0.6px; }
+  .jc > div { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4mm; }
+  .jc .out { border-bottom: 1px dashed #7a6650; background: repeating-linear-gradient(45deg, #f3ead8 0 6px, #ebdfc6 6px 12px); }
+  .jc .out b { font-family: "Alegreya", Georgia, serif; font-size: 16pt; letter-spacing: .2em; text-transform: uppercase; color: #4a3424; }
+  .jc .out small { font-size: 8pt; letter-spacing: .14em; text-transform: uppercase; color: #6e5a46; margin-top: 2mm; }
+  .jc .in .nm { font-family: "Alegreya", Georgia, serif; font-size: 24pt; font-weight: 800; line-height: 1.1; color: #2b1d13; }
+  .jc .in .hint { font-size: 9pt; color: #6e5a46; margin-top: 2mm; }
+  .fold { font-size: 7pt; letter-spacing: .14em; text-transform: uppercase; color: #8a7660; }
 </style>
 </head>
 <body>
@@ -24,12 +25,13 @@
 <section class="sheet first">
   <header class="sh"><span>Jonli oʻyin · Oʻzbekistonning eng yangi tarixi</span><span>1-varaq: qoidalar</span></header>
   <h1>Josus</h1>
-  <p class="lead">Bir guruhdagi hamma oʻyinchi bitta tarixiy joyda “turibdi”. Faqat bittasi — josus — qayerdaligini bilmaydi. Guruh josusni topishi, josus esa joyni topishi kerak.</p>
+  <p class="lead">Guruhdagi hamma oʻyinchi bitta tarixiy joyda “turibdi”. Faqat bittasi — josus — qayerdaligini bilmaydi. Guruh josusni topishi, josus esa joyni topishi kerak.</p>
   <h2>Tayyorgarlik</h2>
   <ol>
-    <li>Kartochkalarni qirqing. Har bir <b>toʻplam</b> (A, B, C...) — 5 ta joy kartochkasi va 1 ta “Josus” kartochkasi, jami 6 ta.</li>
-    <li>Bitta raund uchun bitta toʻplam olinadi. 6 tadan kam oʻyinchi boʻlsa, ortiqcha <b>joy</b> kartochkasini olib qoʻying (josus kartochkasi doim qoladi).</li>
-    <li>Kartochkalarni aralashtirib, teskari qilib tarqating. Har kim faqat oʻzinikini koʻradi.</li>
+    <li>3 ta toʻplam bor: <b>A</b>, <b>B</b>, <b>C</b>. Har toʻplamda <b>10 ta kartochka</b>: 9 tasida joy nomi, bittasida “Josus”.</li>
+    <li>Kartochkalarni tashqi chiziq boʻyicha qirqing va <b>oʻrtadagi punktir boʻyicha buklang</b> — yozuv ichkarida qoladi, tashqi tomoni hamma kartochkada bir xil.</li>
+    <li>Bitta raund uchun bitta toʻplam olinadi. Oʻyinchilar 10 tadan kam boʻlsa, ortiqcha <b>joy</b> kartochkasini olib qoʻying (josus kartochkasi doim qoladi).</li>
+    <li>Buklangan kartochkalarni aralashtirib tarqating. Har kim kartochkasini boshqalarga koʻrsatmasdan ochib koʻradi va yana buklaydi.</li>
   </ol>
   <h2>Qoidalar</h2>
   <ol>
@@ -44,33 +46,27 @@
     <li>Josus joyni topdi yoki vaqt tugaguncha topilmadi — josus <b>+3</b>.</li>
     <li>Notoʻgʻri oʻyinchi josus deb topildi — josus <b>+2</b>.</li>
   </ol>
-  <h2>Barcha joylar roʻyxati (josus uchun chop etib qoʻyish mumkin)</h2>
-  <ol class="places" id="places"></ol>
+  <h2>Mumkin boʻlgan joylar (josusga yordam uchun aytib qoʻyish mumkin)</h2>
+  <ol id="places"></ol>
 </section>
 
 <div id="cards"></div>
 
 <script>
-const L = [
-  ["Registon maydoni", ["Sayyoh", "Gid", "Rassom", "Usta koshinkor", "Fotograf"]],
-  ["BMT Bosh Assambleyasi zali", ["Diplomat", "Tarjimon", "Jurnalist", "Xavfsizlik xodimi", "Bosh kotib yordamchisi"]],
-  ["Orol dengizi sohili", ["Ekolog", "Baliqchi", "Olim", "Jurnalist", "Saksovul ekuvchi"]],
-  ["Ulugʻbek rasadxonasi", ["Astronom", "Shogird", "Muzey xodimi", "Sayyoh", "Tarixchi"]],
-  ["Ichan qalʼa (Xiva)", ["Hunarmand", "Sayyoh", "Gid", "Arxitektor", "Qorovul"]],
-  ["Ipak yoʻlidagi karvonsaroy", ["Savdogar", "Tuyakash", "Oshpaz", "Sayyoh", "Karvonboshi"]],
-  ["Mustaqillik maydoni", ["Talaba", "Bogʻbon", "Fotograf", "Sayyoh", "Faxriy"]],
-  ["YuNESKO konferensiyasi (Samarqand)", ["Delegat", "Tarjimon", "Olim", "Jurnalist", "Tashkilotchi"]]
-];
-document.getElementById("places").innerHTML = L.map(l => `<li>${l[0]}</li>`).join("");
-const SETS = "ABCDEFGH";
-const cards = [];
-L.forEach((l, i) => {
-  l[1].forEach(r => cards.push(`<div class="cut jc"><span class="set">Toʻplam ${SETS[i]}</span><span class="nm">${l[0]}</span><span class="role">Siz — ${r.toLowerCase()}</span></div>`));
-  cards.push(`<div class="cut jc spy"><span class="set">Toʻplam ${SETS[i]}</span><span class="nm">JOSUS</span><span class="role">Joyni bilmaysiz. Oʻzingizni sezdirmang!</span></div>`);
+const L = ["Registon maydoni", "BMT Bosh Assambleyasi zali", "Orol dengizi sohili"];
+document.getElementById("places").innerHTML = L.map(l => `<li>${l}</li>`).join("");
+const SETS = "ABC";
+const card = (set, inner, hint) => `<div class="cut jc">
+  <div class="out"><b>Josus</b><small>Toʻplam ${set} · ichini boshqalarga koʻrsatmang</small></div>
+  <div class="in"><span class="fold">buklash chizigʻi ↑</span><span class="nm">${inner}</span><span class="hint">${hint}</span></div></div>`;
+const pages = [];
+L.forEach((place, i) => {
+  // josus kartochkasi joy kartochkalari bilan bir xil koʻrinishda — faqat matni boshqa
+  const cards = Array.from({ length: 9 }, () => card(SETS[i], place, "Siz shu joydasiz"));
+  cards.splice(Math.floor(Math.random() * 10), 0, card(SETS[i], "Josus", "Joyni bilmaysiz — oʻzingizni sezdirmang"));
+  for (let k = 0; k < cards.length; k += 6) pages.push([SETS[i], k / 6 + 1, Math.ceil(cards.length / 6), cards.slice(k, k + 6)]);
 });
-const PER = 12, pages = [];
-for (let i = 0; i < cards.length; i += PER) pages.push(cards.slice(i, i + PER));
-document.getElementById("cards").innerHTML = pages.map((p, n) => `<section class="sheet"><header class="sh"><span>Josus</span><span>Kartochkalar ${n + 1} / ${pages.length}</span></header><div class="jgrid">${p.join("")}</div></section>`).join("");
+document.getElementById("cards").innerHTML = pages.map(([set, n, tot, cs]) => `<section class="sheet"><header class="sh"><span>Josus · Toʻplam ${set}</span><span>Kartochkalar ${n} / ${tot}</span></header><div class="jgrid">${cs.join("")}</div></section>`).join("");
 </script>
 </body>
 </html>

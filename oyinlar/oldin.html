@@ -75,16 +75,30 @@ function reset() { if (cur && cur.t) cur.t.stop(); cur = null; store.del(SK); S 
 
 function startRun() {
   if (S.teams.every(t => t.runs >= S.runs)) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
-  const order = G.shuffle(EV.map((_, i) => i));
-  cur = { chain: [order[0]], next: 1, order, streak: 0, gained: 0, done: false };
+  cur = { chain: [], refId: -1, streak: 0, gained: 0, done: false };
+  cur.nextId = pickNext();
   render();
 }
 
+// Juftliklar faqat vaqt jihatidan yaqin voqealardan tuziladi (oraligʻi ≤ 25 yil) — oʻyin oson boʻlib qolmasin
+const GAP = 25;
+const PAIRS = [];
+EV.forEach((a, i) => EV.forEach((b, j) => { if (i !== j && Math.abs(a.v - b.v) > 0 && Math.abs(a.v - b.v) <= GAP) PAIRS.push([i, j]); }));
+function pickNext() {
+  const seen = cur.chain;
+  // avval joriy voqeadan boshlanadigan yaqin juftlik, boʻlmasa — istalgan yangi yaqin juftlik
+  let c = PAIRS.filter(([a, b]) => a === cur.refId && !seen.includes(b));
+  if (!c.length) c = PAIRS.filter(([a, b]) => !seen.includes(b));
+  const pr = c[Math.floor(Math.random() * c.length)];
+  cur.refId = pr[0];
+  if (!seen.includes(pr[0])) seen.push(pr[0]);
+  return pr[1];
+}
 const pct = v => (3 + RANK.indexOf(v) / (RANK.length - 1) * 94).toFixed(2);
 
 function render() {
   G.swapped();
-  const t = S.teams[S.turn], ref = EV[cur.chain[cur.chain.length - 1]], nw = EV[cur.order[cur.next]];
+  const t = S.teams[S.turn], ref = EV[cur.refId], nw = EV[cur.nextId];
   $("#app").innerHTML = `
     <div class="panel board">
       <div class="streak" style="--c:${G.tc(t)}"><span class="kicker">Navbat</span><span class="turn"><span class="who">${esc(t.name)}</span></span>
@@ -112,13 +126,13 @@ function render() {
 function decide(dir) {
   if (cur.done) return;
   cur.done = true; cur.t.stop();
-  const t = S.teams[S.turn], ref = EV[cur.chain[cur.chain.length - 1]], nw = EV[cur.order[cur.next]];
+  const t = S.teams[S.turn], ref = EV[cur.refId], nw = EV[cur.nextId];
   const truth = nw.v < ref.v ? -1 : 1, ok = dir === truth;
   $("#ny").textContent = nw.y; $("#ny").classList.remove("hid");
   $("#before").disabled = $("#after").disabled = true;
   if (ok) {
     cur.streak++; const pts = cur.streak * 100; cur.gained += pts; t.score += pts; save(); sound.ok();
-    cur.chain.push(cur.order[cur.next]); cur.next++;
+    cur.chain.push(cur.nextId); cur.refId = cur.nextId; cur.nextId = pickNext();
     const more = cur.streak < MAXRUN;
     $("#res").innerHTML = `<div class="verdict ok">${icon("check")} Toʻgʻri · +${pts}</div><div class="row-btns"><button class="btn primary lg" id="go" type="button">${more ? "Keyingi voqea" : "Seriya yakunlandi"} ${icon("arrow")}</button></div>`;
     G.swapped(); $("#go").onclick = () => more ? render() : endRun();

@@ -79,3 +79,9 @@ Foydalanuvchi talablari:
 ## 15. Yana 8 ta oʻyin
 - Saytga (tarix): Minora qurish, Oldinmi-keyinmi, Labirint, Harflab topish, Ipak yoʻli karvoni, Taxmin.
 - Jonli: Josus, Tarix bingosi.
+
+## 16. Tuzatishlar
+- Oldinmi-keyinmi: juftliklar vaqt jihatidan yaqin voqealardan tanlanadi.
+- Josus: 3 toʻplam × 10 kartochka, rolsiz, buklanadigan (josus kartochkasi tashqaridan farq qilmaydi), qatorda 2 ta.
+- Bingo: boshlovchi savollari katta shriftda.
+- BMT sessiyasi olib tashlandi.
