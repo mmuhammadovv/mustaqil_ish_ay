@@ -7,14 +7,14 @@
 <title>Kim men? — chop etish uchun</title>
 <link rel="stylesheet" href="chop.css">
 <style>
-  /* Eslatma stikeri (76×76 mm) oʻlchamidagi kartochkalar: qirqib, stiker ustiga yopishtiriladi */
-  .notes { display: grid; grid-template-columns: repeat(2, 76mm); grid-auto-rows: 76mm; gap: 8mm 10mm; justify-content: center; margin-top: 4mm; }
+  /* Eslatma stikeri (76×76 mm) uchun kartochka 72×56 mm: stikerning yuqori yopishqoq qismi (~2 sm) ochiq qoladi — bloknotdan uzish oson */
+  .notes { display: grid; grid-template-columns: repeat(2, 72mm); grid-auto-rows: 56mm; gap: 7mm 12mm; justify-content: center; margin-top: 4mm; }
   .note { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 5mm; border: 1px dashed #7a6650; }
   .note::before, .note::after { content: ""; position: absolute; width: 4mm; height: 4mm; border: 0 solid #2b1d13; }
   .note::before { left: -2.5mm; top: -2.5mm; border-left-width: 1px; border-top-width: 1px; }
   .note::after { right: -2.5mm; bottom: -2.5mm; border-right-width: 1px; border-bottom-width: 1px; }
   .note .cat { font-size: 8pt; letter-spacing: .18em; text-transform: uppercase; color: #6e5a46; }
-  .note .name { font-family: "Alegreya", Georgia, serif; font-size: 22pt; font-weight: 800; line-height: 1.08; margin: 3mm 0; color: #2b1d13; }
+  .note .name { font-family: "Alegreya", Georgia, serif; font-size: 20pt; font-weight: 800; line-height: 1.08; margin: 3mm 0; color: #2b1d13; }
   .note .orn { width: 18mm; height: 2.5mm; border-top: 1px solid #b07d2a; border-bottom: 1px solid #b07d2a; }
 </style>
 </head>
@@ -28,8 +28,8 @@
   <p class="lead">Oʻyinchining peshonasiga (yoki koʻkragiga) tarixiy shaxs, tashkilot yoki atama yozilgan kartochka yopishtiriladi. U kartochkani koʻrmaydi — faqat “ha” yoki “yoʻq” javobli savollar berib, kim yoki nima ekanini topadi.</p>
   <h2>Tayyorgarlik</h2>
   <ol>
-    <li>Kartochkalar <b>eslatma stikeri</b> (76×76 mm, kvadrat) oʻlchamida. Oddiy qogʻozga chop eting — chop etishda <b>masshtab 100%</b> boʻlsin (“Sahifaga moslash” oʻchirilgan).</li>
-    <li>Har bir kartochkani punktir chiziq boʻyicha qirqing va <b>stikerning old tomoniga</b> yelim yoki skotch bilan yopishtiring. Stikerning yopishqoq qismi orqada qoladi.</li>
+    <li>Kartochkalar <b>76×76 mm eslatma stikeri</b> uchun: oʻlchami <b>72×56 mm</b>. Oddiy qogʻozga chop eting — chop etishda <b>masshtab 100%</b> boʻlsin (“Sahifaga moslash” oʻchirilgan).</li>
+    <li>Har bir kartochkani punktir chiziq boʻyicha qirqing va stikerning old tomoniga, <b>pastki qismiga</b> yopishtiring. Tepada ~2 sm ochiq qoladi — stikerni bloknotdan bemalol uzib olasiz.</li>
     <li>Tayyor stikerlarni teskari qilib aralashtiring. Oʻyinda bittasini oʻyinchining peshonasiga yopishtirasiz.</li>
     <li>Oxirgi varaq — boshlovchi uchun maslahatlar (har bir kartochka haqida qisqa maʼlumot).</li>
   </ol>
@@ -88,12 +88,12 @@ const C = [
   ["Bayram", "Navroʻz", "“Yangi kun”; 21-mart atrofida nishonlanadi, YuNESKO roʻyxatida."],
   ["Bayram", "Mustaqillik kuni", "1-sentabr; mustaqillik 1991-yil 31-avgustda eʼlon qilingan."]
 ];
-// Eslatma stikeri oʻlchamidagi (76×76 mm) kartochkalar — har varaqda 6 ta
-const PER = 6, pages = [];
+// Eslatma stikeri uchun kartochkalar (72×56 mm) — har varaqda 8 ta
+const PER = 8, pages = [];
 for (let i = 0; i < C.length; i += PER) pages.push(C.slice(i, i + PER));
 document.getElementById("cards").innerHTML = pages.map((pg, n) => `
   <section class="sheet">
-    <header class="sh"><span>Kim men? · stiker kartochkalar (76×76 mm)</span><span>${n + 1} / ${pages.length}</span></header>
+    <header class="sh"><span>Kim men? · stiker kartochkalar (72×56 mm)</span><span>${n + 1} / ${pages.length}</span></header>
     <div class="notes">${pg.map(c => `<div class="note"><span class="cat">${c[0]}</span><span class="name">${c[1]}</span><span class="orn"></span></div>`).join("")}</div>
   </section>`).join("");
 document.getElementById("hints").innerHTML = C.map(c => `<tr><td>${c[1]}</td><td>${c[2]}</td></tr>`).join("");
