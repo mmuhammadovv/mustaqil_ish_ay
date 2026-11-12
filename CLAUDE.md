@@ -56,7 +56,7 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 
 ## Logo
 
-- `favicon.svg` (ildizda) — “MI” (Mustaqil Ishlar): qogʻoz rangli “M” (akademik) + bayroq ranglaridagi “I” ustuni (tarix) + qizil chiziq. Har sahifada favicon va sarlavhada `.brand` (bosh sahifaga havola). `build.mjs` roʻyxatida bor.
+- `favicon.svg` (ildizda) — minimalistik: toʻq yumaloq kvadrat, ingichka geometrik oq “M” va bitta koʻk urgʻu nuqtasi. Foydalanuvchi minimalistik uslubni soʻragan (avvalgi rang-barang “MI” varianti oʻrniga). Har sahifada favicon va sarlavhada `.brand`. `build.mjs` roʻyxatida bor.
 
 ## Konventsiyalar
 
