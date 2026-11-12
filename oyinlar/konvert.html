@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Sirli konvert</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .envs { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; }
+  .env { position: relative; aspect-ratio: 1.45; border: 0; padding: 0; background: none; transition: transform .15s; }
+  .env svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 8px 12px rgba(0,0,0,.18)); }
+  .env .paper { fill: var(--surface); stroke: var(--line-strong); }
+  .env .flap { fill: var(--surface-2); stroke: var(--line-strong); }
+  .env .seal { fill: var(--bad); }
+  .env .seal-t { fill: #fff; font-family: var(--display); font-weight: 800; font-size: 22px; }
+  .env:hover:not(:disabled) { transform: translateY(-4px) rotate(-1deg); }
+  .env:disabled { cursor: default; }
+  .env.open svg { opacity: .45; filter: none; }
+  .env .res { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; font-weight: 700; font-size: 14px; color: var(--c, var(--muted)); }
+  .letter { max-width: 760px; margin: 0 auto; }
+  .letter .pts { display: flex; gap: 8px; margin: 10px 0 6px; }
+  .letter .pts span { flex: 1; text-align: center; padding: 6px 0; border: 1px solid var(--line); border-radius: var(--r); font-family: var(--num); font-weight: 700; color: var(--muted); }
+  .letter .pts span.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .letter .pts span.gone { text-decoration: line-through; opacity: .5; }
+  .clues { list-style: none; margin: 12px 0 14px; padding: 0; }
+  .clues li { display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: baseline; padding: 12px 14px; border: 1px dashed var(--line-strong); border-radius: var(--r); margin-bottom: 8px; background: var(--surface); font-size: clamp(17px, 1.9vw, 22px); line-height: 1.35; animation: rise .3s ease; }
+  .clues li b { font-family: var(--display); font-size: 22px; color: var(--bad); }
+  .clues li.locked { color: var(--muted); font-style: italic; border-style: dotted; background: transparent; font-size: 15px; }
+  .clue-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="savollar/tarix-qoshimcha.js"></script>
+<script src="assets/core.js"></script>
+<script>
+// Bu oʻyin faqat tarix fani uchun
+if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
+const { $, $$, esc, store, icon, sound } = G;
+const SK = G.saveKey("konvert"), PTS = [300, 200, 100], TIME = 30;
+const ENV = ((window.QOSHIMCHA || {}).tarix || {}).konvertlar || [];
+let S = store.get(SK), cur = null;
+
+G.header("Sirli konvert", reset);
+
+function setup() {
+  G.setup($("#app"), {
+    kicker: "Konvertlar",
+    title: "Sirli konvert",
+    rules: [
+      "Stol ustida muhrlangan konvertlar yotadi. Jamoalar navbat bilan bittadan konvert ochadi.",
+      "Konvert ichida bitta javob yashiringan va <b>uchta ishora</b> bor: birinchisi eng qiyini, uchinchisi eng osoni.",
+      `Birinchi ishoradan topsangiz — <b>${PTS[0]}</b>, ikkinchisidan — <b>${PTS[1]}</b>, uchinchisidan — <b>${PTS[2]}</b> ball.`,
+      `Har ishora uchun ${TIME} soniya. Javobni 4 ta variantdan tanlaysiz yoki “Keyingi ishora”ni ochasiz.`,
+      "Xato javob — ball yoʻq, konvert yopiladi. Konvertlar tugagach, eng koʻp ball toʻplagan jamoa gʻolib."
+    ],
+    onStart(teams) {
+      const n = Math.floor(ENV.length / teams.length) * teams.length;
+      S = { teams, ids: G.shuffle(ENV.map((_, i) => i)).slice(0, n), opened: {}, turn: 0 };
+      save(); render();
+    }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { if (cur && cur.t) cur.t.stop(); cur = null; store.del(SK); S = null; G.modal.close(); setup(); }
+
+function envSVG(n) {
+  return `<svg viewBox="0 0 145 100" aria-hidden="true">
+    <rect class="paper" x="2" y="2" width="141" height="96" rx="3"/>
+    <path class="flap" d="M2 4L72.5 56 143 4" />
+    <path d="M2 98L58 50M143 98L87 50" fill="none" stroke="var(--line)"/>
+    <circle class="seal" cx="72.5" cy="56" r="16"/><circle cx="72.5" cy="56" r="12" fill="none" stroke="rgba(255,255,255,.35)"/>
+    <text class="seal-t" x="72.5" y="64" text-anchor="middle">${n}</text></svg>`;
+}
+
+function render() {
+  G.swapped();
+  const left = S.ids.filter(i => !(i in S.opened));
+  if (!left.length) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
+  const t = S.teams[S.turn];
+  $("#app").innerHTML = `
+    <div class="turn" style="--c:${G.tc(t)}"><span class="kicker">Navbat</span><span class="who">${esc(t.name)}</span><span class="what">— konvert tanlang</span></div>
+    <div class="envs">${S.ids.map((id, k) => {
+      const o = S.opened[id];
+      if (o) { const tm = S.teams[o.team]; return `<button class="env open" disabled style="--c:${G.tc(tm)}">${envSVG(k + 1)}<span class="res">${esc(tm.name)} · ${o.pts ? "+" + o.pts : "0"}</span></button>`; }
+      return `<button class="env" type="button" data-id="${id}" aria-label="Konvert ${k + 1}">${envSVG(k + 1)}</button>`;
+    }).join("")}</div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { active: S.turn, onAdjust: (i, d) => { S.teams[i].score += d; save(); render(); } });
+  $$(".env[data-id]").forEach(b => b.onclick = () => openEnv(+b.dataset.id));
+}
+
+function openEnv(id) {
+  sound.click();
+  const e = ENV[id], opts = G.shuffle([e.j, ...e.x]), t = S.teams[S.turn];
+  cur = { id, e, opts, stage: 0, done: false, who: S.turn };
+  const no = S.ids.indexOf(id) + 1;
+  G.modal(`<div class="letter">
+    <div class="meta" style="--c:${G.tc(t)}"><span class="tm-name">${esc(t.name)}</span><span>Konvert ${no}</span></div>
+    <div class="pts" id="pts"></div>
+    <ul class="clues" id="clues"></ul>
+    <div id="tm"></div>
+    <div class="opts" id="opts">${opts.map((o, k) => `<button type="button" class="opt" data-k="${k}"><span class="k">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div id="after"></div>
+    <div class="clue-bar"><span class="hint" style="margin:0">Javobni tanlang yoki keyingi ishorani oching</span><span id="ctl"></span></div>
+  </div>`);
+  $$("#opts .opt").forEach(b => b.onclick = () => answer(+b.dataset.k));
+  stage();
+}
+
+function stage() {
+  const st = cur.stage;
+  $("#pts").innerHTML = PTS.map((p, k) => `<span class="${k === st ? "on" : k < st ? "gone" : ""}">${p}</span>`).join("");
+  $("#clues").innerHTML = cur.e.i.map((c, k) => k <= st ? `<li><b>${PTS[k]}</b><span>${esc(c)}</span></li>` : `<li class="locked"><b></b><span>${k + 1}-ishora yopiq</span></li>`).join("");
+  $("#ctl").innerHTML = st < 2 ? `<button class="btn" id="more" type="button">Keyingi ishora · ${PTS[st + 1]} ball</button>` : "";
+  if (st < 2) $("#more").onclick = () => { cur.t.stop(); cur.stage++; sound.click(); stage(); };
+  if (cur.t) cur.t.stop();
+  cur.t = G.timer($("#tm"), TIME, () => { if (cur.stage < 2) { cur.stage++; stage(); } else answer(-1); });
+}
+
+function answer(k) {
+  if (!cur || cur.done) return;
+  cur.done = true; cur.t.stop();
+  const right = cur.opts.indexOf(cur.e.j), ok = k === right, pts = ok ? PTS[cur.stage] : 0, who = cur.who;
+  $$("#opts .opt").forEach((b, i) => { b.disabled = true; if (i === right) b.classList.add("right"); else if (i === k) b.classList.add("wrong"); });
+  $("#clues").innerHTML = cur.e.i.map((c, i) => `<li><b>${PTS[i]}</b><span>${esc(c)}</span></li>`).join("");
+  ok ? sound.ok() : sound.bad();
+  S.teams[who].score += pts; S.opened[cur.id] = { team: who, pts };
+  S.turn = (S.turn + 1) % S.teams.length; save();
+  $("#after").innerHTML = `<div class="verdict ${ok ? "ok" : "bad"}">${icon(ok ? "check" : "cross")} ${ok ? "Toʻgʻri · +" + pts : k < 0 ? "Vaqt tugadi" : "Notoʻgʻri"}</div>`;
+  $("#ctl").innerHTML = `<button class="btn primary lg" id="next" type="button">Davom etish ${icon("arrow")}</button>`;
+  G.swapped();
+  $("#next").onclick = () => { cur = null; G.modal.close(); render(); };
+}
+
+document.addEventListener("keydown", e => {
+  if (!cur || cur.done) return;
+  const k = "ABCD".indexOf(e.key.toUpperCase()); if (k >= 0) answer(k);
+});
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
+</script>
+</body>
+</html>

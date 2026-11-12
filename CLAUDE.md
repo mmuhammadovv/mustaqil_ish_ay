@@ -24,11 +24,11 @@ oyinlar/
                   Jamoalarda jismoniy tugma — klaviatura YOʻQ; boshlovchi ekranda kim bosganini belgilaydi (qizilda = falstart −50)
   zinapoya.html   04 10 kategoriya × 5 pogʻona, davom etish/toʻxtash, 50/50 va +15 s
   arqon.html      05 Arqon tortish: 2 jamoa NAVBAT BILAN javob beradi (poyga emas)
-  assambleya.html 06 FAQAT TARIX — BMT sessiyasi: yarim doira zal (60 oʻrin), 6 sessiya, 31 oʻrin = gʻalaba, bir martalik veto
+  konvert.html    06 FAQAT TARIX — Sirli konvert: 14 muhrlangan konvert, 3 ishora (300/200/100), 4 variantli javob
   afsona.html     07 FAQAT TARIX — Haqiqat yoki afsona: 4 arxiv hujjatidan soxtasini topish (+200)
-  savollar/tarix-qoshimcha.js  afsona toʻplamlari va sessiyalar (faqat tarix)
+  savollar/tarix-qoshimcha.js  afsona toʻplamlari va konvertlar (faqat tarix)
 jonli-oyinlar/                     Sinfda oʻtkaziladigan oʻyinlar uchun chop etiladigan A4 varaqlar (chop.css)
-  sirli-konvert.html  14 konvert × 3 ishora (300/200/100) + boshlovchi javoblari
+  bmt-sessiyasi.html  BMT sessiyasi (jonli): qoidalar, 8 delegatsiya yorligʻi, 6 muammo kartochkasi, byulleten/veto, hisob varagʻi
   kim-men.html        28 kartochka (shaxs/tashkilot/atama) + qoidalar + boshlovchi maslahatlari
   savollar/akademik.js, savollar/tarix.js   Savollar bazasi (10 kategoriya × 5 daraja, faqat test)
   assets/boot.js   <head> da: fan va tun/kun rejimini oʻrnatadi (localStorage: fan, tema)
@@ -90,7 +90,7 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 ## Rejadagi oʻyinlar
 
 - **Rasmdan top** — QILINMAGAN: rasmlarni foydalanuvchi oʻzi tanlab beradi (oʻzimiz chizgan rasmlar rad etildi). Gʻoya: rasm kattalashtirilgan holda chiqib asta-sekin ochiladi, qancha erta topilsa — shuncha koʻp ball; 4 variantli test.
-- Qilingan: BMT sessiyasi (assambleya.html), Haqiqat yoki afsona (afsona.html) — faqat tarix; Sirli konvert va Kim men? — jonli, chop etiladigan.
+- Qilingan: **saytda** (faqat tarix) — Sirli konvert (konvert.html), Haqiqat yoki afsona (afsona.html); **jonli** (chop etiladigan) — BMT sessiyasi, Kim men?. (Diqqat: foydalanuvchi aniqlashtirgan — Sirli konvert saytda, BMT sessiyasi jonli.)
 
 ## Ochiq masalalar
 

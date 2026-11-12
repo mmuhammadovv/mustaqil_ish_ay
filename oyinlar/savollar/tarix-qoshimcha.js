@@ -1,7 +1,7 @@
 /*
   OʻZBEKISTON TARIXI — faqat tarix uchun qoʻshimcha oʻyinlar maʼlumoti
   - afsona: "Haqiqat yoki afsona" — har toʻplamda 4 ta gap, bittasi soxta (s: true = haqiqat)
-  - sessiyalar: "BMT sessiyasi" — har sessiya mavzusi va unga mos savol kategoriyalari (tarix.js indekslari)
+  - konvertlar: "Sirli konvert" — 3 ta ishora va 4 variantli javob
 */
 window.QOSHIMCHA = window.QOSHIMCHA || {};
 QOSHIMCHA.tarix = {
@@ -68,13 +68,23 @@ QOSHIMCHA.tarix = {
       { t: "Bobur “Boburnoma”ni fors tilida yozgan.", s: false, izoh: "“Boburnoma” turkiy (eski oʻzbek) tilida yozilgan." } ] }
   ],
 
-  sessiyalar: [
-    { nomi: "Orol fojiasi", matn: "Orol dengizi qurimoqda. Mintaqa aholisi salomatligi xavf ostida.", kat: [4, 7] },
-    { nomi: "Mintaqaviy xavfsizlik", matn: "Markaziy Osiyoda tinchlik va barqarorlikni qanday mustahkamlash mumkin?", kat: [3, 8] },
-    { nomi: "BMT va aʼzo davlatlar", matn: "Yosh davlatlarning xalqaro maydondagi oʻrni muhokama qilinmoqda.", kat: [1, 2, 6] },
-    { nomi: "Madaniy meros", matn: "Qadimiy obidalar va anʼanalarni kelajak avlodga qanday yetkazamiz?", kat: [4, 9, 5] },
-    { nomi: "Fan va taʼlim", matn: "Ilm-fan taraqqiyot kaliti. Ajdodlar merosidan nima oʻrganamiz?", kat: [7, 5] },
-    { nomi: "Mustaqillik yoʻli", matn: "Mustaqil davlatning ramzlari va tamoyillari haqida sessiya.", kat: [0, 3] }
+  // "Sirli konvert": har konvertda 3 ta ishora (300 → 200 → 100), javob — 4 variantli test
+  konvertlar: [
+    { j: "BMT", x: ["YuNESKO", "NATO", "Yevropa Ittifoqi"], i: ["Uning Ustavi 1945-yilda San-Fransiskoda imzolangan.", "Bosh qarorgohi Nyu-York shahrida joylashgan.", "Oʻzbekiston unga 1992-yil 2-martda aʼzo boʻlgan."] },
+    { j: "Amir Temur", x: ["Zahiriddin Bobur", "Mirzo Ulugʻbek", "Alisher Navoiy"], i: ["Davlat boshqaruvi haqidagi “Tuzuklar” u bilan bogʻliq.", "Uning shiori: “Kuch — adolatdadir”.", "Samarqanddagi Goʻri Amir — uning maqbarasi."] },
+    { j: "Mirzo Ulugʻbek", x: ["Amir Temur", "Ibn Sino", "Ahmad Fargʻoniy"], i: ["“Ziji jadidi Koʻragoniy” — uning yulduzlar jadvali.", "Samarqandda madrasa va rasadxona qurdirgan.", "Amir Temurning nevarasi, olim hukmdor."] },
+    { j: "Orol dengizi", x: ["Kaspiy dengizi", "Balxash koʻli", "Issiqkoʻl"], i: ["XX asrning eng yirik ekologik falokatlaridan biri u bilan bogʻliq.", "Unga Amudaryo va Sirdaryo quyiladi.", "Qurigan tubida Orolqum choʻli paydo boʻlgan."] },
+    { j: "YuNESKO", x: ["YuNISEF", "JSST", "BMT Taraqqiyot dasturi"], i: ["Oʻzbekiston unga 1993-yilda aʼzo boʻlgan.", "2025-yilda uning Bosh konferensiyasi Samarqandda oʻtgan.", "BMTning taʼlim, fan va madaniyat tashkiloti."] },
+    { j: "Muhammad al-Xorazmiy", x: ["Abu Rayhon Beruniy", "Ibn Sino", "Ahmad Fargʻoniy"], i: ["Bagʻdoddagi “Bayt ul-hikma”da ishlagan.", "Uning asari nomidan “algebra” soʻzi kelib chiqqan.", "“Algoritm” soʻzi uning nomidan olingan."] },
+    { j: "Navroʻz", x: ["Mustaqillik kuni", "Ramazon hayiti", "Konstitutsiya kuni"], i: ["2009-yilda YuNESKOning nomoddiy meros roʻyxatiga kiritilgan.", "BMT 21-martni uning xalqaro kuni deb eʼlon qilgan.", "Soʻzma-soʻz “yangi kun” degani."] },
+    { j: "Ichan qalʼa", x: ["Registon", "Ark qalʼasi", "Shohi Zinda"], i: ["1990-yilda YuNESKO Butunjahon merosi roʻyxatiga kiritilgan.", "Unda mashhur Kalta Minor joylashgan.", "Xivadagi devor bilan oʻralgan ichki shahar."] },
+    { j: "Veto", x: ["Ratifikatsiya", "Rezolyutsiya", "Kvorum"], i: ["Bu huquq BMTda faqat 5 ta davlatda bor.", "Xavfsizlik Kengashida qarorni toʻxtatib qoʻyadi.", "Lotincha “man qilaman” degani."] },
+    { j: "Mustaqillik kuni", x: ["Konstitutsiya kuni", "Navroʻz", "Xotira va qadrlash kuni"], i: ["U 1991-yil 31-avgustda eʼlon qilingan mustaqillik bilan bogʻliq.", "Bu bayramda butun mamlakat boʻylab tantanalar oʻtadi.", "Har yili 1-sentabrda nishonlanadi."] },
+    { j: "Ibn Sino", x: ["Abu Rayhon Beruniy", "Muhammad al-Xorazmiy", "Imom Buxoriy"], i: ["Buxoro yaqinidagi Afshona qishlogʻida tugʻilgan.", "Yevropada “Avitsenna” nomi bilan tanilgan.", "“Tib qonunlari” asarining muallifi."] },
+    { j: "Abdulla Oripov", x: ["Erkin Vohidov", "Gʻafur Gʻulom", "Muhammad Yusuf"], i: ["Oʻzbekiston xalq shoiri, Oʻzbekiston Qahramoni.", "“Jannatga yoʻl” dramatik dostonining muallifi.", "Davlat madhiyasi soʻzlarining muallifi."] },
+    { j: "Registon", x: ["Ichan qalʼa", "Labi hovuz", "Mustaqillik maydoni"], i: ["Nomi “qumli joy” maʼnosini beradi.", "Unda uchta madrasa bor: Ulugʻbek, Sherdor va Tillakori.", "Samarqanddagi eng mashhur maydon."] },
+    { j: "Shanxay hamkorlik tashkiloti", x: ["Mustaqil Davlatlar Hamdoʻstligi", "Turkiy davlatlar tashkiloti", "YeXHT"], i: ["U 2001-yilda tuzilgan.", "2022-yilda uning sammiti Samarqandda oʻtgan.", "Qisqartmasi — ShHT."] }
   ]
+
   // rasmlar: "Rasmdan top" uchun rasmlarni foydalanuvchi oʻzi tanlab beradi
 };

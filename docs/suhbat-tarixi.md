@@ -71,3 +71,4 @@ Foydalanuvchi talablari:
 - Saytga (faqat tarix): BMT sessiyasi, Haqiqat yoki afsona.
 - Jonli (chop etiladigan): Sirli konvert, Kim men?.
 - Rasmdan top — rasmlarni foydalanuvchi beradi, hozircha qilinmagan.
+- Tuzatish: foydalanuvchi aniqlashtirdi — Sirli konvert saytda (konvert.html), BMT sessiyasi esa jonli (jonli-oyinlar/bmt-sessiyasi.html).
