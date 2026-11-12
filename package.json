@@ -3,7 +3,7 @@
   "private": true,
   "description": "Mustaqil ishlar va interaktiv bilim oʻyinlari (statik sayt)",
   "cloudflare": {
-    "project": "mustaqil-ishlar"
+    "project": "iw-mm"
   },
   "scripts": {
     "build": "node scripts/build.mjs",

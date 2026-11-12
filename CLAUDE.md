@@ -73,7 +73,7 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 ## Joylash (Cloudflare Pages) — Node.js orqali
 
 - `scripts/build.mjs` → `dist/` (faqat index.html, fan.html, _headers, oyinlar/, mustaqil-ishlar/). `dist/` gitignore da. Yangi sayt fayli qoʻshilsa, `files` roʻyxatiga qoʻshing.
-- Sayt nomi/URL faqat `package.json` → `"cloudflare": { "project": "..." }` da (manzil: `<project>.pages.dev`). `scripts/cloudflare.mjs` uni oʻqiydi. Buyruqlar: `npm install` → `npm run login` → `npm run create` (har yangi nom uchun bir marta) → `npm run deploy`.
+- Sayt nomi/URL faqat `package.json` → `"cloudflare": { "project": "iw-mm" }` da (manzil: `https://iw-mm.pages.dev`; iw = Independent Work, mm = Muxamadov Muhammadali). Eski loyiha: mustaqil-ishlar. `scripts/cloudflare.mjs` uni oʻqiydi. Buyruqlar: `npm install` → `npm run login` → `npm run create` (har yangi nom uchun bir marta) → `npm run deploy`.
 - Foydalanuvchi bash/PowerShell emas, JS (Node.js) variantini soʻragan — shell skriptlar olib tashlangan.
 - Cloudflare Git integratsiyasi: Build command `npm run build`, output `dist`, preset None.
 - `_headers` — xavfsizlik va kesh sarlavhalari.
