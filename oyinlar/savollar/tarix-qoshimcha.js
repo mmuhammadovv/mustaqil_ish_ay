@@ -84,7 +84,92 @@ QOSHIMCHA.tarix = {
     { j: "Abdulla Oripov", x: ["Erkin Vohidov", "Gʻafur Gʻulom", "Muhammad Yusuf"], i: ["Oʻzbekiston xalq shoiri, Oʻzbekiston Qahramoni.", "“Jannatga yoʻl” dramatik dostonining muallifi.", "Davlat madhiyasi soʻzlarining muallifi."] },
     { j: "Registon", x: ["Ichan qalʼa", "Labi hovuz", "Mustaqillik maydoni"], i: ["Nomi “qumli joy” maʼnosini beradi.", "Unda uchta madrasa bor: Ulugʻbek, Sherdor va Tillakori.", "Samarqanddagi eng mashhur maydon."] },
     { j: "Shanxay hamkorlik tashkiloti", x: ["Mustaqil Davlatlar Hamdoʻstligi", "Turkiy davlatlar tashkiloti", "YeXHT"], i: ["U 2001-yilda tuzilgan.", "2022-yilda uning sammiti Samarqandda oʻtgan.", "Qisqartmasi — ShHT."] }
+  ],
+  // "Oldinmi, keyinmi?": v — tartiblash uchun qiymat (yil + oy/100), y — koʻrsatiladigan yil
+  voqealar: [
+    { t: "Al-Xorazmiy tugʻildi", v: 783, y: "taxm. 783" },
+    { t: "Imom Buxoriy tugʻildi", v: 810, y: "810" },
+    { t: "Abu Rayhon Beruniy tugʻildi", v: 973, y: "973" },
+    { t: "Ibn Sino tugʻildi", v: 980, y: "980" },
+    { t: "Amir Temur tugʻildi", v: 1336, y: "1336" },
+    { t: "Mirzo Ulugʻbek tugʻildi", v: 1394, y: "1394" },
+    { t: "Goʻri Amir maqbarasi qurildi", v: 1403, y: "1403–1404" },
+    { t: "Samarqanddagi Ulugʻbek madrasasi qurila boshladi", v: 1417, y: "1417" },
+    { t: "Alisher Navoiy tugʻildi", v: 1441, y: "1441" },
+    { t: "Zahiriddin Bobur tugʻildi", v: 1483, y: "1483" },
+    { t: "Registondagi Sherdor madrasasi qurila boshladi", v: 1619, y: "1619" },
+    { t: "Xivada Kalta Minor qurila boshladi", v: 1851, y: "1851" },
+    { t: "“Turkiston viloyatining gazeti” chiqa boshladi", v: 1870, y: "1870" },
+    { t: "Behbudiyning “Oyina” jurnali chiqa boshladi", v: 1913, y: "1913" },
+    { t: "“Oʻtgan kunlar” romani kitob boʻlib chiqdi", v: 1926, y: "1926" },
+    { t: "BMT tashkil topdi", v: 1945.10, y: "1945" },
+    { t: "Toshkentda kuchli zilzila boʻldi", v: 1966.04, y: "1966" },
+    { t: "Toshkent metrosi ochildi", v: 1977.11, y: "1977" },
+    { t: "Oʻzbekiston mustaqilligi eʼlon qilindi", v: 1991.08, y: "1991, avgust" },
+    { t: "Mustaqillik boʻyicha umumxalq referendumi oʻtdi", v: 1991.12, y: "1991, dekabr" },
+    { t: "Oʻzbekiston BMTga aʼzo boʻldi", v: 1992.03, y: "1992, mart" },
+    { t: "Birinchi Konstitutsiya qabul qilindi", v: 1992.12, y: "1992, dekabr" },
+    { t: "Oʻzbekiston YuNESKOga aʼzo boʻldi", v: 1993.10, y: "1993" },
+    { t: "Shanxay hamkorlik tashkiloti tuzildi", v: 2001.06, y: "2001" },
+    { t: "Markaziy Osiyo yadrosiz zona shartnomasi imzolandi", v: 2006.09, y: "2006" },
+    { t: "BMT minbaridan birinchi marta oʻzbek tilida nutq yangradi", v: 2017.09, y: "2017" },
+    { t: "“Maʼrifat va diniy bagʻrikenglik” rezolyutsiyasi qabul qilindi", v: 2018.12, y: "2018" },
+    { t: "Oʻzbekiston Turkiy kengashga qoʻshildi", v: 2019.10, y: "2019" },
+    { t: "Oʻzbekiston BMT Inson huquqlari kengashiga saylandi", v: 2020.10, y: "2020" },
+    { t: "Orolboʻyi ekologik innovatsiyalar hududi deb eʼlon qilindi", v: 2021.05, y: "2021" },
+    { t: "Samarqandda ShHT sammiti oʻtdi", v: 2022.09, y: "2022" },
+    { t: "Yangi tahrirdagi Konstitutsiya qabul qilindi", v: 2023.04, y: "2023" },
+    { t: "Samarqandda YuNESKO Bosh konferensiyasi oʻtdi", v: 2025.10, y: "2025" }
+  ],
+
+  // "Harflab topish": savol + yashirin soʻz (katta harflarda)
+  sozlar: [
+    { s: "1991-yil 31-avgustda eʼlon qilingan tarixiy voqea", j: "MUSTAQILLIK" },
+    { s: "Davlatning asosiy qonuni", j: "KONSTITUTSIYA" },
+    { s: "Xalqaro tashkilot organining rasmiy qarori", j: "REZOLYUTSIYA" },
+    { s: "BMTning taʼlim, fan va madaniyat tashkiloti", j: "YUNESKO" },
+    { s: "Samarqanddagi uchta madrasali mashhur maydon", j: "REGISTON" },
+    { s: "Al-Xorazmiy nomidan kelib chiqqan dasturlash atamasi", j: "ALGORITM" },
+    { s: "Orol dengizining qurigan tubida paydo boʻlgan choʻl", j: "OROLQUM" },
+    { s: "Davlatning tashqi siyosatini muzokaralar orqali amalga oshirish sanʼati", j: "DIPLOMATIYA" },
+    { s: "Bir davlatning boshqa davlatdagi rasmiy vakolatxonasi", j: "ELCHIXONA" },
+    { s: "Xalqaro shartnomani parlament tomonidan tasdiqlash", j: "RATIFIKATSIYA" },
+    { s: "“Yangi kun” maʼnosini beruvchi bahor bayrami", j: "NAVROʻZ" },
+    { s: "Davlat ramzlaridan biri — tantanali qoʻshiq", j: "MADHIYA" },
+    { s: "Davlatning ichki va tashqi ishlarda mustaqilligi", j: "SUVERENITET" },
+    { s: "2018-yilgi rezolyutsiya nomi: “Maʼrifat va diniy ...”", j: "BAGʻRIKENGLIK" },
+    { s: "Kaptar va zaytun shoxi qaysi tushunchaning ramzi?", j: "TINCHLIK" }
+  ],
+
+  // "Taxmin": javob — son
+  taxminlar: [
+    { s: "BMTga nechta davlat aʼzo?", j: 193 },
+    { s: "BMT Xavfsizlik Kengashida jami nechta aʼzo bor?", j: 15 },
+    { s: "Davlat bayrogʻimizda nechta yulduz bor?", j: 12 },
+    { s: "BMTning nechta rasmiy tili bor?", j: 6 },
+    { s: "BMTning Barqaror rivojlanish maqsadlari nechta?", j: 17 },
+    { s: "Oʻzbekiston BMTga qaysi yili aʼzo boʻlgan?", j: 1992 },
+    { s: "BMT qaysi yili tashkil topgan?", j: 1945 },
+    { s: "BMTni nechta davlat taʼsis etgan?", j: 51 },
+    { s: "Oʻzbekiston nechta davlat bilan chegaradosh?", j: 5 },
+    { s: "Oʻzbekistonda nechta viloyat bor? (Qoraqalpogʻiston Respublikasi va Toshkent shahridan tashqari)", j: 12 },
+    { s: "Toshkent metrosi qaysi yili ochilgan?", j: 1977 },
+    { s: "Xivadagi Kalta Minor qaysi yili qurila boshlagan?", j: 1851 },
+    { s: "Amir Temur qaysi yili tugʻilgan?", j: 1336 },
+    { s: "Alisher Navoiy qaysi yili tugʻilgan?", j: 1441 },
+    { s: "BMT Xavfsizlik Kengashida nechta doimiy aʼzo bor?", j: 5 }
+  ],
+
+  // "Ipak yoʻli karvoni": yoʻl kataklari. tur: s — savol, f — oldinga, b — orqaga, x — oddiy
+  ipakYoli: [
+    { n: "Sian", tur: "x" }, { tur: "s" }, { tur: "x" }, { tur: "f", m: "Shamol orqadan esdi", d: 2 },
+    { n: "Dunxuan", tur: "s" }, { tur: "x" }, { tur: "b", m: "Taklamakon choʻlida qum boʻroni", d: -3 }, { tur: "s" },
+    { n: "Qashqar", tur: "x" }, { tur: "s" }, { tur: "f", m: "Ipakni yaxshi narxda sotdingiz", d: 2 }, { tur: "s" },
+    { n: "Fargʻona", tur: "x" }, { tur: "s" }, { tur: "b", m: "Tuyalar charchadi", d: -2 }, { n: "Toshkent", tur: "s" },
+    { tur: "x" }, { n: "Samarqand", tur: "s" }, { tur: "f", m: "Karvonsaroyda yangi yoʻl haqida bilib oldingiz", d: 3 }, { n: "Buxoro", tur: "s" },
+    { tur: "x" }, { n: "Marv", tur: "s" }, { tur: "b", m: "Daryo toshdi — aylanib oʻtasiz", d: -3 }, { tur: "s" },
+    { n: "Bagʻdod", tur: "x" }, { tur: "s" }, { tur: "f", m: "Savdogarlar hamroh boʻldi", d: 2 }, { tur: "s" },
+    { n: "Damashq", tur: "s" }, { tur: "x" }, { n: "Konstantinopol", tur: "end" }
   ]
 
-  // rasmlar: "Rasmdan top" uchun rasmlarni foydalanuvchi oʻzi tanlab beradi
 };

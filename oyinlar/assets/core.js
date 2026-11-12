@@ -45,7 +45,15 @@
     scroll: '<path d="M7 4h11a2 2 0 0 1 0 4H7"/><path d="M7 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10V8"/><path d="M9 12h6M9 15.5h4"/>',
     envelope: '<rect x="3" y="6" width="18" height="13" rx="1.5"/><path d="M3 7l9 6 9-6"/>',
     cards: '<rect x="4" y="6" width="11" height="15" rx="1.5" transform="rotate(-8 9.5 13.5)"/><rect x="9" y="3" width="11" height="15" rx="1.5"/>',
-    print: '<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/>'
+    print: '<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/>',
+    tower: '<path d="M6 21h12M7 21V16h10v5M8 16v-5h8v5M9 11V6h6v5M11 6V3h2v3"/>',
+    updown: '<path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/>',
+    maze: '<rect x="3" y="3" width="18" height="18" rx="1"/><path d="M7 3v8h4M15 21v-8h-4M3 15h4M21 9h-6v4"/>',
+    letters: '<rect x="2.5" y="6" width="6" height="12" rx="1"/><rect x="9" y="6" width="6" height="12" rx="1"/><rect x="15.5" y="6" width="6" height="12" rx="1"/><path d="M4.5 14l1-5 1 5M4.8 12.5h1.4"/>',
+    camel: '<path d="M3 20v-6c0-2 1-3 3-3 1 0 1.5-2 3-2s2 2 3 2 1.5-3 3-3 2 2 2 4v1l3-3v3c0 2-1 3-3 3v4M7 20v-4M16 20v-4"/>',
+    gauge: '<path d="M3 17a9 9 0 0 1 18 0"/><path d="M12 17l4-6"/><circle cx="12" cy="17" r="1.4" fill="currentColor"/>',
+    bingo: '<rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/>',
+    spy: '<path d="M4 10h16M7 10l1.5-5h7L17 10"/><circle cx="8" cy="15" r="2.5"/><circle cx="16" cy="15" r="2.5"/><path d="M10.5 15h3"/>'
   };
   const icon = (n, cls = "i") => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ""}</svg>`;
 

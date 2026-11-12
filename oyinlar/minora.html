@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Minora qurish</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .stage { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr); gap: 22px; }
+  .site { padding: 14px; }
+  svg.towers { width: 100%; height: auto; display: block; max-height: calc(100vh - 230px); }
+  .towers .ground { fill: var(--surface-2); stroke: var(--line-strong); }
+  .towers .blk { stroke: rgba(0,0,0,.35); stroke-width: 1; }
+  .towers .lbl { font-family: var(--body); font-weight: 700; font-size: 14px; fill: var(--ink); }
+  .towers .h { font-family: var(--num); font-size: 13px; fill: var(--muted); }
+  .towers .act { fill: var(--accent-soft); }
+  .side { display: flex; flex-direction: column; gap: 16px; }
+  .side .panel { padding: 20px; }
+  .drop-hint { color: var(--muted); font-size: 14px; margin-top: 10px; }
+  .rounds { display: flex; gap: 4px; margin-top: 10px; }
+  .rounds i { flex: 1; height: 6px; background: var(--surface-2); border-radius: 2px; }
+  .rounds i.on { background: var(--c); }
+  @media (max-width: 900px) { .stage { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="assets/core.js"></script>
+<script>
+// Bu oʻyin faqat tarix fani uchun
+if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
+const { $, $$, esc, store, icon, sound } = G;
+const SK = G.saveKey("minora"), BASE = 120, COLW = 220, BH = 16;
+let S = store.get(SK), slide = null;
+
+G.header("Minora qurish", reset);
+
+function setup() {
+  let rounds = 7;
+  G.setup($("#app"), {
+    kicker: "Qurilish",
+    title: "Minora qurish",
+    extra: `<span class="l">Har bir jamoa uchun yurishlar</span>
+      <div class="seg" id="rd">${[5, 7, 10].map(n => `<button type="button" data-r="${n}">${n}</button>`).join("")}</div>`,
+    bind(el) {
+      const sync = () => $$("#rd button", el).forEach(x => x.classList.toggle("on", +x.dataset.r === rounds));
+      $$("#rd button", el).forEach(b => b.onclick = () => { rounds = +b.dataset.r; sync(); });
+      sync();
+    },
+    rules: [
+      "Har bir jamoa oʻz minorasini quradi. Navbat bilan savolga javob beriladi.",
+      "Toʻgʻri javob — jamoa <b>bitta gʻisht</b> oladi. Gʻisht minora tepasida u yoqdan bu yoqqa suzib yuradi.",
+      "<b>“Tashlash”</b> tugmasini (yoki probelni) oʻz vaqtida bosing: gʻishtning minoradan chiqib qolgan qismi kesib tashlanadi, minora torayadi.",
+      "Gʻisht minoraga umuman tushmasa — u yoʻqoladi. Juda aniq tushsa — gʻisht kesilmaydi.",
+      "Minora qancha baland boʻlsa, savollar shuncha qiyin. Yurishlar tugagach, eng baland minora gʻolib."
+    ],
+    onStart(teams) {
+      teams.forEach(t => { t.score = 0; t.blocks = [{ x: 0, w: BASE }]; t.turns = 0; });
+      S = { teams, rounds, turn: 0, used: [] }; save(); render();
+    }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { stopSlide(); store.del(SK); S = null; G.modal.close(); setup(); }
+function stopSlide() { if (slide) cancelAnimationFrame(slide.raf); slide = null; }
+
+const done = () => S.teams.every(t => t.turns >= S.rounds);
+
+function towersSVG(moving) {
+  const n = S.teams.length, maxH = Math.max(12, ...S.teams.map(t => t.blocks.length + 3));
+  const H = maxH * BH + 60, W = n * COLW;
+  return `<svg class="towers" viewBox="0 0 ${W} ${H}" role="img" aria-label="Minoralar">
+    ${S.teams.map((t, i) => {
+      const cx = i * COLW + COLW / 2, gy = H - 34;
+      const blocks = t.blocks.map((b, k) => `<rect class="blk" x="${cx + b.x - b.w / 2}" y="${gy - (k + 1) * BH}" width="${b.w}" height="${BH - 1}" fill="var(--t${t.c})" opacity="${k ? 1 : .55}" rx="1"/>`).join("");
+      return `${i === S.turn && !done() ? `<rect class="act" x="${i * COLW + 6}" y="0" width="${COLW - 12}" height="${gy}" rx="6"/>` : ""}
+        <rect class="ground" x="${i * COLW + 10}" y="${gy}" width="${COLW - 20}" height="8"/>
+        ${blocks}
+        <text class="lbl" x="${cx}" y="${H - 12}" text-anchor="middle">${esc(t.name)}</text>
+        <text class="h" x="${cx}" y="${gy - t.blocks.length * BH - 8}" text-anchor="middle">${t.blocks.length - 1} qavat</text>`;
+    }).join("")}
+    ${moving ? `<rect id="mv" class="blk" x="0" y="0" width="${moving.w}" height="${BH - 1}" fill="var(--t${S.teams[S.turn].c})" rx="1"/>` : ""}
+  </svg>`;
+}
+
+function render(moving) {
+  G.swapped();
+  if (done()) { $("#app").innerHTML = `<div class="panel site">${towersSVG()}</div>`; return G.winner(S.teams, reset, "qavat"); }
+  const t = S.teams[S.turn];
+  $("#app").innerHTML = `
+    <div class="stage">
+      <div class="panel site">${towersSVG(moving)}</div>
+      <div class="side">
+        <div class="panel" style="--c:${G.tc(t)}">
+          <div class="kicker">Navbat</div>
+          <div class="turn"><span class="who">${esc(t.name)}</span></div>
+          <div class="rounds">${Array.from({ length: S.rounds }, (_, k) => `<i class="${k < t.turns ? "on" : ""}"></i>`).join("")}</div>
+          <div id="act" style="margin-top:14px"></div>
+        </div>
+        <div class="scores" id="sc"></div>
+      </div>
+    </div>`;
+  G.scores($("#sc"), S.teams, { active: S.turn, tag: x => `${x.turns}/${S.rounds} yurish` });
+  if (moving) {
+    $("#act").innerHTML = `<button class="btn primary block lg" id="drop" type="button">${icon("arrow")} Tashlash</button><div class="drop-hint">Gʻisht minoraning ustiga toʻgʻri kelganda bosing (probel ham ishlaydi)</div>`;
+    $("#drop").onclick = drop; startSlide(moving);
+  } else {
+    $("#act").innerHTML = `<button class="btn primary block lg" id="ask" type="button">Savol olish</button>`;
+    $("#ask").onclick = question;
+  }
+}
+
+function question() {
+  const t = S.teams[S.turn], lv = Math.min(4, Math.floor((t.blocks.length - 1) / 2));
+  const free = G.all().filter(x => !S.used.includes(x.id));
+  let pool = free.filter(x => x.li === lv); if (!pool.length) pool = free;
+  const q = G.shuffle(pool)[0]; S.used.push(q.id); save();
+  const c = G.modal(`<div class="meta" style="--c:${G.tc(t)}"><span class="tm-name">${esc(t.name)}</span><span>${esc(G.data.kategoriyalar[q.ci].nomi)}</span><span class="acc">${q.li + 1}-daraja</span></div><div id="q"></div>`);
+  G.ask($("#q", c), q.item, { onResult(ok) {
+    G.modal.close();
+    if (ok) { const top = t.blocks[t.blocks.length - 1]; render({ w: top.w }); }
+    else { G.toast("Gʻisht olinmadi"); nextTurn(); }
+  }});
+}
+
+function startSlide(m) {
+  const t = S.teams[S.turn], top = t.blocks[t.blocks.length - 1], i = S.turn;
+  const n = S.teams.length, maxH = Math.max(12, ...S.teams.map(x => x.blocks.length + 3)), H = maxH * BH + 60, gy = H - 34;
+  const cx = i * COLW + COLW / 2, y = gy - (t.blocks.length + 1) * BH - 18, amp = COLW / 2 - 14 - m.w / 2 + 40;
+  const speed = 1.6 + t.blocks.length * .18, t0 = performance.now();
+  slide = { x: 0, w: m.w, raf: 0 };
+  const el = $("#mv");
+  const step = now => {
+    if (!slide || !el.isConnected) return;
+    slide.x = Math.sin((now - t0) / 1000 * speed) * Math.max(30, amp);
+    el.setAttribute("x", cx + slide.x - m.w / 2); el.setAttribute("y", y);
+    slide.raf = requestAnimationFrame(step);
+  };
+  slide.raf = requestAnimationFrame(step);
+}
+
+function drop() {
+  if (!slide) return;
+  const t = S.teams[S.turn], top = t.blocks[t.blocks.length - 1], x = slide.x, w = slide.w;
+  stopSlide();
+  const l = Math.max(x - w / 2, top.x - top.w / 2), r = Math.min(x + w / 2, top.x + top.w / 2), ov = r - l;
+  if (ov <= 4) { sound.bad(); G.toast("Gʻisht yiqilib tushdi"); }
+  else if (Math.abs(x - top.x) < 5) { t.blocks.push({ x: top.x, w: top.w }); sound.bonus(); G.toast("Aniq tushdi — gʻisht butun qoldi"); }
+  else { t.blocks.push({ x: (l + r) / 2, w: ov }); sound.ok(); }
+  t.score = t.blocks.length - 1; save();
+  nextTurn();
+}
+
+function nextTurn() {
+  S.teams[S.turn].turns++;
+  for (let k = 1; k <= S.teams.length; k++) { const i = (S.turn + k) % S.teams.length; if (S.teams[i].turns < S.rounds) { S.turn = i; break; } }
+  save(); render();
+}
+
+document.addEventListener("keydown", e => { if (e.key === " " && slide) { e.preventDefault(); drop(); } });
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
+</script>
+</body>
+</html>

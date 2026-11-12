@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Labirint</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .stage { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr); gap: 22px; }
+  .mz { padding: 16px; display: grid; place-items: center; }
+  svg.maze { width: 100%; max-height: calc(100vh - 210px); }
+  .maze .cell { fill: var(--surface); }
+  .maze .fog { fill: color-mix(in srgb, var(--ink) 22%, var(--surface-2)); }
+  .maze .fog2 { fill: var(--line); opacity: .55; }
+  .maze .wall { stroke: var(--line-strong); stroke-width: 3; stroke-linecap: round; }
+  .maze .can { fill: var(--accent-soft); cursor: pointer; }
+  .maze .can:hover { fill: var(--accent); opacity: .35; }
+  .maze .goal { fill: var(--warn); pointer-events: none; }
+  .maze circle { pointer-events: none; }
+  .side { display: flex; flex-direction: column; gap: 16px; }
+  .side .panel { padding: 20px; }
+  .dist { list-style: none; margin: 10px 0 0; padding: 0; }
+  .dist li { display: flex; justify-content: space-between; padding: 7px 0; border-top: 1px solid var(--line); }
+  .dist li b { font-family: var(--num); }
+  @media (max-width: 900px) { .stage { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="assets/core.js"></script>
+<script>
+// Bu oʻyin faqat tarix fani uchun
+if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
+const { $, $$, esc, store, icon, sound } = G;
+const SK = G.saveKey("labirint"), N = 7, C = 64, GOAL = [3, 3];
+const CORNERS = [[0, 0], [6, 6], [6, 0], [0, 6]];
+let S = store.get(SK);
+
+G.header("Labirint", reset);
+
+function setup() {
+  G.setup($("#app"), {
+    kicker: "Yoʻl topish",
+    title: "Labirint",
+    rules: [
+      "Har bir jamoa labirintning bir burchagidan boshlaydi. Maqsad — <b>markazdagi xazinaga</b> birinchi boʻlib yetish.",
+      "Labirint tuman bilan qoplangan: faqat jamoalar yurgan joylar va ularning yonidagi kataklar koʻrinadi.",
+      "Navbatdagi jamoa qoʻshni ochiq katakni tanlaydi va savolga javob beradi. Toʻgʻri — oʻsha katakka oʻtadi, xato — joyida qoladi.",
+      "Markazga yaqinlashgan sari savollar qiyinlashadi. Boshi berk koʻchaga kirib qolmang!",
+      "Savollar tugasa, markazga eng yaqin jamoa gʻolib."
+    ],
+    onStart(teams) {
+      const walls = makeMaze();
+      teams.forEach((t, i) => { t.pos = CORNERS[i]; t.score = 0; });
+      S = { teams, walls, seen: [], turn: 0, used: [] };
+      teams.forEach(t => see(t.pos)); updateScores(); save(); render();
+    }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { store.del(SK); S = null; G.modal.close(); setup(); }
+
+/* Labirint: chuqurlik boʻyicha qidiruv + qoʻshimcha oʻtish yoʻllari (boshi berk koʻchalar kamroq boʻlsin) */
+function makeMaze() {
+  const k = (x, y) => x + "," + y, open = {}, vis = new Set([k(0, 0)]), st = [[0, 0]];
+  const link = (a, b) => { open[k(...a) + "|" + k(...b)] = open[k(...b) + "|" + k(...a)] = 1; };
+  while (st.length) {
+    const [x, y] = st[st.length - 1];
+    const nb = G.shuffle([[1, 0], [-1, 0], [0, 1], [0, -1]]).map(([dx, dy]) => [x + dx, y + dy]).filter(([a, b]) => a >= 0 && b >= 0 && a < N && b < N && !vis.has(k(a, b)));
+    if (!nb.length) { st.pop(); continue; }
+    link([x, y], nb[0]); vis.add(k(...nb[0])); st.push(nb[0]);
+  }
+  for (let i = 0; i < 9; i++) { const x = Math.floor(Math.random() * (N - 1)), y = Math.floor(Math.random() * N); link([x, y], [x + 1, y]); }
+  return Object.keys(open);
+}
+const key = p => p[0] + "," + p[1];
+const isOpen = (a, b) => S.walls.includes(key(a) + "|" + key(b));
+const nbrs = p => [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => [p[0] + dx, p[1] + dy]).filter(q => q[0] >= 0 && q[1] >= 0 && q[0] < N && q[1] < N && isOpen(p, q));
+function see(p) { [p, ...nbrs(p)].forEach(q => { if (!S.seen.includes(key(q))) S.seen.push(key(q)); }); }
+function dist(p) { // markazgacha haqiqiy yoʻl uzunligi
+  const seen = { [key(p)]: 0 }, q = [p];
+  while (q.length) { const c = q.shift(); if (key(c) === key(GOAL)) return seen[key(c)]; nbrs(c).forEach(n => { if (!(key(n) in seen)) { seen[key(n)] = seen[key(c)] + 1; q.push(n); } }); }
+  return 99;
+}
+function updateScores() { S.teams.forEach(t => { t.start = t.start ?? dist(t.pos); t.score = key(t.pos) === key(GOAL) ? 100 : Math.max(0, t.start - dist(t.pos)); }); }
+const won = () => S.teams.find(t => key(t.pos) === key(GOAL));
+
+function mazeSVG(can) {
+  const W = N * C;
+  let cells = "", walls = "", toks = "";
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    const p = [x, y], vis = S.seen.includes(key(p)), isCan = can.some(c => key(c) === key(p));
+    cells += `<rect class="${isCan ? "can" : vis ? "cell" : "fog"}" x="${x * C}" y="${y * C}" width="${C}" height="${C}" ${isCan ? `data-to="${key(p)}"` : ""}/>`;
+    if (x < N - 1 && !isOpen(p, [x + 1, y]) && (vis || S.seen.includes(key([x + 1, y])))) walls += `<line class="wall" x1="${(x + 1) * C}" y1="${y * C}" x2="${(x + 1) * C}" y2="${(y + 1) * C}"/>`;
+    if (y < N - 1 && !isOpen(p, [x, y + 1]) && (vis || S.seen.includes(key([x, y + 1])))) walls += `<line class="wall" x1="${x * C}" y1="${(y + 1) * C}" x2="${(x + 1) * C}" y2="${(y + 1) * C}"/>`;
+  }
+  const g = GOAL.map(v => v * C + C / 2);
+  toks = S.teams.map((t, i) => { const off = [[-12, -12], [12, 12], [12, -12], [-12, 12]][i]; return `<circle cx="${t.pos[0] * C + C / 2 + off[0]}" cy="${t.pos[1] * C + C / 2 + off[1]}" r="11" fill="var(--t${t.c})" stroke="var(--surface)" stroke-width="2.5"/>`; }).join("");
+  return `<svg class="maze" viewBox="-4 -4 ${W + 8} ${W + 8}" role="img" aria-label="Labirint">
+    ${cells}
+    <path class="goal" d="M${g[0]} ${g[1] - 18}l5 12 13 1-10 8 3 13-11-7-11 7 3-13-10-8 13-1z"/>
+    ${walls}<rect x="0" y="0" width="${W}" height="${W}" fill="none" stroke="var(--line-strong)" stroke-width="4"/>
+    ${toks}</svg>`;
+}
+
+function render() {
+  G.swapped();
+  const w = won(), outOfQ = !G.all().some(x => !S.used.includes(x.id));
+  if (w || outOfQ) { $("#app").innerHTML = `<div class="panel mz">${mazeSVG([])}</div>`; G.winner(S.teams, reset, "ball"); if (w) G.$(".win .sub").textContent = "Xazinaga birinchi yetib keldi"; return; }
+  const t = S.teams[S.turn], can = nbrs(t.pos);
+  $("#app").innerHTML = `
+    <div class="stage">
+      <div class="panel mz">${mazeSVG(can)}</div>
+      <div class="side">
+        <div class="panel" style="--c:${G.tc(t)}">
+          <div class="kicker">Navbat</div>
+          <div class="turn"><span class="who">${esc(t.name)}</span></div>
+          <p style="color:var(--muted);margin:10px 0 0">Qoʻshni yorugʻ katakni tanlang — savolga toʻgʻri javob bersangiz, oʻsha yerga oʻtasiz.</p>
+        </div>
+        <div class="panel"><div class="kicker">Xazinagacha</div>
+          <ul class="dist">${S.teams.map(x => `<li style="color:var(--t${x.c})"><span>${esc(x.name)}</span><b>${dist(x.pos)} qadam</b></li>`).join("")}</ul></div>
+      </div>
+    </div>`;
+  $$("[data-to]").forEach(r => r.onclick = () => step(r.dataset.to.split(",").map(Number)));
+}
+
+function step(to) {
+  sound.click();
+  const t = S.teams[S.turn], d = dist(to), lv = Math.max(0, Math.min(4, 4 - Math.floor(d / 2)));
+  const free = G.all().filter(x => !S.used.includes(x.id));
+  let pool = free.filter(x => x.li === lv); if (!pool.length) pool = free;
+  const q = G.shuffle(pool)[0]; S.used.push(q.id); save();
+  const c = G.modal(`<div class="meta" style="--c:${G.tc(t)}"><span class="tm-name">${esc(t.name)}</span><span>${esc(G.data.kategoriyalar[q.ci].nomi)}</span><span class="acc">${q.li + 1}-daraja</span></div><div id="q"></div>`);
+  G.ask($("#q", c), q.item, { onResult(ok) {
+    if (ok) { t.pos = to; see(to); sound.ok(); }
+    else G.toast("Yoʻl yopiq qoldi");
+    updateScores();
+    if (!won()) S.turn = (S.turn + 1) % S.teams.length;
+    save(); G.modal.close(); render();
+  }});
+}
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
+</script>
+</body>
+</html>

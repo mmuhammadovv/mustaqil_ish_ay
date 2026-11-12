@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="uz" data-fan="tarix" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Josus — chop etish uchun</title>
+<link rel="stylesheet" href="chop.css">
+<style>
+  .jgrid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 58mm; }
+  .jc { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4mm; margin: -0.6px; }
+  .jc .set { font-size: 8pt; letter-spacing: .16em; text-transform: uppercase; color: #8a7660; }
+  .jc .nm { font-family: "Alegreya", Georgia, serif; font-size: 18pt; font-weight: 800; line-height: 1.1; margin: 3mm 0 2mm; }
+  .jc .role { font-size: 10pt; color: #4a3424; }
+  .jc.spy { background: #2b1d13; color: #efe3c8; }
+  .jc.spy .nm { font-size: 24pt; letter-spacing: .1em; color: #e0b65a; }
+  .jc.spy .role, .jc.spy .set { color: #cdbb9c; }
+  .places { columns: 2; column-gap: 8mm; padding-left: 5mm; }
+</style>
+</head>
+<body>
+<div class="toolbar"><a href="../fan.html?fan=tarix">← Oʻyinlar</a><button onclick="window.print()">Chop etish</button></div>
+
+<section class="sheet first">
+  <header class="sh"><span>Jonli oʻyin · Oʻzbekistonning eng yangi tarixi</span><span>1-varaq: qoidalar</span></header>
+  <h1>Josus</h1>
+  <p class="lead">Bir guruhdagi hamma oʻyinchi bitta tarixiy joyda “turibdi”. Faqat bittasi — josus — qayerdaligini bilmaydi. Guruh josusni topishi, josus esa joyni topishi kerak.</p>
+  <h2>Tayyorgarlik</h2>
+  <ol>
+    <li>Kartochkalarni qirqing. Har bir <b>toʻplam</b> (A, B, C...) — 5 ta joy kartochkasi va 1 ta “Josus” kartochkasi, jami 6 ta.</li>
+    <li>Bitta raund uchun bitta toʻplam olinadi. 6 tadan kam oʻyinchi boʻlsa, ortiqcha <b>joy</b> kartochkasini olib qoʻying (josus kartochkasi doim qoladi).</li>
+    <li>Kartochkalarni aralashtirib, teskari qilib tarqating. Har kim faqat oʻzinikini koʻradi.</li>
+  </ol>
+  <h2>Qoidalar</h2>
+  <ol>
+    <li>Oʻyinchilar navbat bilan bir-biriga savol beradi: “Bu yerda nimani koʻrish mumkin?”, “Bu yerga qachon kelish yaxshi?”. Javob joyni oshkor qilmasin, lekin oʻzingizni “bilaman” deb koʻrsatsin.</li>
+    <li>Josus joyni bilmaydi — u boshqalarning javoblaridan taxmin qilib, oʻzini sezdirmasligi kerak.</li>
+    <li>Vaqt — <b>5 daqiqa</b>. Istalgan payt kimdir “Josus — ...!” deb ovozga qoʻyishi mumkin. Koʻpchilik rozi boʻlsa, oʻsha oʻyinchi kartochkasini ochadi.</li>
+    <li>Josus istalgan payt “Joy — ...!” deb taxminini aytishi mumkin. Toʻgʻri boʻlsa — josus yutadi.</li>
+  </ol>
+  <h2>Ball</h2>
+  <ol>
+    <li>Josus topildi — guruhdagi har bir oʻyinchi <b>+1</b>.</li>
+    <li>Josus joyni topdi yoki vaqt tugaguncha topilmadi — josus <b>+3</b>.</li>
+    <li>Notoʻgʻri oʻyinchi josus deb topildi — josus <b>+2</b>.</li>
+  </ol>
+  <h2>Barcha joylar roʻyxati (josus uchun chop etib qoʻyish mumkin)</h2>
+  <ol class="places" id="places"></ol>
+</section>
+
+<div id="cards"></div>
+
+<script>
+const L = [
+  ["Registon maydoni", ["Sayyoh", "Gid", "Rassom", "Usta koshinkor", "Fotograf"]],
+  ["BMT Bosh Assambleyasi zali", ["Diplomat", "Tarjimon", "Jurnalist", "Xavfsizlik xodimi", "Bosh kotib yordamchisi"]],
+  ["Orol dengizi sohili", ["Ekolog", "Baliqchi", "Olim", "Jurnalist", "Saksovul ekuvchi"]],
+  ["Ulugʻbek rasadxonasi", ["Astronom", "Shogird", "Muzey xodimi", "Sayyoh", "Tarixchi"]],
+  ["Ichan qalʼa (Xiva)", ["Hunarmand", "Sayyoh", "Gid", "Arxitektor", "Qorovul"]],
+  ["Ipak yoʻlidagi karvonsaroy", ["Savdogar", "Tuyakash", "Oshpaz", "Sayyoh", "Karvonboshi"]],
+  ["Mustaqillik maydoni", ["Talaba", "Bogʻbon", "Fotograf", "Sayyoh", "Faxriy"]],
+  ["YuNESKO konferensiyasi (Samarqand)", ["Delegat", "Tarjimon", "Olim", "Jurnalist", "Tashkilotchi"]]
+];
+document.getElementById("places").innerHTML = L.map(l => `<li>${l[0]}</li>`).join("");
+const SETS = "ABCDEFGH";
+const cards = [];
+L.forEach((l, i) => {
+  l[1].forEach(r => cards.push(`<div class="cut jc"><span class="set">Toʻplam ${SETS[i]}</span><span class="nm">${l[0]}</span><span class="role">Siz — ${r.toLowerCase()}</span></div>`));
+  cards.push(`<div class="cut jc spy"><span class="set">Toʻplam ${SETS[i]}</span><span class="nm">JOSUS</span><span class="role">Joyni bilmaysiz. Oʻzingizni sezdirmang!</span></div>`);
+});
+const PER = 12, pages = [];
+for (let i = 0; i < cards.length; i += PER) pages.push(cards.slice(i, i + PER));
+document.getElementById("cards").innerHTML = pages.map((p, n) => `<section class="sheet"><header class="sh"><span>Josus</span><span>Kartochkalar ${n + 1} / ${pages.length}</span></header><div class="jgrid">${p.join("")}</div></section>`).join("");
+</script>
+</body>
+</html>

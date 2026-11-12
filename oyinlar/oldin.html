@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Oldinmi, keyinmi?</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .board { padding: clamp(18px, 3vw, 30px); }
+  .pair { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: stretch; margin-top: 16px; }
+  .ev { padding: 22px; border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); display: flex; flex-direction: column; justify-content: space-between; gap: 14px; min-height: 180px; }
+  .ev .lbl { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .ev .tx { font-family: var(--display); font-size: clamp(20px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; }
+  .ev .yr { font-family: var(--num); font-size: 28px; font-weight: 700; color: var(--accent); }
+  .ev .yr.hid { color: var(--line); letter-spacing: .3em; }
+  .ev.new { border-style: dashed; }
+  .choose { display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+  .choose .btn { min-width: 150px; }
+  .line { position: relative; height: 64px; margin: 26px 8px 4px; }
+  .line::before { content: ""; position: absolute; left: 0; right: 0; top: 30px; height: 2px; background: var(--line-strong); }
+  .dot { position: absolute; top: 22px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: var(--c, var(--accent)); border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--line-strong); }
+  .dot span { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); font-family: var(--num); font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .streak { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .streak b { font-family: var(--num); font-size: 28px; }
+  @media (max-width: 760px) { .pair { grid-template-columns: 1fr; } .choose { flex-direction: row; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="savollar/tarix-qoshimcha.js"></script>
+<script src="assets/core.js"></script>
+<script>
+// Bu oʻyin faqat tarix fani uchun
+if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
+const { $, $$, esc, store, icon, sound } = G;
+const SK = G.saveKey("oldin"), TIME = 30, MAXRUN = 8;
+const EV = ((window.QOSHIMCHA || {}).tarix || {}).voqealar || [];
+// vaqt chizigʻida nuqtalar tartib raqami boʻyicha joylashadi (zamonaviy voqealar bir joyga toʻplanib qolmasin)
+const RANK = EV.map(e => e.v).sort((a, b) => a - b);
+let S = store.get(SK), cur = null;
+
+G.header("Oldinmi, keyinmi?", reset);
+
+function setup() {
+  let runs = 2;
+  G.setup($("#app"), {
+    kicker: "Vaqt chizigʻi",
+    title: "Oldinmi, keyinmi?",
+    extra: `<span class="l">Har bir jamoa uchun seriyalar</span>
+      <div class="seg" id="rn">${[1, 2, 3].map(n => `<button type="button" data-r="${n}">${n}</button>`).join("")}</div>`,
+    bind(el) {
+      const sync = () => $$("#rn button", el).forEach(x => x.classList.toggle("on", +x.dataset.r === runs));
+      $$("#rn button", el).forEach(b => b.onclick = () => { runs = +b.dataset.r; sync(); });
+      sync();
+    },
+    rules: [
+      "Ekranda bitta voqea yili bilan koʻrsatiladi. Uning yonida — yili yashirin yangi voqea.",
+      "Jamoa yangi voqea birinchisidan <b>oldin</b> yoki <b>keyin</b> boʻlganini tanlaydi.",
+      `Toʻgʻri boʻlsa — seriya davom etadi: 1-javob +100, 2-javob +200, 3-javob +300 va hokazo (eng koʻpi ${MAXRUN} ta).`,
+      "Birinchi xatoda seriya tugaydi, ammo toʻplangan ball saqlanadi. Har qaror uchun 30 soniya.",
+      "Seriyalar tugagach, eng koʻp ball toʻplagan jamoa gʻolib."
+    ],
+    onStart(teams) {
+      teams.forEach(t => { t.runs = 0; });
+      S = { teams, runs, turn: 0 }; save(); startRun();
+    }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { if (cur && cur.t) cur.t.stop(); cur = null; store.del(SK); S = null; G.modal.close(); setup(); }
+
+function startRun() {
+  if (S.teams.every(t => t.runs >= S.runs)) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
+  const order = G.shuffle(EV.map((_, i) => i));
+  cur = { chain: [order[0]], next: 1, order, streak: 0, gained: 0, done: false };
+  render();
+}
+
+const pct = v => (3 + RANK.indexOf(v) / (RANK.length - 1) * 94).toFixed(2);
+
+function render() {
+  G.swapped();
+  const t = S.teams[S.turn], ref = EV[cur.chain[cur.chain.length - 1]], nw = EV[cur.order[cur.next]];
+  $("#app").innerHTML = `
+    <div class="panel board">
+      <div class="streak" style="--c:${G.tc(t)}"><span class="kicker">Navbat</span><span class="turn"><span class="who">${esc(t.name)}</span></span>
+        <span class="what">· seriya: <b>${cur.streak}</b> · bu seriyada: <b>${cur.gained}</b> ball</span></div>
+      <div id="tm" style="margin-top:12px"></div>
+      <div class="pair">
+        <div class="ev"><span class="lbl">Maʼlum voqea</span><span class="tx">${esc(ref.t)}</span><span class="yr">${esc(ref.y)}</span></div>
+        <div class="choose">
+          <button class="btn primary lg" id="before" type="button">${icon("back")} Oldin</button>
+          <button class="btn primary lg" id="after" type="button">Keyin ${icon("arrow")}</button>
+        </div>
+        <div class="ev new"><span class="lbl">Yangi voqea</span><span class="tx">${esc(nw.t)}</span><span class="yr hid" id="ny">????</span></div>
+      </div>
+      <div class="line">${cur.chain.map(i => `<span class="dot" style="left:${pct(EV[i].v)}%;--c:${G.tc(t)}"><span>${esc(EV[i].y).replace("taxm. ", "")}</span></span>`).join("")}</div>
+      <div id="res"></div>
+    </div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { active: S.turn, tag: x => `${x.runs}/${S.runs} seriya` });
+  $("#before").onclick = () => decide(-1);
+  $("#after").onclick = () => decide(1);
+  cur.done = false;
+  cur.t = G.timer($("#tm"), TIME, () => decide(0));
+}
+
+function decide(dir) {
+  if (cur.done) return;
+  cur.done = true; cur.t.stop();
+  const t = S.teams[S.turn], ref = EV[cur.chain[cur.chain.length - 1]], nw = EV[cur.order[cur.next]];
+  const truth = nw.v < ref.v ? -1 : 1, ok = dir === truth;
+  $("#ny").textContent = nw.y; $("#ny").classList.remove("hid");
+  $("#before").disabled = $("#after").disabled = true;
+  if (ok) {
+    cur.streak++; const pts = cur.streak * 100; cur.gained += pts; t.score += pts; save(); sound.ok();
+    cur.chain.push(cur.order[cur.next]); cur.next++;
+    const more = cur.streak < MAXRUN;
+    $("#res").innerHTML = `<div class="verdict ok">${icon("check")} Toʻgʻri · +${pts}</div><div class="row-btns"><button class="btn primary lg" id="go" type="button">${more ? "Keyingi voqea" : "Seriya yakunlandi"} ${icon("arrow")}</button></div>`;
+    G.swapped(); $("#go").onclick = () => more ? render() : endRun();
+  } else {
+    sound.bad();
+    $("#res").innerHTML = `<div class="verdict bad">${icon("cross")} ${dir === 0 ? "Vaqt tugadi" : "Notoʻgʻri"} — seriya tugadi (${cur.gained} ball saqlandi)</div><div class="row-btns"><button class="btn primary lg" id="go" type="button">Keyingi jamoa ${icon("arrow")}</button></div>`;
+    G.swapped(); $("#go").onclick = endRun;
+  }
+  G.scores($("#sc"), S.teams, { active: S.turn, tag: x => `${x.runs}/${S.runs} seriya` });
+}
+
+function endRun() {
+  S.teams[S.turn].runs++;
+  for (let k = 1; k <= S.teams.length; k++) { const i = (S.turn + k) % S.teams.length; if (S.teams[i].runs < S.runs) { S.turn = i; break; } }
+  save(); startRun();
+}
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? startRun() : setup();
+</script>
+</body>
+</html>

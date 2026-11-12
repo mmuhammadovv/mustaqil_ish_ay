@@ -75,3 +75,7 @@ Foydalanuvchi talablari:
 
 ## 14. Yangi gʻoyalar tanlovi
 - Rejaga olindi: Harflab topish (sayt), Ipak yoʻli karvoni (sayt), Tarix bingosi (jonli), Taxmin (sayt). Talab: har oʻyinning mexanikasi bir-biridan tubdan farq qilsin (masalan, Sirli konvert va Ortiqchasini top bir xil deb topildi).
+
+## 15. Yana 8 ta oʻyin
+- Saytga (tarix): Minora qurish, Oldinmi-keyinmi, Labirint, Harflab topish, Ipak yoʻli karvoni, Taxmin.
+- Jonli: Josus, Tarix bingosi.

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Taxmin</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .board { padding: clamp(18px, 3vw, 30px); }
+  .q { font-family: var(--display); font-weight: 700; font-size: clamp(24px, 3.2vw, 38px); line-height: 1.22; margin: 10px 0 18px; }
+  .guesses { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+  .g { padding: 14px; border: 1px solid var(--line-strong); border-top: 5px solid var(--c); border-radius: var(--r); background: var(--surface); }
+  .g label { display: block; font-weight: 700; margin-bottom: 8px; }
+  .g input { width: 100%; font-family: var(--num); font-size: 26px; font-weight: 700; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); color: var(--ink); }
+  .g .r { margin-top: 8px; font-size: 14px; color: var(--muted); min-height: 1.3em; }
+  .g.win { background: color-mix(in srgb, var(--good) 14%, var(--surface)); }
+  .axis { position: relative; height: 110px; margin: 30px 12px 6px; }
+  .axis::before { content: ""; position: absolute; left: 0; right: 0; top: 54px; height: 3px; background: var(--line-strong); }
+  .mk { position: absolute; top: 18px; transform: translateX(-50%); text-align: center; transition: left .8s cubic-bezier(.2,.9,.3,1.2); }
+  .mk i { display: block; width: 16px; height: 16px; margin: 0 auto; border-radius: 50%; background: var(--c); border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--line-strong); margin-top: 28px; }
+  .mk span { position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-family: var(--num); font-size: 13px; font-weight: 700; white-space: nowrap; color: var(--c); }
+  .mk.true i { width: 4px; height: 46px; border-radius: 0; margin-top: 18px; background: var(--ink); box-shadow: none; border: 0; }
+  .mk.true span { top: 70px; color: var(--ink); font-size: 18px; }
+  .bar { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="savollar/tarix-qoshimcha.js"></script>
+<script src="assets/core.js"></script>
+<script>
+// Bu oʻyin faqat tarix fani uchun
+if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
+const { $, $$, esc, store, icon, sound } = G;
+const SK = G.saveKey("taxmin"), TIME = 30, NEAR = 300, EXACT = 500;
+const Q = ((window.QOSHIMCHA || {}).tarix || {}).taxminlar || [];
+let S = store.get(SK), cur = { t: null };
+
+G.header("Taxmin", reset);
+
+function setup() {
+  let n = 8;
+  G.setup($("#app"), {
+    kicker: "Sonlar",
+    title: "Taxmin",
+    extra: `<span class="l">Savollar soni</span>
+      <div class="seg" id="rn">${[5, 8, 12, 15].map(k => `<button type="button" data-r="${k}">${k}</button>`).join("")}</div>`,
+    bind(el) {
+      const sync = () => $$("#rn button", el).forEach(x => x.classList.toggle("on", +x.dataset.r === n));
+      $$("#rn button", el).forEach(b => b.onclick = () => { n = +b.dataset.r; sync(); });
+      sync();
+    },
+    rules: [
+      "Har savolning javobi — <b>son</b>. Variantlar yoʻq.",
+      `Har bir jamoa ${TIME} soniya ichida taxminini <b>qogʻozga yozib</b> boshlovchiga beradi (boshqalar koʻrmasin). Boshlovchi sonlarni ekranga kiritadi.`,
+      `Javoblar ochilganda hammasi son oʻqida koʻrsatiladi. Eng yaqin taxmin — <b>+${NEAR} ball</b>, aniq topilsa — <b>+${EXACT} ball</b>.`,
+      "Bir nechta jamoa bir xil yaqin boʻlsa, hammasi ball oladi.",
+      "Savollar tugagach, eng koʻp ball toʻplagan jamoa gʻolib."
+    ],
+    onStart(teams) { S = { teams, order: G.shuffle(Q.map((_, i) => i)).slice(0, n), idx: 0 }; save(); render(); }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { if (cur.t) cur.t.stop(); store.del(SK); S = null; G.modal.close(); setup(); }
+
+function render() {
+  G.swapped();
+  if (cur.t) cur.t.stop();
+  if (S.idx >= S.order.length) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
+  const q = Q[S.order[S.idx]];
+  $("#app").innerHTML = `
+    <div class="panel board">
+      <div class="meta"><span>Savol ${S.idx + 1} / ${S.order.length}</span><span class="acc">Javob — son</span></div>
+      <div class="q">${esc(q.s)}</div>
+      <div id="tm"></div>
+      <div class="guesses">${S.teams.map((t, i) => `<div class="g" style="--c:${G.tc(t)}"><label for="g${i}">${esc(t.name)}</label><input id="g${i}" type="number" inputmode="numeric" autocomplete="off"><div class="r"></div></div>`).join("")}</div>
+      <div class="axis" id="axis"></div>
+      <div class="bar" id="bar"><button class="btn primary lg" id="open" type="button">Javoblarni ochish ${icon("arrow")}</button></div>
+    </div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { onAdjust: (i, d) => { S.teams[i].score += d; save(); G.scores($("#sc"), S.teams); } });
+  $("#g0").focus();
+  $("#open").onclick = reveal;
+  cur.t = G.timer($("#tm"), TIME, () => {});
+}
+
+function reveal() {
+  cur.t.stop();
+  const q = Q[S.order[S.idx]], vals = S.teams.map((_, i) => { const v = parseFloat($("#g" + i).value); return isNaN(v) ? null : v; });
+  $$(".g input").forEach(x => x.disabled = true);
+  const ds = vals.map(v => v === null ? Infinity : Math.abs(v - q.j)), best = Math.min(...ds);
+  const all = [q.j, ...vals.filter(v => v !== null)], lo = Math.min(...all), hi = Math.max(...all), span = (hi - lo) || 1;
+  const pos = v => (6 + (v - lo) / span * 88).toFixed(2);
+  $("#axis").innerHTML = S.teams.map((t, i) => vals[i] === null ? "" : `<div class="mk" style="left:${pos(vals[i])}%;--c:${G.tc(t)}"><span>${vals[i]}</span><i></i></div>`).join("") +
+    `<div class="mk true" style="left:${pos(q.j)}%"><span>${q.j}</span><i></i></div>`;
+  S.teams.forEach((t, i) => {
+    const box = $$(".g")[i], r = box.querySelector(".r");
+    if (ds[i] === best && best !== Infinity) { const p = best === 0 ? EXACT : NEAR; t.score += p; box.classList.add("win"); r.innerHTML = `<b style="color:var(--good)">+${p}</b> · ${best === 0 ? "aniq!" : "eng yaqin (farq " + best + ")"}`; }
+    else r.textContent = vals[i] === null ? "javob yoʻq" : `farq: ${ds[i]}`;
+  });
+  sound[best === 0 ? "bonus" : "ok"]();
+  S.idx++; save(); G.scores($("#sc"), S.teams);
+  $("#bar").innerHTML = `<button class="btn primary lg" id="next" type="button">${S.idx >= S.order.length ? "Natijalar" : "Keyingi savol"} ${icon("arrow")}</button>`;
+  G.swapped(); $("#next").onclick = render;
+}
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
+</script>
+</body>
+</html>

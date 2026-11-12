@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Harflab topish</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .board { padding: clamp(18px, 3vw, 30px); text-align: center; }
+  .q { font-family: var(--display); font-weight: 700; font-size: clamp(22px, 3vw, 34px); line-height: 1.25; margin: 10px auto 22px; max-width: 900px; }
+  .word { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 auto 22px; }
+  .tile { width: clamp(42px, 5.4vw, 64px); height: clamp(54px, 6.8vw, 80px); display: grid; place-items: center; border: 2px solid var(--line-strong); border-radius: var(--r); background: var(--accent); font-family: var(--display); font-weight: 800; font-size: clamp(22px, 3vw, 36px); color: transparent; transition: background .3s, color .3s, transform .3s; }
+  .tile.on { background: var(--surface); color: var(--ink); transform: rotateX(360deg); }
+  .tile.flash { background: var(--warn); color: #1b1300; }
+  .abc { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 900px; margin: 0 auto; }
+  .abc button { min-width: 48px; height: 46px; padding: 0 8px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--surface); font-family: var(--display); font-weight: 700; font-size: 20px; }
+  .abc button:hover:not(:disabled) { background: var(--accent-soft); }
+  .abc button.yes { background: var(--good); color: #fff; border-color: var(--good); }
+  .abc button.no { background: var(--surface-2); color: var(--muted); text-decoration: line-through; }
+  .abc button:disabled { cursor: default; }
+  .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 20px; text-align: left; }
+  .whole { display: flex; gap: 8px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="savollar/tarix-qoshimcha.js"></script>
+<script src="assets/core.js"></script>
+<script>
+// Bu oʻyin faqat tarix fani uchun
+if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
+const { $, $$, esc, store, icon, sound } = G;
+const SK = G.saveKey("harf"), TIME = 30, PER = 100, BONUS = 500;
+const W = ((window.QOSHIMCHA || {}).tarix || {}).sozlar || [];
+const ABC = ["A", "B", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "X", "Y", "Z", "Oʻ", "Gʻ", "SH", "CH", "NG"];
+const DI = ["Oʻ", "Gʻ", "SH", "CH", "NG"];
+let S = store.get(SK), cur = { t: null };
+
+G.header("Harflab topish", reset);
+
+// Soʻzni harflarga ajratish: Oʻ, Gʻ, SH, CH, NG — bitta harf
+function tokens(w) { const out = []; for (let i = 0; i < w.length;) { const d = DI.find(x => w.startsWith(x, i)); if (d) { out.push(d); i += d.length; } else { out.push(w[i]); i++; } } return out; }
+
+function setup() {
+  let n = 6;
+  G.setup($("#app"), {
+    kicker: "Harflar",
+    title: "Harflab topish",
+    extra: `<span class="l">Raundlar soni</span>
+      <div class="seg" id="rn">${[4, 6, 9, 12].map(k => `<button type="button" data-r="${k}">${k}</button>`).join("")}</div>`,
+    bind(el) {
+      const sync = () => $$("#rn button", el).forEach(x => x.classList.toggle("on", +x.dataset.r === n));
+      $$("#rn button", el).forEach(b => b.onclick = () => { n = +b.dataset.r; sync(); });
+      sync();
+    },
+    rules: [
+      "Boshlovchi savolni oʻqiydi. Javob — ekrandagi yopiq kataklardagi soʻz.",
+      "Navbatdagi jamoa bitta harf aytadi, boshlovchi uni ekranda bosadi.",
+      `Harf soʻzda boʻlsa — u ochiladi, jamoa har bir ochilgan katak uchun <b>${PER} ball</b> oladi va yana harf aytadi. Boʻlmasa — navbat keyingi jamoaga oʻtadi.`,
+      `Jamoa istalgan paytda soʻzni butunligicha aytishi mumkin: toʻgʻri — <b>+${BONUS} ball</b> va raund tugaydi, xato — navbat oʻtadi.`,
+      `Har yurish uchun ${TIME} soniya. Oʻ, Gʻ, Sh, Ch, Ng — bitta harf hisoblanadi.`
+    ],
+    onStart(teams) {
+      S = { teams, order: G.shuffle(W.map((_, i) => i)).slice(0, n), idx: 0, turn: 0, open: [], tried: [] };
+      save(); render();
+    }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { if (cur.t) cur.t.stop(); store.del(SK); S = null; G.modal.close(); setup(); }
+
+function render(flash = []) {
+  G.swapped();
+  if (cur.t) cur.t.stop();
+  if (S.idx >= S.order.length) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
+  const w = W[S.order[S.idx]], tk = tokens(w.j), t = S.teams[S.turn];
+  const solved = tk.every(x => S.open.includes(x));
+  $("#app").innerHTML = `
+    <div class="panel board">
+      <div class="meta" style="justify-content:center"><span>Raund ${S.idx + 1} / ${S.order.length}</span><span class="acc">${tk.length} ta harf</span></div>
+      <div class="q">${esc(w.s)}</div>
+      <div class="word">${tk.map(x => `<div class="tile ${S.open.includes(x) || solved ? "on" : ""} ${flash.includes(x) ? "flash" : ""}">${esc(x === "SH" ? "Sh" : x === "CH" ? "Ch" : x === "NG" ? "Ng" : x)}</div>`).join("")}</div>
+      ${solved ? "" : `<div class="abc">${ABC.map(a => { const tr = S.tried.includes(a); return `<button type="button" data-a="${a}" ${tr ? "disabled" : ""} class="${tr ? (tk.includes(a) ? "yes" : "no") : ""}">${a === "SH" ? "Sh" : a === "CH" ? "Ch" : a === "NG" ? "Ng" : a}</button>`; }).join("")}</div>`}
+      <div id="tm" style="margin-top:18px"></div>
+      <div class="bar" style="--c:${G.tc(t)}">
+        <div class="turn"><span class="what">Navbat:</span><span class="who">${esc(t.name)}</span></div>
+        <div class="whole" id="whole">${solved
+          ? `<button class="btn primary lg" id="next" type="button">${S.idx + 1 >= S.order.length ? "Natijalar" : "Keyingi raund"} ${icon("arrow")}</button>`
+          : `<button class="btn" id="say" type="button">Soʻzni butunligicha aytdi</button>`}</div>
+      </div>
+    </div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { active: S.turn, onAdjust: (i, d) => { S.teams[i].score += d; save(); render(); } });
+  if (solved) { $("#next").onclick = nextRound; return; }
+  $$(".abc button[data-a]").forEach(b => b.onclick = () => letter(b.dataset.a));
+  $("#say").onclick = sayWhole;
+  cur.t = G.timer($("#tm"), TIME, () => { G.toast("Vaqt tugadi — navbat oʻtdi"); pass(); });
+}
+
+function letter(a) {
+  const tk = tokens(W[S.order[S.idx]].j);
+  S.tried.push(a);
+  const n = tk.filter(x => x === a).length;
+  if (n) {
+    S.open.push(a); S.teams[S.turn].score += n * PER; sound.ok();
+    G.toast(`${esc(S.teams[S.turn].name)}: “${a}” — ${n} ta, +${n * PER}`);
+    save(); render([a]);
+  } else { sound.bad(); G.toast(`“${a}” harfi yoʻq — navbat oʻtdi`); pass(); }
+}
+
+function pass() { S.turn = (S.turn + 1) % S.teams.length; save(); render(); }
+
+function sayWhole() {
+  if (cur.t) cur.t.stop();
+  const w = W[S.order[S.idx]];
+  // Javob ekranda koʻrsatilmaydi: boshlovchi jamoa aytgan soʻzni yozadi, sayt oʻzi tekshiradi
+  $("#whole").innerHTML = `<input class="inp" id="guess" placeholder="Jamoa aytgan soʻz" style="max-width:260px" autocomplete="off">
+    <button class="btn primary" id="check" type="button">Tekshirish</button>`;
+  G.swapped();
+  const inp = $("#guess"); inp.focus();
+  const norm = v => v.toUpperCase().replace(/[‘’'`ʼ]/g, "ʻ").replace(/\s+/g, "");
+  const check = () => {
+    if (!inp.value.trim()) return;
+    if (norm(inp.value) === norm(w.j)) { S.teams[S.turn].score += BONUS; tokens(w.j).forEach(x => { if (!S.open.includes(x)) S.open.push(x); }); sound.bonus(); G.toast(`Toʻgʻri! +${BONUS}`); save(); render(); }
+    else { sound.bad(); G.toast("Notoʻgʻri — navbat oʻtdi"); pass(); }
+  };
+  $("#check").onclick = check; inp.onkeydown = e => { if (e.key === "Enter") check(); };
+}
+
+function nextRound() { S.idx++; S.open = []; S.tried = []; S.turn = S.idx % S.teams.length; save(); render(); }
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
+</script>
+</body>
+</html>

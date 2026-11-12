@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Ipak yoʻli karvoni</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .stage { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(250px, 1fr); gap: 22px; }
+  .map { padding: 12px; }
+  svg.road { width: 100%; height: auto; display: block; }
+  .road .path { fill: none; stroke: var(--line-strong); stroke-width: 3; stroke-dasharray: 2 7; stroke-linecap: round; }
+  .road .c { stroke: var(--line-strong); stroke-width: 1.5; }
+  .road .c-x { fill: var(--surface); } .road .c-s { fill: var(--accent-soft); } .road .c-f { fill: color-mix(in srgb, var(--good) 30%, var(--surface)); } .road .c-b { fill: color-mix(in srgb, var(--bad) 28%, var(--surface)); } .road .c-end { fill: var(--warn); }
+  .road .city { font-family: var(--display); font-weight: 700; font-size: 15px; fill: var(--ink); }
+  .road .no { font-family: var(--num); font-size: 10px; fill: var(--muted); }
+  .road .tok { transition: transform .35s ease; }
+  .side { display: flex; flex-direction: column; gap: 16px; }
+  .side .panel { padding: 20px; }
+  .dice { width: 92px; height: 92px; margin: 10px auto; display: block; }
+  .dice rect { fill: var(--surface); stroke: var(--line-strong); stroke-width: 2.5; }
+  .dice circle { fill: var(--ink); }
+  .dice.roll { animation: roll .55s linear infinite; }
+  @keyframes roll { to { transform: rotate(360deg); } }
+  .legend { list-style: none; margin: 8px 0 0; padding: 0; font-size: 14px; }
+  .legend li { display: flex; align-items: center; gap: 10px; padding: 5px 0; color: var(--muted); }
+  .legend i { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--line-strong); }
+  @media (max-width: 960px) { .stage { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="savollar/tarix-qoshimcha.js"></script>
+<script src="assets/core.js"></script>
+<script>
+// Bu oʻyin faqat tarix fani uchun
+if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
+const { $, $$, esc, store, icon, sound } = G;
+const SK = G.saveKey("karvon");
+const ROAD = ((window.QOSHIMCHA || {}).tarix || {}).ipakYoli || [];
+const END = ROAD.length - 1;
+let S = store.get(SK), busy = false;
+
+G.header("Ipak yoʻli karvoni", reset);
+
+// Kataklar joylashuvi: sharqdan (oʻngdan) gʻarbga (chapga) ilonsimon 3 qator
+const PTS = (() => {
+  const per = 11, W = 1000, out = [];
+  for (let i = 0; i < ROAD.length; i++) {
+    const row = Math.floor(i / per), k = i % per, dir = row % 2 === 0 ? -1 : 1;
+    const x = dir < 0 ? W - 50 - k * 90 : 50 + k * 90, y = 70 + row * 150 + Math.sin(k * .9) * 16;
+    out.push([x, y]);
+  }
+  return out;
+})();
+
+function setup() {
+  G.setup($("#app"), {
+    kicker: "Karvon",
+    title: "Ipak yoʻli karvoni",
+    rules: [
+      "Har bir jamoa — bitta karvon. Hammasi Siandan (Xitoy) boshlab, Konstantinopolga qarab yoʻl oladi.",
+      "Navbatdagi jamoa kubik tashlaydi va shuncha katak yuradi.",
+      "<b>Koʻk katak</b> — savol: toʻgʻri javob — yana <b>1 qadam oldinga</b>, xato — <b>2 qadam orqaga</b>.",
+      "<b>Yashil katak</b> — omad (oldinga), <b>qizil katak</b> — toʻsiq (orqaga).",
+      "Konstantinopolga birinchi yetib kelgan karvon gʻolib."
+    ],
+    onStart(teams) { teams.forEach(t => { t.pos = 0; t.score = 0; }); S = { teams, turn: 0, used: [], last: 0 }; save(); render(); }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { store.del(SK); S = null; busy = false; G.modal.close(); setup(); }
+
+function diceSVG(n, cls = "") {
+  const P = { 1: [[50, 50]], 2: [[30, 30], [70, 70]], 3: [[28, 28], [50, 50], [72, 72]], 4: [[30, 30], [70, 30], [30, 70], [70, 70]], 5: [[28, 28], [72, 28], [50, 50], [28, 72], [72, 72]], 6: [[30, 26], [70, 26], [30, 50], [70, 50], [30, 74], [70, 74]] }[n] || [];
+  return `<svg class="dice ${cls}" viewBox="0 0 100 100"><rect x="6" y="6" width="88" height="88" rx="16"/>${P.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="8"/>`).join("")}</svg>`;
+}
+
+function roadSVG() {
+  const d = "M" + PTS.map(p => p.join(" ")).join(" L");
+  return `<svg class="road" viewBox="0 0 1000 420" role="img" aria-label="Ipak yoʻli">
+    <path class="path" d="${d}"/>
+    ${ROAD.map((c, i) => { const [x, y] = PTS[i]; return `<circle class="c c-${c.tur}" cx="${x}" cy="${y}" r="${c.n ? 20 : 15}"/>${c.n ? `<text class="city" x="${x}" y="${y - 28}" text-anchor="middle">${esc(c.n)}</text>` : `<text class="no" x="${x}" y="${y + 4}" text-anchor="middle">${i}</text>`}`; }).join("")}
+    ${S.teams.map((t, i) => { const [x, y] = PTS[Math.min(t.pos, END)], o = [[-9, -9], [9, -9], [-9, 9], [9, 9]][i]; return `<g class="tok" style="transform:translate(${x + o[0]}px,${y + o[1]}px)"><circle r="10" fill="var(--t${t.c})" stroke="var(--surface)" stroke-width="2.5"/></g>`; }).join("")}
+  </svg>`;
+}
+
+function render() {
+  G.swapped();
+  const w = S.teams.find(t => t.pos >= END);
+  if (w) { $("#app").innerHTML = `<div class="panel map">${roadSVG()}</div>`; S.teams.forEach(t => t.score = Math.min(t.pos, END)); G.winner(S.teams, reset, "katak"); G.$(".win .sub").textContent = "Karvon Konstantinopolga birinchi yetib keldi"; return; }
+  const t = S.teams[S.turn];
+  $("#app").innerHTML = `
+    <div class="stage">
+      <div class="panel map">${roadSVG()}</div>
+      <div class="side">
+        <div class="panel" style="--c:${G.tc(t)};text-align:center">
+          <div class="kicker">Navbat</div>
+          <div class="turn" style="justify-content:center"><span class="who">${esc(t.name)}</span></div>
+          <div id="dice">${diceSVG(S.last || 1)}</div>
+          <button class="btn primary block lg" id="roll" type="button">Kubik tashlash</button>
+        </div>
+        <div class="panel"><div class="kicker">Karvonlar</div>
+          <ul class="legend">${S.teams.map(x => `<li><i style="background:var(--t${x.c})"></i><span style="flex:1">${esc(x.name)}</span><b class="num">${x.pos} / ${END}</b></li>`).join("")}</ul>
+          <ul class="legend" style="margin-top:10px;border-top:1px solid var(--line);padding-top:6px">
+            <li><i style="background:var(--accent-soft)"></i>Savol</li>
+            <li><i style="background:color-mix(in srgb, var(--good) 30%, var(--surface))"></i>Omad — oldinga</li>
+            <li><i style="background:color-mix(in srgb, var(--bad) 28%, var(--surface))"></i>Toʻsiq — orqaga</li></ul></div>
+      </div>
+    </div>`;
+  $("#roll").onclick = roll;
+}
+
+function roll() {
+  if (busy) return; busy = true; $("#roll").disabled = true;
+  $("#dice").innerHTML = diceSVG(1 + Math.floor(Math.random() * 6), "roll");
+  let n = 0; const iv = setInterval(() => { sound.spin(); $("#dice").innerHTML = diceSVG(1 + Math.floor(Math.random() * 6), "roll"); if (++n > 8) {
+    clearInterval(iv); const v = 1 + Math.floor(Math.random() * 6); S.last = v; $("#dice").innerHTML = diceSVG(v); sound.click();
+    walk(S.turn, v, () => land(S.turn));
+  } }, 90);
+}
+
+function walk(i, steps, done) {
+  const t = S.teams[i], dir = Math.sign(steps); let left = Math.abs(steps);
+  const tick = () => {
+    if (!left || (dir > 0 && t.pos >= END) || (dir < 0 && t.pos <= 0)) { save(); return done(); }
+    t.pos += dir; left--; save();
+    const g = $$(".tok")[i]; if (g) { const [x, y] = PTS[t.pos], o = [[-9, -9], [9, -9], [-9, 9], [9, 9]][i]; g.style.transform = `translate(${x + o[0]}px,${y + o[1]}px)`; }
+    $$(".legend b")[i] && ($$(".legend b")[i].textContent = `${t.pos} / ${END}`);
+    setTimeout(tick, 300);
+  };
+  tick();
+}
+
+function land(i) {
+  const t = S.teams[i], c = ROAD[Math.min(t.pos, END)];
+  if (t.pos >= END) return finish();
+  if (c.tur === "s") return question(i);
+  if (c.tur === "f" || c.tur === "b") {
+    const m = G.modal(`<div class="kicker">${c.d > 0 ? "Omad" : "Toʻsiq"}</div><h2 style="font-family:var(--display);margin:10px 0">${esc(c.m)}</h2>
+      <p style="font-size:20px">${c.d > 0 ? "+" : "−"}${Math.abs(c.d)} qadam</p><div class="row-btns"><button class="btn primary lg" id="ok" type="button">Davom etish</button></div>`);
+    c.d > 0 ? sound.bonus() : sound.bad();
+    $("#ok", m).onclick = () => { G.modal.close(); walk(i, c.d, finish); };
+    return;
+  }
+  finish();
+}
+
+function question(i) {
+  const t = S.teams[i], lv = Math.min(4, Math.floor(t.pos / END * 5));
+  const free = G.all().filter(x => !S.used.includes(x.id));
+  let pool = free.filter(x => x.li === lv); if (!pool.length) pool = free;
+  if (!pool.length) return finish();
+  const q = G.shuffle(pool)[0]; S.used.push(q.id); save();
+  const c = G.modal(`<div class="meta" style="--c:${G.tc(t)}"><span class="tm-name">${esc(t.name)}</span><span>${esc(ROAD[t.pos].n || (t.pos + "-katak"))}</span><span class="acc">${q.li + 1}-daraja</span></div><div id="q"></div>`);
+  G.ask($("#q", c), q.item, { onResult(ok) { G.modal.close(); walk(i, ok ? 1 : -2, finish); } });
+}
+
+function finish() { busy = false; if (!S.teams.some(t => t.pos >= END)) S.turn = (S.turn + 1) % S.teams.length; save(); render(); }
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
+</script>
+</body>
+</html>

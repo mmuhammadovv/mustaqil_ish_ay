@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="uz" data-fan="tarix" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Tarix bingosi — chop etish uchun</title>
+<link rel="stylesheet" href="chop.css">
+<style>
+  .bcard { margin-bottom: 8mm; break-inside: avoid; }
+  .bcard .hd { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #2b1d13; padding-bottom: 1mm; margin-bottom: 2mm; }
+  .bcard .hd b { font-family: "Alegreya", Georgia, serif; font-size: 20pt; letter-spacing: .3em; }
+  .bcard .hd span { font-size: 10pt; color: #6e5a46; }
+  .bgrid { display: grid; grid-template-columns: repeat(5, 1fr); border: 1.5px solid #2b1d13; }
+  .bgrid div { height: 22mm; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1.5mm; border: 0.6px solid #8a7660; font-size: 11pt; font-weight: 700; line-height: 1.15; }
+  .bgrid .free { background: #2b1d13; color: #e0b65a; font-family: "Alegreya", Georgia, serif; font-size: 13pt; }
+  .host { width: 100%; border-collapse: collapse; font-size: 10.5pt; }
+  .host td { border-bottom: 1px solid #e0d4bd; padding: 1.3mm 2mm; vertical-align: top; }
+  .host td:first-child { width: 8mm; text-align: center; font-weight: 700; }
+  .host td:last-child { width: 38mm; font-weight: 700; }
+  .host .box { display: inline-block; width: 3.5mm; height: 3.5mm; border: 1px solid #4a3424; margin-right: 2mm; vertical-align: -0.5mm; }
+</style>
+</head>
+<body>
+<div class="toolbar"><a href="../fan.html?fan=tarix">← Oʻyinlar</a><button onclick="window.print()">Chop etish</button></div>
+
+<section class="sheet first">
+  <header class="sh"><span>Jonli oʻyin · Oʻzbekistonning eng yangi tarixi</span><span>1-varaq: qoidalar</span></header>
+  <h1>Tarix bingosi</h1>
+  <p class="lead">Butun sinf bir vaqtda oʻynaydi. Har jamoa (yoki har bir oʻquvchi) javoblar yozilgan 5×5 kartochka oladi. Boshlovchi savollarni oʻqiydi — javob kartochkangizda boʻlsa, uni belgilaysiz.</p>
+  <h2>Tayyorgarlik</h2>
+  <ol>
+    <li>Bingo kartochkalarini chop eting (8 ta har xil kartochka). Har jamoaga bittadan bering, ruchka yoki fishkalar tayyorlang.</li>
+    <li>Oxirgi varaq — boshlovchi uchun savollar va javoblar. Savollarni roʻyxat tartibida oʻqing.</li>
+  </ol>
+  <h2>Qoidalar</h2>
+  <ol>
+    <li>Boshlovchi savolni oʻqiydi, <b>javobni aytmaydi</b>. Jamoalarga oʻylash uchun 30 soniya beriladi.</li>
+    <li>Kimning kartochkasida javob boʻlsa, oʻsha katakni belgilaydi. Markazdagi “BMT” katagi hammada boshidan belgilangan.</li>
+    <li>Gorizontal, vertikal yoki diagonal boʻyicha <b>5 ta katak</b> belgilangan jamoa “Bingo!” deb qichqiradi.</li>
+    <li>Boshlovchi tekshiradi: belgilangan javoblar oʻqilgan savollarga mos boʻlsa — jamoa gʻolib. Xato belgi topilsa — jamoa oʻyinni davom ettiradi, lekin oʻsha katak oʻchiriladi.</li>
+    <li>Birinchi “Bingo”dan keyin oʻyinni “ikkinchi qator”, “butun kartochka” uchun davom ettirish mumkin.</li>
+  </ol>
+</section>
+
+<div id="cards"></div>
+
+<section class="sheet">
+  <header class="sh"><span>Tarix bingosi</span><span>Boshlovchi uchun: savollar va javoblar</span></header>
+  <table class="host" id="host"></table>
+</section>
+
+<script>
+const Q = [
+  ["Oʻzbekiston BMTga qaysi yili aʼzo boʻlgan?", "1992"],
+  ["BMT qaysi yili tashkil topgan?", "1945"],
+  ["Oʻzbekiston mustaqilligi qaysi yili eʼlon qilingan?", "1991"],
+  ["BMTning bosh qarorgohi qaysi shaharda?", "Nyu-York"],
+  ["BMTning taʼlim, fan va madaniyat tashkiloti", "YuNESKO"],
+  ["BMTning Bolalar jamgʻarmasi", "YuNISEF"],
+  ["Lotincha “man qilaman” — qarorni toʻxtatish huquqi", "Veto"],
+  ["Samarqanddagi uchta madrasali maydon", "Registon"],
+  ["Xivadagi devor bilan oʻralgan ichki shahar", "Ichan qalʼa"],
+  ["Amir Temur maqbarasi", "Goʻri Amir"],
+  ["Orol qurigan tubida paydo boʻlgan choʻl", "Orolqum"],
+  ["Orolga quyiladigan daryolardan biri", "Amudaryo"],
+  ["“Yangi kun” maʼnosini beruvchi bayram", "Navroʻz"],
+  ["Al-Xorazmiy nomidan kelib chiqqan atama", "Algoritm"],
+  ["“Tib qonunlari” muallifi", "Ibn Sino"],
+  ["Samarqandda rasadxona qurdirgan olim hukmdor", "Ulugʻbek"],
+  ["“Xamsa” muallifi", "Navoiy"],
+  ["“Boburnoma” muallifi", "Bobur"],
+  ["“Oyina” jurnalini chiqargan jadid", "Behbudiy"],
+  ["“Oʻtgan kunlar” romani muallifi", "Qodiriy"],
+  ["Davlat bayrogʻimizdagi yulduzlar soni", "12"],
+  ["Mustaqillik kuni qaysi sanada nishonlanadi?", "1-sentabr"],
+  ["Oʻzbekiston mustaqilligini birinchilardan tan olgan davlat", "Turkiya"],
+  ["2022-yilda ShHT sammiti oʻtgan shahar", "Samarqand"],
+  ["2001-yilda tuzilgan Shanxay hamkorlik tashkiloti qisqartmasi", "ShHT"],
+  ["Tinchlik ramzi boʻlgan qush", "Kaptar"],
+  ["BMT bayrogʻidagi shoxlar qaysi daraxtniki?", "Zaytun"],
+  ["BMTning rasmiy tillari soni", "6"],
+  ["BMTga aʼzo davlatlar soni", "193"],
+  ["Davlat madhiyasi soʻzlari muallifi", "Abdulla Oripov"]
+];
+// Takrorlanadigan tasodifiy sonlar (har chop etishda kartochkalar bir xil chiqsin)
+let seed = 20261112;
+const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const cards = Array.from({ length: 8 }, (_, n) => {
+  const picks = shuffle(Q.map(q => q[1])).slice(0, 24);
+  picks.splice(12, 0, null);
+  return `<div class="bcard"><div class="hd"><b>BINGO</b><span>Kartochka № ${n + 1} · Jamoa: ____________</span></div>
+    <div class="bgrid">${picks.map(a => a === null ? `<div class="free">BMT</div>` : `<div>${a}</div>`).join("")}</div></div>`;
+});
+const pages = []; for (let i = 0; i < cards.length; i += 2) pages.push(cards.slice(i, i + 2));
+document.getElementById("cards").innerHTML = pages.map((p, n) => `<section class="sheet"><header class="sh"><span>Tarix bingosi</span><span>Kartochkalar ${n + 1} / ${pages.length}</span></header>${p.join("")}</section>`).join("");
+document.getElementById("host").innerHTML = shuffle(Q).map((q, i) => `<tr><td>${i + 1}</td><td><span class="box"></span>${q[0]}</td><td>${q[1]}</td></tr>`).join("");
+</script>
+</body>
+</html>
