@@ -27,13 +27,14 @@
   .half[data-fan="akademik"] { border-right: 1px solid var(--line-strong); }
   .half[data-fan="akademik"] h2 { border-top: 4px double var(--line-strong); border-bottom: 1px solid var(--line-strong); padding: 16px 0; }
   .half[data-fan="akademik"] .enter { text-transform: uppercase; letter-spacing: .12em; font-size: 13px; }
+  .half[data-fan="tarix"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 46%; background: var(--skyline) center bottom / auto 100% no-repeat; pointer-events: none; opacity: .9; }
+  .half[data-fan="tarix"] > * { position: relative; z-index: 1; }
   .half[data-fan="tarix"] .mark { display: none; }
-  .half[data-fan="tarix"]::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 14px; background: linear-gradient(to bottom, #0a9fc4 0 33.3%, #ce1126 33.3% 35.5%, #ffffff 35.5% 64.5%, #ce1126 64.5% 66.6%, #1eb53a 66.6%); }
-  .half[data-fan="tarix"] h2 { font-weight: 700; text-transform: uppercase; letter-spacing: -.045em; line-height: .9; }
-  .half[data-fan="tarix"] .over { display: inline-block; background: var(--warn); color: #111418; padding: 3px 10px; }
-  .half[data-fan="tarix"] ul { border: 2px solid var(--line-strong); background: var(--surface); padding: 0 14px; box-shadow: var(--shadow); }
+  .half[data-fan="tarix"] .over { color: var(--accent-2); font-variant: small-caps; text-transform: none; letter-spacing: .16em; font-size: 14px; }
+  .half[data-fan="tarix"] h2 { font-weight: 800; }
+  .half[data-fan="tarix"] ul { background: var(--surface); border: 1px solid var(--line-strong); box-shadow: var(--frame); padding: 4px 16px; border-radius: var(--r-lg); }
   .half[data-fan="tarix"] li:first-child { border-top: 0; }
-  .half[data-fan="tarix"] .enter { border: 2px solid var(--hard); box-shadow: 4px 4px 0 var(--hard); }
+  .half[data-fan="tarix"] .enter { border-radius: var(--r); }
   @media (max-width: 860px) { .split { grid-template-columns: 1fr; } .half[data-fan="akademik"] { border-right: 0; border-bottom: 1px solid var(--line-strong); } }
 </style>
 </head>

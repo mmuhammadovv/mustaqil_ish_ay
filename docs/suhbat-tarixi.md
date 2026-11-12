@@ -56,3 +56,8 @@ Foydalanuvchi talablari:
 - Sozlash tugmalari jamoalar soni oʻzgarganda ishlamay qolardi — `setup({bind})` bilan tuzatildi.
 - Logo (favicon.svg) qoʻshildi; URL `package.json` → cloudflare.project orqali oʻzgartiriladi.
 - Svetofor: yashil signal baland va aniq, kompressor bilan.
+
+## 11. Logo variantlari va tarixiy dizayn
+- Logo: minimalistik M; keyin 8 ta variant (docs/logo-variantlar.html) — foydalanuvchi tanlaydi.
+- Oʻyin tavsiflari olib tashlandi.
+- Tarix dizayni tarixga bogʻliq qilindi: gʻisht teksturasi, Registon siluyeti, koshin ramkalari, Alegreya shrifti.

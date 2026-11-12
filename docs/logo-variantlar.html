@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo variantlari</title>
+<style>
+  body { margin: 0; font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background: #f4f2ee; color: #16181c; }
+  h1 { font-size: 22px; margin: 0; padding: 24px 24px 4px; }
+  p.lead { margin: 0; padding: 0 24px 16px; color: #666; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; padding: 0 24px 32px; }
+  .card { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 18px; }
+  .card h2 { margin: 0 0 12px; font-size: 16px; display: flex; gap: 10px; align-items: baseline; }
+  .card h2 b { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #16181c; color: #fff; font-size: 14px; }
+  .row { display: flex; align-items: center; gap: 14px; }
+  .dark { background: #111317; border-radius: 8px; padding: 10px; display: flex; gap: 10px; align-items: center; }
+  .card small { display: block; color: #777; margin-top: 10px; }
+  svg { display: block; }
+</style>
+</head>
+<body>
+<h1>Logo variantlari</h1>
+<p class="lead">Har bir variant: katta, brauzer tabidagi (32 va 16 px) va qorongʻi fonda. Yoqqanining harfini yozing.</p>
+<div class="grid" id="g"></div>
+<script>
+const V = {
+  A: ["Minimal M", "Hozirgi variant: ingichka M va koʻk nuqta",
+    '<rect width="64" height="64" rx="14" fill="#14161a"/><path d="M17 44V21l15 15 15-15v23" fill="none" stroke="#f4f1ea" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="47" cy="52" r="3" fill="#2bb7de"/>'],
+  B: ["Ochiq kitob", "Ikki varaq birga “M” shaklini hosil qiladi",
+    '<rect width="64" height="64" rx="14" fill="#f4f1ea"/><path d="M12 20c7-3 14-2 20 3v24c-6-5-13-6-20-3z" fill="none" stroke="#14161a" stroke-width="4" stroke-linejoin="round"/><path d="M52 20c-7-3-14-2-20 3v24c6-5 13-6 20-3z" fill="#14161a" stroke="#14161a" stroke-width="4" stroke-linejoin="round"/>'],
+  C: ["Ravoq (pishtoq)", "Sharq meʼmorchiligidagi ravoq ichida M — tarixga ishora",
+    '<rect width="64" height="64" rx="14" fill="#1f3f6e"/><path d="M14 54V30c0-10 8-17 18-22 10 5 18 12 18 22v24" fill="none" stroke="#efe4cf" stroke-width="3.5" stroke-linejoin="round"/><path d="M22 48V32l10 9 10-9v16" fill="none" stroke="#efe4cf" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>'],
+  D: ["Qalam uchi", "Yozuv (akademik yozuv) ramzi — qalam uchi",
+    '<rect width="64" height="64" rx="32" fill="#14161a"/><path d="M32 12l12 20-12 22-12-22z" fill="none" stroke="#f4f1ea" stroke-width="3.5" stroke-linejoin="round"/><path d="M32 32v22" stroke="#f4f1ea" stroke-width="3"/><circle cx="32" cy="32" r="3.5" fill="#f4f1ea"/>'],
+  E: ["Toʻrt katak", "Toʻrt kvadrat — oʻyinlar maydoni, bittasi urgʻuli",
+    '<rect width="64" height="64" rx="14" fill="#f4f1ea"/><rect x="13" y="13" width="17" height="17" rx="3" fill="#14161a"/><rect x="34" y="13" width="17" height="17" rx="3" fill="#14161a"/><rect x="13" y="34" width="17" height="17" rx="3" fill="#14161a"/><rect x="34" y="34" width="17" height="17" rx="3" fill="#c0392b"/>'],
+  F: ["Kichik “m” serif", "Kitobiy, klassik shriftdagi kichik m harfi",
+    '<rect width="64" height="64" rx="14" fill="#efe9dd"/><text x="32" y="45" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-size="42" font-weight="700" fill="#14161a">m</text><rect x="17" y="50" width="30" height="2.5" fill="#b02a1c"/>'],
+  G: ["Halqa MM", "Ingichka halqa ichida ikki harf — ism-familiya bosh harflari",
+    '<rect width="64" height="64" rx="32" fill="#f4f1ea"/><circle cx="32" cy="32" r="25" fill="none" stroke="#14161a" stroke-width="2.5"/><text x="32" y="39" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="-1" fill="#14161a">MM</text>'],
+  H: ["Sakkiz qirrali yulduz", "Oʻzbek naqshlaridagi yulduz — sodda, bitta chiziqda",
+    '<rect width="64" height="64" rx="14" fill="#14161a"/><rect x="18" y="18" width="28" height="28" fill="none" stroke="#e8c37a" stroke-width="3" stroke-linejoin="round"/><rect x="18" y="18" width="28" height="28" fill="none" stroke="#e8c37a" stroke-width="3" stroke-linejoin="round" transform="rotate(45 32 32)"/><circle cx="32" cy="32" r="4" fill="#e8c37a"/>']
+};
+const svg = (body, s) => `<svg viewBox="0 0 64 64" width="${s}" height="${s}">${body}</svg>`;
+document.getElementById("g").innerHTML = Object.entries(V).map(([k, [n, d, b]]) => `
+  <div class="card"><h2><b>${k}</b>${n}</h2>
+    <div class="row">${svg(b, 96)}${svg(b, 32)}${svg(b, 16)}<div class="dark">${svg(b, 40)}${svg(b, 16)}</div></div>
+    <small>${d}</small></div>`).join("");
+</script>
+</body>
+</html>

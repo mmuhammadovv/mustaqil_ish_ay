@@ -39,7 +39,7 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 3. **Emoji ishlatilmaydi.** Faqat oʻzimiz chizgan SVG ikonlar (`core.js` → `P` obyekti, `G.icon(name)`).
 4. Dizayn “AI qilgandek” neon/gradient boʻlmasin — dizayner ishlagandek, toza, tipografik. **Har bir fanning dizayni alohida**:
    - akademik — gazeta/tahririyat uslubi (Playfair Display + IBM Plex, qogʻoz rangi, qizil urgʻu, chiziqlar, oʻtkir burchaklar);
-   - tarix — Swiss/plakat uslubi (Space Grotesk + Inter, katta qalin bosh harfli sarlavhalar, katakli “chizma qogʻozi” foni, 0 radius, qattiq offset soyalar, bayroq ranglari bloklari, sariq yorliqlar). Oldingi ikki varianti (feruza/oltin; DM Serif koʻk) yoqmagan.
+   - tarix — tarixiy “Buxoro gʻishti va Samarqand koshinlari” uslubi: Alegreya + Alegreya Sans; lojuvard koʻk, gʻisht, feruza, qum ranglari; fonda gʻisht teruvi teksturasi va pastda Registon siluyeti (chiziqli illyustratsiya), koshin ramkali panellar, romb naqshli hoshiya. Tasvirlar `tools/tarix_art.py` bilan yasalib, theme.css ga `/*ART:...*/` orasiga yoziladi. Avvalgi 3 varianti (feruza/oltin; DM Serif koʻk; Swiss plakat) yoqmagan.
 5. **Kunduzgi va tungi rejim** har sahifada boʻlishi shart.
 6. Oʻyinlar **internetsiz, oddiy HTML** sifatida ochilishi kerak (`file://`). `fetch` ishlatmang — maʼlumot `<script src>` orqali.
 7. Tarix savollari: **oson**, yillar kam; taxminan **50% zakovat uslubidagi mantiqiy savollar** (tarixga bogʻliq, lekin qiziqarli — dasturlash, fan va h.k.).
@@ -58,6 +58,8 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 ## Logo
 
 - `favicon.svg` (ildizda) — minimalistik: toʻq yumaloq kvadrat, ingichka geometrik oq “M” va bitta koʻk urgʻu nuqtasi. Foydalanuvchi minimalistik uslubni soʻragan (avvalgi rang-barang “MI” varianti oʻrniga). Har sahifada favicon va sarlavhada `.brand`. `build.mjs` roʻyxatida bor.
+
+- Logo variantlari: `docs/logo-variantlar.html` (A–H). Foydalanuvchi tanlashini kutyapmiz; hozir A (minimal M).
 
 ## Konventsiyalar
 

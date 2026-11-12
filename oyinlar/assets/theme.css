@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Alegreya:wght@500;700;800&family=Alegreya+Sans:wght@400;500;700&display=swap");
 
 /* =========================================================
    TOKENLAR
@@ -25,45 +25,59 @@
 }
 
 [data-fan="tarix"] {
-  --display: "Space Grotesk", "Inter", "Segoe UI", system-ui, sans-serif;
-  --body: "Inter", "Segoe UI", system-ui, sans-serif;
-  --num: "Space Grotesk", "Inter", system-ui, sans-serif;
-  --r: 0px; --r-lg: 0px;
-  --bg: #e8ebee; --surface: #ffffff; --surface-2: #dce1e6; --ink: #111418; --muted: #58626c; --line: #c3cad1; --line-strong: #111418;
-  --accent: #0a7fa3; --accent-ink: #fff; --accent-soft: #d5edf4; --accent-2: #17964a;
-  --good: #17964a; --bad: #d0213a; --warn: #d99a00;
-  --t0: #0a7fa3; --t1: #d0213a; --t2: #17964a; --t3: #d99a00;
-  --hard: #111418;
-  --shadow: 5px 5px 0 var(--hard);
-  --grid: rgba(17,20,24,.06);
-  --pattern: linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 32px 32px;
-  --flag: linear-gradient(to right, #0a9fc4 0 33.3%, #ffffff 33.3% 66.6%, #1eb53a 66.6% 100%);
+  /* Tarix: Buxoro gʻishti, Samarqand koshinlari, Registon siluyeti */
+  --display: "Alegreya", Georgia, "Times New Roman", serif;
+  --body: "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
+  --num: "Alegreya Sans", system-ui, sans-serif;
+  --r: 4px; --r-lg: 6px;
+  --bg: #e7dbc4; --surface: #f7f0e2; --surface-2: #ece1cc; --ink: #2b1d13; --muted: #6e5a46; --line: #cdbb9c; --line-strong: #4a3424;
+  --accent: #1f4a8a; --accent-ink: #f7f0e2; --accent-soft: #dce4ef; --accent-2: #15807a;
+  --good: #2d7a4b; --bad: #a8432a; --warn: #b07d2a;
+  --t0: #1f4a8a; --t1: #a8432a; --t2: #15807a; --t3: #b07d2a;
+  --shadow: 0 1px 0 rgba(74,52,36,.08), 0 12px 28px -18px rgba(74,52,36,.45);
+  --frame: inset 0 0 0 3px var(--surface), inset 0 0 0 4px var(--line);
+  /*ART:light*/
+  --skyline: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 240' preserveAspectRatio='xMidYMax meet'%3E%3Cpath d='M0 232H1200M28 232L32 70H48L52 232M26 70H54L50 58H30ZM33 58V46H47V58M33 46Q40 30 47 46M40 34V24M31.0 110.5H49.0M30.0 151.0H50.0M29.0 191.5H51.0M80 232V122H330V232M150.0 232V72H260.0V232M162.0 232V84H248.0V232M175.0 232V142Q205.0 92 235.0 142V232M180.0 72V60H230.0V72M178.0 60C178.0 22 232.0 22 232.0 60M192.0 60Q194.0 34 205.0 28M218.0 60Q216.0 34 205.0 28M205.0 60V28M205.0 28V16M80 122V98H94V122M80 98Q87 88 94 98M316 122V98H330V122M316 98Q323 88 330 98M92 225V196.0Q101.0 181.0 110 196.0V225M120 225V196.0Q129.0 181.0 138 196.0V225M272 225V196.0Q281.0 181.0 290 196.0V225M300 225V196.0Q309.0 181.0 318 196.0V225M92 172V147.0Q101.0 132.0 110 147.0V172M120 172V147.0Q129.0 132.0 138 147.0V172M272 172V147.0Q281.0 132.0 290 147.0V172M300 172V147.0Q309.0 132.0 318 147.0V172M401 232L404 120H416L419 232M398 120H422L418 108H402ZM405 108V96H415V108M405 96Q410 80 415 96M410 84V74M403.2 148.0H416.8M402.5 176.0H417.5M401.8 204.0H418.2M430 232V164H650V232M480 164V112H600V164M470 112C460 26 620 26 610 112ZM483 112Q495 54 540 34M502 112Q510 54 540 34M521 112Q525 54 540 34M540 112Q540 54 540 34M559 112Q555 54 540 34M578 112Q570 54 540 34M597 112Q585 54 540 34M540 34V18M516 232V196Q540 170 564 196V232M440 226V204.0Q448.0 190.66666666666666 456 204.0V226M466 226V204.0Q474.0 190.66666666666666 482 204.0V226M592 226V204.0Q600.0 190.66666666666666 608 204.0V226M618 226V204.0Q626.0 190.66666666666666 634 204.0V226M480 128H600M480 146H600M661 232L664 120H676L679 232M658 120H682L678 108H662ZM665 108V96H675V108M665 96Q670 80 675 96M670 84V74M663.2 148.0H676.8M662.5 176.0H677.5M661.8 204.0H678.2M700 232V122H950V232M770.0 232V72H880.0V232M782.0 232V84H868.0V232M795.0 232V142Q825.0 92 855.0 142V232M800.0 72V60H850.0V72M798.0 60C798.0 22 852.0 22 852.0 60M812.0 60Q814.0 34 825.0 28M838.0 60Q836.0 34 825.0 28M825.0 60V28M825.0 28V16M700 122V98H714V122M700 98Q707 88 714 98M936 122V98H950V122M936 98Q943 88 950 98M712 225V196.0Q721.0 181.0 730 196.0V225M740 225V196.0Q749.0 181.0 758 196.0V225M892 225V196.0Q901.0 181.0 910 196.0V225M920 225V196.0Q929.0 181.0 938 196.0V225M712 172V147.0Q721.0 132.0 730 147.0V172M740 172V147.0Q749.0 132.0 758 147.0V172M892 172V147.0Q901.0 132.0 910 147.0V172M920 172V147.0Q929.0 132.0 938 147.0V172M979 232L984 44H1006L1011 232M978 44H1012L1008 32H982ZM985 32V20H1005V32M985 20Q995 4 1005 20M995 8V-2M982.8 91.0H1007.2M981.5 138.0H1008.5M980.2 185.0H1009.8M1040 232V180H1080V232M1042 180Q1060 150 1078 180M1060 158V150M1052 232V200Q1060 190 1068 200V232M1086 232V192H1126V232M1088 192Q1106 162 1124 192M1106 170V162M1098 232V212Q1106 202 1114 212V232M1132 232V172H1172V232M1134 172Q1152 142 1170 172M1152 150V142M1144 232V192Q1152 182 1160 192V232' fill='none' stroke='%235a3a22' stroke-opacity='0.3' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E");
+  --bricks: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='48' viewBox='0 0 96 48'%3E%3Cg fill='none' stroke='%237a4a2a' stroke-opacity='0.11' stroke-width='1'%3E%3Cpath d='M0 .5H96M0 12.5H96M0 24.5H96M0 36.5H96M24 0V12M72 0V12M0 12V24M48 12V24M24 24V36M72 24V36M0 36V48M48 36V48'/%3E%3Cpath d='M48 2l4 4.5-4 4.5-4-4.5zM0 26l4 4.5-4 4.5-4-4.5zM96 26l4 4.5-4 4.5-4-4.5z'/%3E%3C/g%3E%3C/svg%3E");
+  --band: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10' viewBox='0 0 20 10'%3E%3Cpath d='M0 5L5 1 10 5 5 9Z M10 5L15 1 20 5 15 9Z' fill='none' stroke='%231f4a8a' stroke-width='1'/%3E%3Ccircle cx='10' cy='5' r='1.2' fill='%231f4a8a'/%3E%3C/svg%3E");
+  /*/ART*/
+  --pattern: var(--bricks);
 }
 [data-fan="tarix"][data-theme="dark"] {
-  --bg: #0e1012; --surface: #171a1d; --surface-2: #23272b; --ink: #f1f3f5; --muted: #98a2ac; --line: #2f353b; --line-strong: #f1f3f5;
-  --accent: #2bb7de; --accent-ink: #061015; --accent-soft: #0f2f39; --accent-2: #3cc76d;
-  --good: #3cc76d; --bad: #ff5a6d; --warn: #ffc531;
-  --t0: #2bb7de; --t1: #ff5a6d; --t2: #3cc76d; --t3: #ffc531;
-  --hard: #000000;
-  --grid: rgba(255,255,255,.045);
+  --bg: #121826; --surface: #1a2233; --surface-2: #232d42; --ink: #efe3c8; --muted: #a99c84; --line: #354058; --line-strong: #d9c9a6;
+  --accent: #7aa3e6; --accent-ink: #0f1522; --accent-soft: #1e2c48; --accent-2: #45b8ad;
+  --good: #63c08a; --bad: #e07a5f; --warn: #ddb055;
+  --t0: #7aa3e6; --t1: #e07a5f; --t2: #45b8ad; --t3: #ddb055;
+  --shadow: 0 1px 0 rgba(0,0,0,.3), 0 14px 30px -18px rgba(0,0,0,.8);
+  /*ART:dark*/
+  --skyline: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 240' preserveAspectRatio='xMidYMax meet'%3E%3Cpath d='M0 232H1200M28 232L32 70H48L52 232M26 70H54L50 58H30ZM33 58V46H47V58M33 46Q40 30 47 46M40 34V24M31.0 110.5H49.0M30.0 151.0H50.0M29.0 191.5H51.0M80 232V122H330V232M150.0 232V72H260.0V232M162.0 232V84H248.0V232M175.0 232V142Q205.0 92 235.0 142V232M180.0 72V60H230.0V72M178.0 60C178.0 22 232.0 22 232.0 60M192.0 60Q194.0 34 205.0 28M218.0 60Q216.0 34 205.0 28M205.0 60V28M205.0 28V16M80 122V98H94V122M80 98Q87 88 94 98M316 122V98H330V122M316 98Q323 88 330 98M92 225V196.0Q101.0 181.0 110 196.0V225M120 225V196.0Q129.0 181.0 138 196.0V225M272 225V196.0Q281.0 181.0 290 196.0V225M300 225V196.0Q309.0 181.0 318 196.0V225M92 172V147.0Q101.0 132.0 110 147.0V172M120 172V147.0Q129.0 132.0 138 147.0V172M272 172V147.0Q281.0 132.0 290 147.0V172M300 172V147.0Q309.0 132.0 318 147.0V172M401 232L404 120H416L419 232M398 120H422L418 108H402ZM405 108V96H415V108M405 96Q410 80 415 96M410 84V74M403.2 148.0H416.8M402.5 176.0H417.5M401.8 204.0H418.2M430 232V164H650V232M480 164V112H600V164M470 112C460 26 620 26 610 112ZM483 112Q495 54 540 34M502 112Q510 54 540 34M521 112Q525 54 540 34M540 112Q540 54 540 34M559 112Q555 54 540 34M578 112Q570 54 540 34M597 112Q585 54 540 34M540 34V18M516 232V196Q540 170 564 196V232M440 226V204.0Q448.0 190.66666666666666 456 204.0V226M466 226V204.0Q474.0 190.66666666666666 482 204.0V226M592 226V204.0Q600.0 190.66666666666666 608 204.0V226M618 226V204.0Q626.0 190.66666666666666 634 204.0V226M480 128H600M480 146H600M661 232L664 120H676L679 232M658 120H682L678 108H662ZM665 108V96H675V108M665 96Q670 80 675 96M670 84V74M663.2 148.0H676.8M662.5 176.0H677.5M661.8 204.0H678.2M700 232V122H950V232M770.0 232V72H880.0V232M782.0 232V84H868.0V232M795.0 232V142Q825.0 92 855.0 142V232M800.0 72V60H850.0V72M798.0 60C798.0 22 852.0 22 852.0 60M812.0 60Q814.0 34 825.0 28M838.0 60Q836.0 34 825.0 28M825.0 60V28M825.0 28V16M700 122V98H714V122M700 98Q707 88 714 98M936 122V98H950V122M936 98Q943 88 950 98M712 225V196.0Q721.0 181.0 730 196.0V225M740 225V196.0Q749.0 181.0 758 196.0V225M892 225V196.0Q901.0 181.0 910 196.0V225M920 225V196.0Q929.0 181.0 938 196.0V225M712 172V147.0Q721.0 132.0 730 147.0V172M740 172V147.0Q749.0 132.0 758 147.0V172M892 172V147.0Q901.0 132.0 910 147.0V172M920 172V147.0Q929.0 132.0 938 147.0V172M979 232L984 44H1006L1011 232M978 44H1012L1008 32H982ZM985 32V20H1005V32M985 20Q995 4 1005 20M995 8V-2M982.8 91.0H1007.2M981.5 138.0H1008.5M980.2 185.0H1009.8M1040 232V180H1080V232M1042 180Q1060 150 1078 180M1060 158V150M1052 232V200Q1060 190 1068 200V232M1086 232V192H1126V232M1088 192Q1106 162 1124 192M1106 170V162M1098 232V212Q1106 202 1114 212V232M1132 232V172H1172V232M1134 172Q1152 142 1170 172M1152 150V142M1144 232V192Q1152 182 1160 192V232' fill='none' stroke='%23efe3c8' stroke-opacity='0.16' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E");
+  --bricks: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='48' viewBox='0 0 96 48'%3E%3Cg fill='none' stroke='%23efe3c8' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M0 .5H96M0 12.5H96M0 24.5H96M0 36.5H96M24 0V12M72 0V12M0 12V24M48 12V24M24 24V36M72 24V36M0 36V48M48 36V48'/%3E%3Cpath d='M48 2l4 4.5-4 4.5-4-4.5zM0 26l4 4.5-4 4.5-4-4.5zM96 26l4 4.5-4 4.5-4-4.5z'/%3E%3C/g%3E%3C/svg%3E");
+  --band: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10' viewBox='0 0 20 10'%3E%3Cpath d='M0 5L5 1 10 5 5 9Z M10 5L15 1 20 5 15 9Z' fill='none' stroke='%23e0b65a' stroke-width='1'/%3E%3Ccircle cx='10' cy='5' r='1.2' fill='%23e0b65a'/%3E%3C/svg%3E");
+  /*/ART*/
+  --pattern: var(--bricks);
 }
-/* Swiss / plakat uslubi: qalin sans, qattiq soya, rang bloklari */
+/* Fon: gʻisht teksturasi + pastda Registon siluyeti */
+[data-fan="tarix"] body::before { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: min(30vh, 250px); background: var(--skyline) center bottom / auto 100% repeat-x; pointer-events: none; z-index: 0; }
+[data-fan="tarix"] main.wrap, [data-fan="tarix"] .page { position: relative; z-index: 1; }
 [data-fan="tarix"] h1, [data-fan="tarix"] h2, [data-fan="tarix"] h3, [data-fan="tarix"] h4,
 [data-fan="tarix"] .q-text, [data-fan="tarix"] .who, [data-fan="tarix"] .verdict, [data-fan="tarix"] .cat-picked,
-[data-fan="tarix"] .side .nm, [data-fan="tarix"] .cc .nm, [data-fan="tarix"] .top .ttl b { font-weight: 700; letter-spacing: -.02em; }
-[data-fan="tarix"] .panel, [data-fan="tarix"] .mcard, [data-fan="tarix"] .scores { border: 2px solid var(--line-strong); box-shadow: var(--shadow); }
-[data-fan="tarix"] .btn { border-width: 2px; font-weight: 700; box-shadow: 3px 3px 0 var(--hard); }
-[data-fan="tarix"] .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--hard); }
-[data-fan="tarix"] .btn.primary { border-color: var(--hard); }
-[data-fan="tarix"] .opt { border-width: 2px; border-color: var(--line-strong); }
-[data-fan="tarix"] .opt:hover:not(:disabled) { box-shadow: 3px 3px 0 var(--hard); transform: translate(-1px, -1px); }
-[data-fan="tarix"] .kicker { color: var(--ink); background: var(--warn); display: inline-block; padding: 2px 8px; }
-[data-fan="tarix"] .top { border-bottom: 2px solid var(--line-strong); padding-left: 28px; }
-[data-fan="tarix"] .top::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: linear-gradient(to bottom, #0a9fc4 0 33.3%, #ce1126 33.3% 36%, #ffffff 36% 64%, #ce1126 64% 66.6%, #1eb53a 66.6%); }
-[data-fan="tarix"] .team::before { width: 8px; }
-[data-fan="tarix"] .timer .bar { height: 8px; border-radius: 0; }
-[data-fan="tarix"] .timer .bar i { background: var(--accent); }
-[data-fan="tarix"] .q-text { font-size: clamp(22px, 3vw, 36px); }
+[data-fan="tarix"] .side .nm, [data-fan="tarix"] .cc .nm, [data-fan="tarix"] .top .ttl b { font-weight: 700; letter-spacing: 0; }
+/* Koshin ramkasi: ikki qavatli chegara */
+[data-fan="tarix"] .panel, [data-fan="tarix"] .mcard { border: 1px solid var(--line-strong); box-shadow: var(--frame), var(--shadow); }
+[data-fan="tarix"] .scores { border: 1px solid var(--line-strong); box-shadow: var(--shadow); }
+[data-fan="tarix"] .btn { border-radius: var(--r); font-weight: 700; letter-spacing: .02em; }
+[data-fan="tarix"] .btn.primary { box-shadow: inset 0 0 0 2px var(--accent), inset 0 0 0 3px rgba(255,255,255,.35); }
+[data-fan="tarix"] .opt { border-color: var(--line); background: var(--surface); }
+[data-fan="tarix"] .opt .k { border-radius: 50%; font-family: var(--display); font-weight: 700; }
+[data-fan="tarix"] .kicker { color: var(--accent-2); font-variant: small-caps; text-transform: none; letter-spacing: .12em; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; }
+[data-fan="tarix"] .kicker::before, [data-fan="tarix"] .kicker::after { content: ""; width: 7px; height: 7px; transform: rotate(45deg); border: 1px solid currentColor; }
+[data-fan="tarix"] .top { border-bottom: 1px solid var(--line-strong); }
+[data-fan="tarix"] .top::after { content: ""; position: absolute; left: 0; right: 0; bottom: -11px; height: 10px; background: var(--band) left center / 20px 10px repeat-x; }
+[data-fan="tarix"] .top + main.wrap { padding-top: 32px; }
+[data-fan="tarix"] .top .brand img { border-radius: 6px; }
+[data-fan="tarix"] .timer .bar i { background: var(--accent-2); }
+[data-fan="tarix"] .q-text { font-size: clamp(23px, 3.1vw, 38px); line-height: 1.22; }
+[data-fan="tarix"] .meta { letter-spacing: .1em; }
 
 /* =========================================================
    ASOS
@@ -88,7 +102,6 @@ svg.i { width: 1.15em; height: 1.15em; flex: none; vertical-align: -0.18em; }
 [data-fan="akademik"] .top { border-bottom: 3px double var(--line-strong); }
 .top .brand { display: inline-flex; flex: none; }
 .top .brand img { display: block; width: 34px; height: 34px; border-radius: 8px; }
-[data-fan="tarix"] .top .brand img { border-radius: 0; }
 .top .ttl { flex: 1; min-width: 0; }
 .top .ttl b { display: block; font-family: var(--display); font-size: clamp(17px, 2.2vw, 24px); line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .top .ttl span { display: block; color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -125,7 +138,6 @@ main.wrap { flex: 1; width: 100%; max-width: 1360px; margin: 0 auto; padding: 20
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
 [data-fan="akademik"] .panel { border-color: var(--line-strong); }
 .kicker { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
-[data-fan="tarix"] .kicker { color: var(--accent-2); }
 
 /* =========================================================
    SOZLASH EKRANI
@@ -181,7 +193,6 @@ main.wrap { flex: 1; width: 100%; max-width: 1360px; margin: 0 auto; padding: 20
 .meta .tm-name { color: var(--c); }
 [data-fan="akademik"] .meta { border-bottom: 1px solid var(--line-strong); padding-bottom: 10px; }
 .q-text { font-family: var(--display); font-size: clamp(22px, 3.2vw, 38px); line-height: 1.25; margin: 18px 0 16px; font-weight: 700; }
-[data-fan="tarix"] .q-text { font-weight: 700; }
 
 .timer { display: flex; align-items: center; gap: 12px; margin: 4px 0 16px; }
 .timer .bar { flex: 1; height: 4px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
