@@ -61,3 +61,8 @@ Foydalanuvchi talablari:
 - Logo: minimalistik M; keyin 8 ta variant (docs/logo-variantlar.html) — foydalanuvchi tanlaydi.
 - Oʻyin tavsiflari olib tashlandi.
 - Tarix dizayni tarixga bogʻliq qilindi: gʻisht teksturasi, Registon siluyeti, koshin ramkalari, Alegreya shrifti.
+
+## 12. Yangi oʻyin gʻoyalari
+- Logo: D varianti (qalam uchi) tanlandi.
+- Foydalanuvchi rejaga oldi: Rasmdan top, BMT sessiyasi, Kim men?, Yolgʻon xabarni top (CLAUDE.md → “Rejadagi oʻyinlar”).
+- Qoʻshimcha 10 ta faqat tarix fani uchun oʻyin gʻoyasi taklif qilindi.

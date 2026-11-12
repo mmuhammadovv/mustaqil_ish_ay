@@ -81,6 +81,14 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 - Cloudflare Git integratsiyasi: Build command `npm run build`, output `dist`, preset None.
 - `_headers` — xavfsizlik va kesh sarlavhalari.
 
+## Rejadagi oʻyinlar (foydalanuvchi tanlagan, hali qilinmagan)
+
+Foydalanuvchi bularni amalga oshirmoqchi — eslab qoling, soʻraganda shu roʻyxatdan boshlang:
+- **Rasmdan top** (10): ekranda obida/shaxs rasmi kuchli kattalashtirilgan holda chiqadi va asta-sekin kichrayib toʻliq koʻrinadi; kim oldin topsa — koʻproq ball. Rasmlar toʻplami kerak (internetsiz ishlashi uchun repoda saqlanadi).
+- **BMT sessiyasi** (4): jamoalar davlat/tashkilot rolini oladi; boshlovchi muammo aytadi (Orol, suv va h.k.), jamoalar 1 daqiqalik taklif bilan chiqadi, ovoz berib rezolyutsiya qabul qilinadi. Asosan jonli; sayt — taymer, muammo kartochkasi, ovoz hisobi.
+- **Kim men?** (5): oʻquvchi peshonasidagi shaxs/atamani faqat “ha/yoʻq” savollari bilan topadi. Jonli; sayt — kartochkalar va taymer, chop etiladigan kartochkalar.
+- **Yolgʻon xabarni top** (6): 3 ta “yangilik”dan bittasi soxta; jamoa topadi va asoslaydi (manba, klikbeyt). Akademik yozuv uchun.
+
 ## Ochiq masalalar
 
 - Titul varagʻida universitet/fakultet nomi va guruh raqami boʻsh qoldirilgan — foydalanuvchi aytsa toʻldirish.
