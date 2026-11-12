@@ -6,9 +6,27 @@
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <title>Kim men? — chop etish uchun</title>
 <link rel="stylesheet" href="chop.css">
+<style>
+  /* Stiker qogʻozi: A4, chetlarsiz, oldindan kesilgan yorliqlar. Chop etishda masshtab 100%, chetlar — yoʻq. */
+  @page stiker { size: A4; margin: 0; }
+  .stiker-sheet { page: stiker; width: 210mm; height: 297mm; margin: 16px auto; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.2); display: grid; grid-template-columns: repeat(2, 105mm); }
+  .label { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6mm; overflow: hidden; outline: 1px dashed #d9cfbd; outline-offset: -1px; }
+  .label .cat { font-size: 9pt; letter-spacing: .18em; text-transform: uppercase; color: #6e5a46; }
+  .label .name { font-family: "Alegreya", Georgia, serif; font-size: 30pt; font-weight: 800; line-height: 1.05; margin: 3mm 0; color: #2b1d13; }
+  .label .orn { width: 24mm; height: 3mm; border-top: 1px solid #b07d2a; border-bottom: 1px solid #b07d2a; }
+  .fmt { display: flex; gap: 8px; align-items: center; color: #efe3c8; font-size: 14px; }
+  .fmt select { font: inherit; padding: 6px 8px; border-radius: 4px; border: 0; }
+  @media print {
+    .stiker-sheet { margin: 0; box-shadow: none; break-before: page; }
+    .label { outline: 0; }
+  }
+</style>
 </head>
 <body>
-<div class="toolbar"><a href="../fan.html?fan=tarix">← Oʻyinlar</a><button onclick="window.print()">Chop etish</button></div>
+<div class="toolbar"><a href="../fan.html?fan=tarix">← Oʻyinlar</a>
+  <label class="fmt">Stiker qogʻozi:
+    <select id="fmt"><option value="8">A4 · 8 ta yorliq (105×74 mm)</option><option value="10">A4 · 10 ta yorliq (105×59,4 mm)</option></select></label>
+  <button onclick="window.print()">Chop etish</button></div>
 
 <section class="sheet first">
   <header class="sh"><span>Jonli oʻyin · Oʻzbekistonning eng yangi tarixi</span><span>1-varaq: qoidalar</span></header>
@@ -16,8 +34,10 @@
   <p class="lead">Oʻyinchining peshonasiga (yoki koʻkragiga) tarixiy shaxs, tashkilot yoki atama yozilgan kartochka yopishtiriladi. U kartochkani koʻrmaydi — faqat “ha” yoki “yoʻq” javobli savollar berib, kim yoki nima ekanini topadi.</p>
   <h2>Tayyorgarlik</h2>
   <ol>
-    <li>Kartochka varaqlarini chop eting va punktir chiziq boʻyicha qirqing.</li>
-    <li>Kartochkalarni teskari qilib aralashtiring. Skotch yoki qogʻoz qisqich tayyorlang.</li>
+    <li>Kartochkalar <b>A4 stiker qogʻoziga</b> chop etiladi (oldindan kesilgan yorliqli varaq). Yuqoridagi menyudan varagʻingizdagi yorliqlar sonini tanlang: <b>8 ta</b> (105×74 mm) yoki <b>10 ta</b> (105×59,4 mm).</li>
+    <li>Chop etishda: <b>masshtab — 100%</b> (“Sahifaga moslash” oʻchirilgan), <b>chetlar — yoʻq</b>. Avval oddiy qogʻozga sinab chop etib, stiker varagʻiga qoʻyib solishtiring.</li>
+    <li>Qoidalar va boshlovchi maslahatlari varaqlari oddiy qogʻozga chop etiladi — chop etish oynasida faqat stiker betlarini (masalan, 2–5) stiker qogʻoziga yuboring.</li>
+    <li>Stikerlarni koʻchirmasdan, varaq bilan teskari qilib aralashtiring. Oʻyinda bittasini koʻchirib, oʻyinchining peshonasiga yopishtirasiz.</li>
     <li>Oxirgi varaq — boshlovchi uchun maslahatlar (har bir kartochka haqida qisqa maʼlumot).</li>
   </ol>
   <h2>Qoidalar</h2>
@@ -75,13 +95,17 @@ const C = [
   ["Bayram", "Navroʻz", "“Yangi kun”; 21-mart atrofida nishonlanadi, YuNESKO roʻyxatida."],
   ["Bayram", "Mustaqillik kuni", "1-sentabr; mustaqillik 1991-yil 31-avgustda eʼlon qilingan."]
 ];
-const PER = 10, pages = [];
-for (let i = 0; i < C.length; i += PER) pages.push(C.slice(i, i + PER));
-document.getElementById("cards").innerHTML = pages.map((pg, n) => `
-  <section class="sheet">
-    <header class="sh"><span>Kim men?</span><span>Kartochkalar ${n + 1} / ${pages.length}</span></header>
-    <div class="grid9">${pg.map(c => `<div class="cut card"><span class="cat">${c[0]}</span><span class="name">${c[1]}</span><span class="orn"></span></div>`).join("")}</div>
-  </section>`).join("");
+// Stiker varaqlari: tanlangan formatga koʻra (2 ustun × 4 yoki 5 qator), chetlarsiz A4
+function stickers() {
+  const per = +document.getElementById("fmt").value, rows = per / 2, h = (297 / rows).toFixed(2);
+  const pages = []; for (let i = 0; i < C.length; i += per) pages.push(C.slice(i, i + per));
+  document.getElementById("cards").innerHTML = pages.map(pg => `
+    <section class="stiker-sheet" style="grid-template-rows:repeat(${rows}, ${h}mm)">
+      ${pg.map(c => `<div class="label"><span class="cat">${c[0]}</span><span class="name" style="font-size:${per === 8 ? 30 : 26}pt">${c[1]}</span><span class="orn"></span></div>`).join("")}
+    </section>`).join("");
+}
+document.getElementById("fmt").onchange = stickers;
+stickers();
 document.getElementById("hints").innerHTML = C.map(c => `<tr><td>${c[1]}</td><td>${c[2]}</td></tr>`).join("");
 </script>
 </body>

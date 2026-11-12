@@ -34,7 +34,7 @@ oyinlar/
   taxmin.html     13 FAQAT TARIX — Taxmin: javob son; son oʻqida koʻrsatiladi; eng yaqin +300, aniq +500
   savollar/tarix-qoshimcha.js  afsona, konvertlar, voqealar, sozlar, taxminlar, ipakYoli (faqat tarix)
 jonli-oyinlar/                     Sinfda oʻtkaziladigan oʻyinlar uchun chop etiladigan A4 varaqlar (chop.css)
-  kim-men.html        28 kartochka (shaxs/tashkilot/atama) + qoidalar + boshlovchi maslahatlari
+  kim-men.html        28 kartochka — A4 STIKER qogʻozi formatida (8 ta 105×74 yoki 10 ta 105×59,4; @page stiker margin 0) + qoidalar + boshlovchi maslahatlari
   josus.html          3 toʻplam × 10 kartochka (9 joy + 1 josus), rolsiz; buklanadigan — tashqi tomoni hammada bir xil; 2 ta katta kartochka qatorda
   bingo.html          8 ta har xil 5×5 kartochka + boshlovchi uchun 30 savol (katta shrift — oʻqish oson boʻlsin)
   savollar/akademik.js, savollar/tarix.js   Savollar bazasi (10 kategoriya × 5 daraja, faqat test)
