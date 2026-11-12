@@ -1,0 +1,48 @@
+/* Jonli oʻyinlar uchun chop etiladigan varaqlar (A4) */
+@import url("https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700;800&family=Alegreya+Sans:wght@400;500;700&display=swap");
+@page { size: A4; margin: 12mm; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: "Alegreya Sans", "Segoe UI", system-ui, sans-serif; color: #2b1d13; background: #d9cfbd; font-size: 11.5pt; line-height: 1.45; }
+h1, h2, .big, .name { font-family: "Alegreya", Georgia, serif; }
+.toolbar { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: #2b1d13; }
+.toolbar a { color: #efe3c8; text-decoration: none; font-weight: 700; }
+.toolbar button { font: inherit; font-weight: 700; padding: 8px 18px; border: 0; border-radius: 4px; background: #1f4a8a; color: #fff; cursor: pointer; }
+.sheet { width: 210mm; min-height: 297mm; margin: 16px auto; padding: 12mm; background: #fffdf8; box-shadow: 0 2px 10px rgba(0,0,0,.2); }
+.sh { display: flex; justify-content: space-between; font-size: 9pt; letter-spacing: .1em; text-transform: uppercase; color: #6e5a46; border-bottom: 1px solid #4a3424; padding-bottom: 4px; margin-bottom: 8mm; }
+h1 { font-size: 30pt; margin: 0 0 4mm; font-weight: 800; }
+h2 { font-size: 15pt; margin: 7mm 0 2mm; border-bottom: 1px solid #cdbb9c; padding-bottom: 1mm; }
+.lead { font-size: 13pt; margin: 0; }
+ol { margin: 0; padding-left: 6mm; } li { margin: 1.2mm 0; }
+.answers { width: 100%; border-collapse: collapse; margin-top: 2mm; }
+.answers th, .answers td { border: 1px solid #cdbb9c; padding: 1.6mm 3mm; text-align: left; }
+.answers th { background: #efe6d4; }
+.answers td:nth-child(odd) { width: 10mm; text-align: center; font-weight: 700; }
+.cut { border: 1.2px dashed #7a6650; }
+
+/* Sirli konvert */
+.env { margin-bottom: 7mm; break-inside: avoid; }
+.env .label { display: flex; align-items: center; gap: 6mm; padding: 4mm 6mm; margin-bottom: 2mm; background: #f3ead8; }
+.env .label .big { font-size: 34pt; font-weight: 800; color: #1f4a8a; line-height: 1; }
+.env .label span:last-child { font-size: 14pt; letter-spacing: .14em; text-transform: uppercase; }
+.env .clue { display: grid; grid-template-columns: 18mm 1fr 12mm; gap: 4mm; align-items: center; padding: 3.5mm 5mm; margin-top: -1.2px; font-size: 13pt; }
+.env .clue .pts { font-family: "Alegreya", Georgia, serif; font-weight: 800; font-size: 18pt; color: #a8432a; }
+.env .clue .no { font-size: 9pt; color: #8a7660; text-align: right; }
+
+/* Kim men? */
+.grid9 { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 47mm; gap: 0; }
+.card { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 4mm; margin: -0.6px; }
+.card .cat { font-size: 9pt; letter-spacing: .16em; text-transform: uppercase; color: #6e5a46; }
+.card .name { font-size: 28pt; font-weight: 800; line-height: 1.05; margin: 3mm 0; }
+.card .orn { width: 22mm; height: 3mm; border-top: 1px solid #b07d2a; border-bottom: 1px solid #b07d2a; }
+.hints { width: 100%; border-collapse: collapse; font-size: 10.5pt; }
+.hints td { border-bottom: 1px solid #e0d4bd; padding: 1.4mm 2mm; vertical-align: top; }
+.hints td:first-child { font-weight: 700; width: 48mm; }
+
+@media print {
+  body { background: #fff; }
+  .toolbar { display: none; }
+  .sheet { width: auto; min-height: 0; margin: 0; padding: 0; box-shadow: none; break-before: page; }
+  .sheet.first { break-before: auto; }
+}
+@media screen and (max-width: 840px) { .sheet { width: auto; margin: 8px; padding: 16px; min-height: 0; } }

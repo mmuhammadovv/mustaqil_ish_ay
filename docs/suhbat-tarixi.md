@@ -66,3 +66,8 @@ Foydalanuvchi talablari:
 - Logo: D varianti (qalam uchi) tanlandi.
 - Foydalanuvchi rejaga oldi: Rasmdan top, BMT sessiyasi, Kim men?, Yolgʻon xabarni top (CLAUDE.md → “Rejadagi oʻyinlar”).
 - Qoʻshimcha 10 ta faqat tarix fani uchun oʻyin gʻoyasi taklif qilindi.
+
+## 13. Yangi tarix oʻyinlari
+- Saytga (faqat tarix): BMT sessiyasi, Haqiqat yoki afsona.
+- Jonli (chop etiladigan): Sirli konvert, Kim men?.
+- Rasmdan top — rasmlarni foydalanuvchi beradi, hozircha qilinmagan.

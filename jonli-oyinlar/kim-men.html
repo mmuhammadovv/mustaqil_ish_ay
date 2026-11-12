@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="uz" data-fan="tarix" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Kim men? — chop etish uchun</title>
+<link rel="stylesheet" href="chop.css">
+</head>
+<body>
+<div class="toolbar"><a href="../fan.html?fan=tarix">← Oʻyinlar</a><button onclick="window.print()">Chop etish</button></div>
+
+<section class="sheet first">
+  <header class="sh"><span>Jonli oʻyin · Oʻzbekistonning eng yangi tarixi</span><span>1-varaq: qoidalar</span></header>
+  <h1>Kim men?</h1>
+  <p class="lead">Oʻyinchining peshonasiga (yoki koʻkragiga) tarixiy shaxs, tashkilot yoki atama yozilgan kartochka yopishtiriladi. U kartochkani koʻrmaydi — faqat “ha” yoki “yoʻq” javobli savollar berib, kim yoki nima ekanini topadi.</p>
+  <h2>Tayyorgarlik</h2>
+  <ol>
+    <li>Kartochka varaqlarini chop eting va punktir chiziq boʻyicha qirqing.</li>
+    <li>Kartochkalarni teskari qilib aralashtiring. Skotch yoki qogʻoz qisqich tayyorlang.</li>
+    <li>Oxirgi varaq — boshlovchi uchun maslahatlar (har bir kartochka haqida qisqa maʼlumot).</li>
+  </ol>
+  <h2>Qoidalar</h2>
+  <ol>
+    <li>Har jamoadan bitta oʻyinchi chiqadi. Boshlovchi unga kartochka yopishtiradi — jamoa va zal koʻradi, oʻyinchi koʻrmaydi.</li>
+    <li>Oʻyinchi navbat bilan savol beradi: “Men shaxsmanmi?”, “Men XX asrda yashaganmanmi?” Jamoa faqat <b>“ha”</b> yoki <b>“yoʻq”</b> deydi.</li>
+    <li>Vaqt — <b>90 soniya</b>. Shu vaqtda topsa: 10 tagacha savolda — <b>300 ball</b>, 11–20 savolda — <b>200 ball</b>, undan koʻp — <b>100 ball</b>.</li>
+    <li>“Ha/yoʻq”dan boshqa soʻz aytgan jamoa ishora berdi hisoblanadi — <b>−50 ball</b>.</li>
+    <li>Har jamoadan navbat bilan oʻyinchilar chiqadi. Eng koʻp ball toʻplagan jamoa gʻolib.</li>
+  </ol>
+  <h2>Yaxshi savollar namunasi</h2>
+  <ol>
+    <li>Men odammanmi? Men tashkilotmanmi? Men joy nomimanmi?</li>
+    <li>Men 1900-yildan oldin yashaganmanmi? Men olimmanmi? Men shoirmanmi?</li>
+    <li>Men Samarqand bilan bogʻliqmanmi? Men BMT bilan bogʻliqmanmi?</li>
+  </ol>
+</section>
+
+<div id="cards"></div>
+
+<section class="sheet">
+  <header class="sh"><span>Kim men?</span><span>Boshlovchi uchun maslahatlar</span></header>
+  <h2 style="margin-top:0">Kartochkalar haqida qisqa maʼlumot</h2>
+  <table class="hints" id="hints"></table>
+</section>
+
+<script>
+const C = [
+  ["Shaxs", "Amir Temur", "XIV asr sarkardasi va davlat arbobi; Samarqanddagi Goʻri Amirda dafn etilgan."],
+  ["Shaxs", "Mirzo Ulugʻbek", "Amir Temurning nevarasi; Samarqandda rasadxona qurdirgan astronom."],
+  ["Shaxs", "Alisher Navoiy", "Buyuk shoir va mutafakkir; “Xamsa” va “Muhokamat ul-lugʻatayn” muallifi."],
+  ["Shaxs", "Zahiriddin Bobur", "Boburiylar saltanati asoschisi; “Boburnoma” muallifi."],
+  ["Shaxs", "Ibn Sino", "Buyuk tabib va olim; “Tib qonunlari” muallifi, Buxoro yaqinida tugʻilgan."],
+  ["Shaxs", "al-Xorazmiy", "Matematik; “algebra” va “algoritm” soʻzlari u bilan bogʻliq."],
+  ["Shaxs", "Abu Rayhon Beruniy", "Xorazmda tugʻilgan qomusiy olim; “Qonuni Masʼudiy” muallifi."],
+  ["Shaxs", "Imom Buxoriy", "Buxorolik muhaddis; “Al-jomeʼ as-sahih” toʻplamining muallifi."],
+  ["Shaxs", "Ahmad Fargʻoniy", "Fargʻonalik astronom; Qohirada Nil suvi oʻlchagichini qurgan."],
+  ["Shaxs", "Mahmudxoʻja Behbudiy", "Jadid maʼrifatparvari; “Oyina” jurnali va “Padarkush” dramasi muallifi."],
+  ["Shaxs", "Abdulla Qodiriy", "“Oʻtgan kunlar” romani muallifi; “Julqunboy” taxallusi bilan yozgan."],
+  ["Shaxs", "Abdulla Avloniy", "Jadid pedagogi; “Turkiy guliston yoxud axloq” muallifi."],
+  ["Shaxs", "Abdurauf Fitrat", "Jadid adibi va olimi; “Munozara” asari muallifi."],
+  ["Shaxs", "Abdulla Oripov", "Oʻzbekiston xalq shoiri; Davlat madhiyasi soʻzlari muallifi."],
+  ["Tashkilot", "BMT", "1945-yilda tuzilgan; Oʻzbekiston 1992-yilda aʼzo boʻlgan."],
+  ["Tashkilot", "YuNESKO", "BMTning taʼlim, fan va madaniyat tashkiloti; 2025-yilda Bosh konferensiyasi Samarqandda oʻtgan."],
+  ["Tashkilot", "YuNISEF", "BMTning Bolalar jamgʻarmasi; bolalar sogʻligʻi va taʼlimi bilan shugʻullanadi."],
+  ["Tashkilot", "Xavfsizlik Kengashi", "BMT organi: 15 aʼzo, ulardan 5 tasi doimiy va veto huquqiga ega."],
+  ["Atama", "Veto", "Lotincha “man qilaman”; qarorni toʻxtatib qoʻyish huquqi."],
+  ["Hujjat", "Konstitutsiya", "Davlatning asosiy qonuni; 1992-yil 8-dekabrda qabul qilingan, 2023-yilda yangi tahriri."],
+  ["Ramz", "Davlat bayrogʻi", "Koʻk, oq, yashil ranglar; yarim oy va 12 ta yulduz."],
+  ["Ramz", "Davlat madhiyasi", "Soʻzlari — Abdulla Oripov, musiqasi — Mutal Burhonov."],
+  ["Joy", "Orol dengizi", "Unga Amudaryo va Sirdaryo quyiladi; qurigan tubida Orolqum paydo boʻlgan."],
+  ["Joy", "Registon", "Samarqanddagi maydon; uchta madrasa: Ulugʻbek, Sherdor, Tillakori."],
+  ["Joy", "Ichan qalʼa", "Xivadagi devor bilan oʻralgan ichki shahar; Kalta Minor shu yerda."],
+  ["Joy", "Buyuk ipak yoʻli", "Xitoydan Oʻrta yer dengizigacha boʻlgan savdo yoʻli; nomini Rixtgofen bergan."],
+  ["Bayram", "Navroʻz", "“Yangi kun”; 21-mart atrofida nishonlanadi, YuNESKO roʻyxatida."],
+  ["Bayram", "Mustaqillik kuni", "1-sentabr; mustaqillik 1991-yil 31-avgustda eʼlon qilingan."]
+];
+const PER = 10, pages = [];
+for (let i = 0; i < C.length; i += PER) pages.push(C.slice(i, i + PER));
+document.getElementById("cards").innerHTML = pages.map((pg, n) => `
+  <section class="sheet">
+    <header class="sh"><span>Kim men?</span><span>Kartochkalar ${n + 1} / ${pages.length}</span></header>
+    <div class="grid9">${pg.map(c => `<div class="cut card"><span class="cat">${c[0]}</span><span class="name">${c[1]}</span><span class="orn"></span></div>`).join("")}</div>
+  </section>`).join("");
+document.getElementById("hints").innerHTML = C.map(c => `<tr><td>${c[1]}</td><td>${c[2]}</td></tr>`).join("");
+</script>
+</body>
+</html>

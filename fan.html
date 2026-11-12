@@ -62,7 +62,7 @@
   [data-fan="tarix"] .mast .orn svg { width: 22px; height: 22px; }
   [data-fan="tarix"] .mast .art { height: clamp(120px, 20vw, 210px); margin-top: 18px; background: var(--skyline) center bottom / auto 100% no-repeat; border-bottom: 1px solid var(--line-strong); }
   [data-fan="tarix"] .mast .dateline { display: none; }
-  [data-fan="tarix"] .games { gap: 16px; }
+  [data-fan="tarix"] .games { gap: 16px; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
   [data-fan="tarix"] .game { background: var(--surface); border: 1px solid var(--line-strong); border-top: 4px solid var(--c); border-radius: var(--r-lg); box-shadow: var(--frame), var(--shadow); transition: transform .15s, box-shadow .15s; }
   [data-fan="tarix"] .game:hover { transform: translateY(-3px); }
   [data-fan="tarix"] .game .no { color: var(--ink); }
@@ -99,7 +99,14 @@ const GAMES = [
   { f: "hududlar", ic: "hex", t: "Hududlar", tags: "2–4 jamoa · xarita · strategiya", d: "Olti burchakli kataklardan iborat xarita. Bazadan boshlab qoʻshni hududlarni egallang, raqibga hujum qiling, poytaxtga yeting." },
   { f: "svetofor", ic: "light", t: "Svetofor", tags: "2–4 jamoa · reaksiya · boshlovchi", d: "Qizil chiroqda chalgʻituvchi tovushlar, yashilda bosish. Boshlovchi kim birinchi bosganini belgilaydi, qizilda bosgan — falstart." },
   { f: "zinapoya", ic: "ladder", t: "Zinapoya", tags: "2–4 jamoa · 10 kategoriya · xavf", d: "Kategoriyani tanlang va 100 dan 500 gacha koʻtariling. Har pogʻonada qaror: davom etish yoki yutuqni saqlash." },
-  { f: "arqon", ic: "rope", t: "Arqon tortish", tags: "2 jamoa · duel · navbat bilan", d: "Ikki jamoa navbatma-navbat javob beradi. Har toʻgʻri javob arqonni bir qadam oʻz tomoningizga tortadi." }
+  { f: "arqon", ic: "rope", t: "Arqon tortish" },
+  { f: "assambleya", ic: "hall", t: "BMT sessiyasi", only: "tarix" },
+  { f: "afsona", ic: "scroll", t: "Haqiqat yoki afsona", only: "tarix" }
+];
+// Jonli (real hayotda) oʻtkaziladigan oʻyinlar uchun chop etiladigan materiallar
+const JONLI = [
+  { f: "sirli-konvert", ic: "envelope", t: "Sirli konvert" },
+  { f: "kim-men", ic: "cards", t: "Kim men?" }
 ];
 document.title = data.fan;
 document.getElementById("crumb").textContent = data.fan;
@@ -121,12 +128,19 @@ document.getElementById("page").innerHTML = `
     <ul class="facts"><li>Hajmi<b>22 bet</b></li><li>Format<b>A4 · 14 pt · 1,5</b></li><li>Qismlar<b>3 qism, 2 ilova</b></li><li>Tahlil qilingan matnlar<b>5 ta</b></li></ul>
   </section>` : ""}
   <div class="sec-h"><h3>Oʻyinlar</h3><span>${data.kategoriyalar.length} kategoriya · ${data.kategoriyalar.length * 5} ta test savoli</span></div>
-  <div class="games">${GAMES.map((g, i) => `
+  <div class="games">${GAMES.filter(g => !g.only || g.only === fan).map((g, i) => `
     <a class="game" href="oyinlar/${g.f}.html?fan=${fan}" style="--c:var(--t${i % 4})">
       <div class="no"><span><b>${ak ? String(i + 1).padStart(2, "0") : i + 1}</b></span>${icon(g.ic, "")}</div>
       <h4>${g.t}</h4>
       <span class="go">Oʻynash ${icon("arrow")}</span>
     </a>`).join("")}</div>
+  ${ak ? "" : `<div class="sec-h"><h3>Jonli oʻyinlar</h3><span>Sinfda oʻtkazish uchun · chop etiladigan materiallar</span></div>
+  <div class="games jonli">${JONLI.map((g, i) => `
+    <a class="game" href="jonli-oyinlar/${g.f}.html" style="--c:var(--t${(i + 2) % 4})">
+      <div class="no"><span><b>${i + 1}</b></span>${icon(g.ic, "")}</div>
+      <h4>${g.t}</h4>
+      <span class="go">${icon("print")} Chop etish</span>
+    </a>`).join("")}</div>`}
   <footer>Topshiruvchi: Muxamadov Muhammadali</footer>`;
 </script>
 </body>

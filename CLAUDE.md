@@ -24,6 +24,12 @@ oyinlar/
                   Jamoalarda jismoniy tugma — klaviatura YOʻQ; boshlovchi ekranda kim bosganini belgilaydi (qizilda = falstart −50)
   zinapoya.html   04 10 kategoriya × 5 pogʻona, davom etish/toʻxtash, 50/50 va +15 s
   arqon.html      05 Arqon tortish: 2 jamoa NAVBAT BILAN javob beradi (poyga emas)
+  assambleya.html 06 FAQAT TARIX — BMT sessiyasi: yarim doira zal (60 oʻrin), 6 sessiya, 31 oʻrin = gʻalaba, bir martalik veto
+  afsona.html     07 FAQAT TARIX — Haqiqat yoki afsona: 4 arxiv hujjatidan soxtasini topish (+200)
+  savollar/tarix-qoshimcha.js  afsona toʻplamlari va sessiyalar (faqat tarix)
+jonli-oyinlar/                     Sinfda oʻtkaziladigan oʻyinlar uchun chop etiladigan A4 varaqlar (chop.css)
+  sirli-konvert.html  14 konvert × 3 ishora (300/200/100) + boshlovchi javoblari
+  kim-men.html        28 kartochka (shaxs/tashkilot/atama) + qoidalar + boshlovchi maslahatlari
   savollar/akademik.js, savollar/tarix.js   Savollar bazasi (10 kategoriya × 5 daraja, faqat test)
   assets/boot.js   <head> da: fan va tun/kun rejimini oʻrnatadi (localStorage: fan, tema)
   assets/theme.css Dizayn tokenlari: [data-fan] × [data-theme]
@@ -75,19 +81,16 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 
 ## Joylash (Cloudflare Pages) — Node.js orqali
 
-- `scripts/build.mjs` → `dist/` (faqat index.html, fan.html, _headers, oyinlar/, mustaqil-ishlar/). `dist/` gitignore da. Yangi sayt fayli qoʻshilsa, `files` roʻyxatiga qoʻshing.
+- `scripts/build.mjs` → `dist/` (index.html, fan.html, favicon.svg, _headers, oyinlar/, mustaqil-ishlar/, jonli-oyinlar/). `dist/` gitignore da. Yangi sayt fayli qoʻshilsa, `files` roʻyxatiga qoʻshing.
 - Sayt nomi/URL faqat `package.json` → `"cloudflare": { "project": "iw-mm" }` da (manzil: `https://iw-mm.pages.dev`; iw = Independent Work, mm = Muxamadov Muhammadali). Eski loyiha: mustaqil-ishlar. `scripts/cloudflare.mjs` uni oʻqiydi. Buyruqlar: `npm install` → `npm run login` → `npm run create` (har yangi nom uchun bir marta) → `npm run deploy`.
 - Foydalanuvchi bash/PowerShell emas, JS (Node.js) variantini soʻragan — shell skriptlar olib tashlangan.
 - Cloudflare Git integratsiyasi: Build command `npm run build`, output `dist`, preset None.
 - `_headers` — xavfsizlik va kesh sarlavhalari.
 
-## Rejadagi oʻyinlar (foydalanuvchi tanlagan, hali qilinmagan)
+## Rejadagi oʻyinlar
 
-Foydalanuvchi bularni amalga oshirmoqchi — eslab qoling, soʻraganda shu roʻyxatdan boshlang:
-- **Rasmdan top** (10): ekranda obida/shaxs rasmi kuchli kattalashtirilgan holda chiqadi va asta-sekin kichrayib toʻliq koʻrinadi; kim oldin topsa — koʻproq ball. Rasmlar toʻplami kerak (internetsiz ishlashi uchun repoda saqlanadi).
-- **BMT sessiyasi** (4): jamoalar davlat/tashkilot rolini oladi; boshlovchi muammo aytadi (Orol, suv va h.k.), jamoalar 1 daqiqalik taklif bilan chiqadi, ovoz berib rezolyutsiya qabul qilinadi. Asosan jonli; sayt — taymer, muammo kartochkasi, ovoz hisobi.
-- **Kim men?** (5): oʻquvchi peshonasidagi shaxs/atamani faqat “ha/yoʻq” savollari bilan topadi. Jonli; sayt — kartochkalar va taymer, chop etiladigan kartochkalar.
-- **Yolgʻon xabarni top** (6): 3 ta “yangilik”dan bittasi soxta; jamoa topadi va asoslaydi (manba, klikbeyt). Akademik yozuv uchun.
+- **Rasmdan top** — QILINMAGAN: rasmlarni foydalanuvchi oʻzi tanlab beradi (oʻzimiz chizgan rasmlar rad etildi). Gʻoya: rasm kattalashtirilgan holda chiqib asta-sekin ochiladi, qancha erta topilsa — shuncha koʻp ball; 4 variantli test.
+- Qilingan: BMT sessiyasi (assambleya.html), Haqiqat yoki afsona (afsona.html) — faqat tarix; Sirli konvert va Kim men? — jonli, chop etiladigan.
 
 ## Ochiq masalalar
 

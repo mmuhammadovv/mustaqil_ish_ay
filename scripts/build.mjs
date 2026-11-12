@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const out = join(root, "dist");
-const files = ["index.html", "fan.html", "favicon.svg", "_headers", "oyinlar", "mustaqil-ishlar"];
+const files = ["index.html", "fan.html", "favicon.svg", "_headers", "oyinlar", "mustaqil-ishlar", "jonli-oyinlar"];
 
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out);

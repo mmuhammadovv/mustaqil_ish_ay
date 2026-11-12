@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Haqiqat yoki afsona</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .desk { padding: clamp(18px, 3vw, 30px); }
+  .desk .ttl { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .desk h2 { font-family: var(--display); font-size: clamp(24px, 3vw, 34px); margin: 4px 0 0; }
+  .docs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+  .doc { position: relative; text-align: left; padding: 18px 20px 58px; min-height: 150px; border: 1px solid var(--line-strong); border-radius: 2px;
+    background: var(--surface); box-shadow: 0 1px 0 var(--line), 0 10px 22px -16px rgba(0,0,0,.5); font-size: clamp(17px, 1.8vw, 21px); line-height: 1.4; transition: transform .15s, box-shadow .15s; overflow: hidden; }
+  .doc:nth-child(1) { transform: rotate(-.6deg); } .doc:nth-child(2) { transform: rotate(.5deg); } .doc:nth-child(3) { transform: rotate(.4deg); } .doc:nth-child(4) { transform: rotate(-.5deg); }
+  .doc:hover:not(:disabled) { transform: translateY(-3px) rotate(0); box-shadow: 0 1px 0 var(--line), 0 16px 30px -16px rgba(0,0,0,.55); }
+  .doc .no { display: flex; justify-content: space-between; font-family: var(--num); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 10px; }
+  .doc .no b { color: var(--accent); }
+  .doc:disabled { cursor: default; }
+  .stamp { position: absolute; right: 16px; bottom: 14px; padding: 6px 14px; border: 3px solid currentColor; border-radius: 4px; font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; transform: rotate(-12deg) scale(1.6); opacity: 0; transition: transform .25s cubic-bezier(.3,1.6,.5,1), opacity .2s; }
+  .doc.fake .stamp { color: var(--bad); opacity: .9; transform: rotate(-12deg) scale(1); }
+  .doc.true .stamp { color: var(--good); opacity: .85; transform: rotate(-12deg) scale(1); }
+  .doc.picked { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .doc.dim { opacity: .55; }
+  .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+  @media (max-width: 760px) { .docs { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="savollar/tarix-qoshimcha.js"></script>
+<script src="assets/core.js"></script>
+<script>
+// Bu oʻyin faqat tarix fani uchun
+if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
+const { $, $$, esc, store, icon, sound } = G;
+const SK = G.saveKey("afsona"), PTS = 200, TIME = 30;
+const SETS = ((window.QOSHIMCHA || {}).tarix || {}).afsona || [];
+let S = store.get(SK), cur = null;
+
+G.header("Haqiqat yoki afsona", reset);
+
+function setup() {
+  G.setup($("#app"), {
+    kicker: "Arxiv",
+    title: "Haqiqat yoki afsona",
+    rules: [
+      "Har yurishda stol ustida <b>4 ta arxiv hujjati</b> paydo boʻladi. Ulardan uchtasi — haqiqat, bittasi — <b>afsona</b>.",
+      `Navbatdagi jamoa ${TIME} soniya ichida afsonani topadi (sichqoncha yoki A, B, C, D).`,
+      `Toʻgʻri topsa — <b>+${PTS} ball</b>. Xato boʻlsa — ball yoʻq, toʻgʻri javob va izoh koʻrsatiladi.`,
+      "Hujjatlar tugagach, eng koʻp ball toʻplagan jamoa gʻolib."
+    ],
+    onStart(teams) {
+      const n = Math.floor(SETS.length / teams.length) * teams.length;
+      S = { teams, order: G.shuffle(SETS.map((_, i) => i)).slice(0, n), idx: 0 };
+      save(); render();
+    }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { if (cur && cur.t) cur.t.stop(); cur = null; store.del(SK); S = null; G.modal.close(); setup(); }
+
+function render() {
+  G.swapped();
+  if (S.idx >= S.order.length) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
+  const who = S.idx % S.teams.length, t = S.teams[who], set = SETS[S.order[S.idx]];
+  const docs = G.shuffle(set.gaplar);
+  cur = { who, docs, done: false };
+  $("#app").innerHTML = `
+    <div class="panel desk">
+      <div class="ttl" style="--c:${G.tc(t)}">
+        <div><div class="kicker">Hujjatlar toʻplami ${S.idx + 1} / ${S.order.length}</div><h2>${esc(set.mavzu)}</h2></div>
+        <div class="turn"><span class="what">Navbat:</span><span class="who">${esc(t.name)}</span></div>
+      </div>
+      <div id="tm" style="margin-top:12px"></div>
+      <div class="docs">${docs.map((d, k) => `
+        <button class="doc" type="button" data-k="${k}">
+          <div class="no"><span>Hujjat <b>${"ABCD"[k]}</b></span><span>Arxiv · №${(S.order[S.idx] + 1) * 100 + k + 1}</span></div>
+          ${esc(d.t)}<span class="stamp">${d.s ? "Haqiqat" : "Afsona"}</span>
+        </button>`).join("")}</div>
+      <div id="after"></div>
+      <div class="bar"><span class="hint" style="margin:0">Qaysi hujjat — afsona?</span><span id="nx"></span></div>
+    </div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { active: who, onAdjust: (i, d) => { S.teams[i].score += d; save(); G.scores($("#sc"), S.teams, { active: who }); } });
+  $$(".doc").forEach(b => b.onclick = () => pick(+b.dataset.k));
+  cur.t = G.timer($("#tm"), TIME, () => pick(-1));
+}
+
+function pick(k) {
+  if (!cur || cur.done) return;
+  cur.done = true; cur.t.stop();
+  const fake = cur.docs.findIndex(d => !d.s), ok = k === fake, who = cur.who;
+  $$(".doc").forEach((b, i) => { b.disabled = true; if (i !== fake && i !== k) b.classList.add("dim"); });
+  if (k >= 0 && k !== fake) $$(".doc")[k].classList.add("true", "picked");
+  setTimeout(() => $$(".doc")[fake].classList.add("fake"), k === fake ? 0 : 450);
+  if (k === fake) $$(".doc")[k].classList.add("picked");
+  ok ? sound.ok() : sound.bad();
+  if (ok) S.teams[who].score += PTS;
+  S.idx++; save();
+  G.scores($("#sc"), S.teams, { active: who }); G.bump($("#sc"), who);
+  $("#after").innerHTML = `<div class="verdict ${ok ? "ok" : "bad"}">${icon(ok ? "check" : "cross")} ${ok ? "Topildi · +" + PTS : k < 0 ? "Vaqt tugadi" : "Bu hujjat — haqiqat"}</div>${cur.docs[fake].izoh ? `<div class="izoh">${cur.docs[fake].izoh}</div>` : ""}`;
+  $("#nx").innerHTML = `<button class="btn primary lg" id="next" type="button">${S.idx >= S.order.length ? "Natijalar" : "Keyingi toʻplam"} ${icon("arrow")}</button>`;
+  G.swapped(); $("#next").onclick = render;
+}
+
+document.addEventListener("keydown", e => {
+  if (!cur || cur.done || G.$(".modal.open")) return;
+  const k = "ABCD".indexOf(e.key.toUpperCase()); if (k >= 0) pick(k);
+});
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
+</script>
+</body>
+</html>

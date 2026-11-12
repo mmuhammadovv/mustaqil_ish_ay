@@ -40,7 +40,12 @@
     star: '<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.5 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/>',
     globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/>',
     pen: '<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',
-    crown: '<path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/>'
+    crown: '<path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/>',
+    hall: '<path d="M3 19a9 9 0 0 1 18 0"/><path d="M7 19a5 5 0 0 1 10 0"/><path d="M2 19h20"/><circle cx="12" cy="8" r="1.4" fill="currentColor"/>',
+    scroll: '<path d="M7 4h11a2 2 0 0 1 0 4H7"/><path d="M7 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10V8"/><path d="M9 12h6M9 15.5h4"/>',
+    envelope: '<rect x="3" y="6" width="18" height="13" rx="1.5"/><path d="M3 7l9 6 9-6"/>',
+    cards: '<rect x="4" y="6" width="11" height="15" rx="1.5" transform="rotate(-8 9.5 13.5)"/><rect x="9" y="3" width="11" height="15" rx="1.5"/>',
+    print: '<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/>'
   };
   const icon = (n, cls = "i") => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ""}</svg>`;
 

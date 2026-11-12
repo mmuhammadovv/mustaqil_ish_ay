@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="uz" data-fan="tarix" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Sirli konvert — chop etish uchun</title>
+<link rel="stylesheet" href="chop.css">
+</head>
+<body>
+<div class="toolbar"><a href="../fan.html?fan=tarix">← Oʻyinlar</a><button onclick="window.print()">Chop etish</button></div>
+
+<section class="sheet first">
+  <header class="sh"><span>Jonli oʻyin · Oʻzbekistonning eng yangi tarixi</span><span>1-varaq: qoidalar va javoblar</span></header>
+  <h1>Sirli konvert</h1>
+  <p class="lead">Har bir konvertda bitta javob yashiringan va uchta ishora bor. Birinchi ishora eng qiyini, uchinchisi eng osoni. Qancha erta topsangiz, shuncha koʻp ball.</p>
+  <h2>Tayyorgarlik</h2>
+  <ol>
+    <li>2–5-varaqlarni chop eting va kartochkalarni punktir chiziq boʻyicha qirqing.</li>
+    <li>Har bir konvertga uning raqamli yorligʻini yopishtiring, ichiga uchta ishorani (300, 200, 100) solib qoʻying.</li>
+    <li>Bu birinchi varaq — boshlovchida qoladi (javoblar shu yerda).</li>
+  </ol>
+  <h2>Qoidalar</h2>
+  <ol>
+    <li>Jamoalar navbat bilan konvert tanlaydi. Boshlovchi <b>300 balllik</b> ishorani oʻqiydi.</li>
+    <li>Jamoa 30 soniya maslahatlashib javob aytadi. Toʻgʻri — <b>300 ball</b>.</li>
+    <li>Topa olmasa, boshlovchi <b>200 balllik</b> ishorani oʻqiydi, keyin <b>100 balllik</b>ni.</li>
+    <li>Uchinchi ishoradan keyin ham topilmasa, savol keyingi jamoaga <b>50 ball</b>ga oʻtadi.</li>
+    <li>Eng koʻp ball toʻplagan jamoa gʻolib.</li>
+  </ol>
+  <h2>Javoblar (faqat boshlovchi uchun)</h2>
+  <table class="answers" id="answers"></table>
+</section>
+
+<div id="cards"></div>
+
+<script>
+const K = [
+  ["Birlashgan Millatlar Tashkiloti (BMT)", "Uning Ustavi 1945-yilda San-Fransiskoda imzolangan.", "Bosh qarorgohi Nyu-York shahrida joylashgan.", "Oʻzbekiston unga 1992-yil 2-martda aʼzo boʻlgan."],
+  ["Amir Temur", "Davlat boshqaruvi haqidagi “Tuzuklar” u bilan bogʻliq.", "Uning shiori: “Kuch — adolatdadir”.", "Samarqanddagi Goʻri Amir — uning maqbarasi."],
+  ["Mirzo Ulugʻbek", "“Ziji jadidi Koʻragoniy” — uning yulduzlar jadvali.", "Samarqandda madrasa va rasadxona qurdirgan.", "Amir Temurning nevarasi, olim hukmdor."],
+  ["Orol dengizi", "XX asrning eng yirik ekologik falokatlaridan biri u bilan bogʻliq.", "Unga Amudaryo va Sirdaryo quyiladi.", "Qurigan tubida Orolqum choʻli paydo boʻlgan."],
+  ["YuNESKO", "Oʻzbekiston unga 1993-yilda aʼzo boʻlgan.", "2025-yilda uning Bosh konferensiyasi Samarqandda oʻtgan.", "BMTning taʼlim, fan va madaniyat tashkiloti."],
+  ["Muhammad al-Xorazmiy", "Bagʻdoddagi “Bayt ul-hikma”da ishlagan.", "Uning asari nomidan “algebra” soʻzi kelib chiqqan.", "“Algoritm” soʻzi uning nomidan olingan."],
+  ["Navroʻz", "2009-yilda YuNESKOning nomoddiy meros roʻyxatiga kiritilgan.", "BMT 21-martni uning xalqaro kuni deb eʼlon qilgan.", "Soʻzma-soʻz “yangi kun” degani."],
+  ["Ichan qalʼa (Xiva)", "1990-yilda YuNESKO Butunjahon merosi roʻyxatiga kiritilgan.", "Unda mashhur Kalta Minor joylashgan.", "Xorazmdagi devor bilan oʻralgan ichki shahar."],
+  ["Veto", "Bu huquq BMTda faqat 5 ta davlatda bor.", "Xavfsizlik Kengashida qarorni toʻxtatib qoʻyadi.", "Lotincha “man qilaman” degani."],
+  ["Mustaqillik kuni", "U 1991-yil 31-avgustda eʼlon qilingan mustaqillik bilan bogʻliq.", "Bu bayramda butun mamlakat boʻylab tantanalar oʻtadi.", "Har yili 1-sentabrda nishonlanadi."],
+  ["Ibn Sino", "Buxoro yaqinidagi Afshona qishlogʻida tugʻilgan.", "Yevropada “Avitsenna” nomi bilan tanilgan.", "“Tib qonunlari” asarining muallifi."],
+  ["Abdulla Oripov", "Oʻzbekiston xalq shoiri, Oʻzbekiston Qahramoni.", "“Jannatga yoʻl” dramatik dostonining muallifi.", "Davlat madhiyasi soʻzlarining muallifi."],
+  ["Registon maydoni", "Nomi “qumli joy” maʼnosini beradi.", "Unda uchta madrasa bor: Ulugʻbek, Sherdor va Tillakori.", "Samarqanddagi eng mashhur maydon."],
+  ["Shanxay hamkorlik tashkiloti (ShHT)", "U 2001-yilda tuzilgan.", "2022-yilda uning sammiti Samarqandda oʻtgan.", "Qisqartmasi — ShHT."]
+];
+// javoblar jadvali ikki ustunda — birinchi varaqqa sigʻsin
+const half = Math.ceil(K.length / 2);
+document.getElementById("answers").innerHTML = "<tr><th>№</th><th>Javob</th><th>№</th><th>Javob</th></tr>" +
+  Array.from({ length: half }, (_, r) => `<tr><td>${r + 1}</td><td>${K[r][0]}</td>${K[r + half] ? `<td>${r + half + 1}</td><td>${K[r + half][0]}</td>` : "<td></td><td></td>"}</tr>`).join("");
+const PER = 3, pages = [];
+for (let p = 0; p < K.length; p += PER) pages.push(K.slice(p, p + PER).map((k, j) => [p + j, k]));
+document.getElementById("cards").innerHTML = pages.map((pg, n) => `
+  <section class="sheet">
+    <header class="sh"><span>Sirli konvert</span><span>${n + 2}-varaq: konvertlar</span></header>
+    ${pg.map(([i, k]) => `
+      <div class="env">
+        <div class="cut label"><span class="big">${i + 1}</span><span>Sirli konvert</span></div>
+        ${[1, 2, 3].map(c => `<div class="cut clue"><span class="pts">${[300, 200, 100][c - 1]}</span><span>${k[c]}</span><span class="no">№${i + 1}</span></div>`).join("")}
+      </div>`).join("")}
+  </section>`).join("");
+</script>
+</body>
+</html>
