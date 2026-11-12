@@ -57,9 +57,9 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 
 ## Logo
 
-- `favicon.svg` (ildizda) — minimalistik: toʻq yumaloq kvadrat, ingichka geometrik oq “M” va bitta koʻk urgʻu nuqtasi. Foydalanuvchi minimalistik uslubni soʻragan (avvalgi rang-barang “MI” varianti oʻrniga). Har sahifada favicon va sarlavhada `.brand`. `build.mjs` roʻyxatida bor.
+- `favicon.svg` (ildizda) — foydalanuvchi tanlagan **D varianti: qalam uchi** (toʻq doira ichida oq qalam uchi). Har sahifada favicon va sarlavhada `.brand`. `build.mjs` roʻyxatida bor.
 
-- Logo variantlari: `docs/logo-variantlar.html` (A–H). Foydalanuvchi tanlashini kutyapmiz; hozir A (minimal M).
+- Logo variantlari: `docs/logo-variantlar.html` (A–H); tanlangan — D.
 
 ## Konventsiyalar
 
