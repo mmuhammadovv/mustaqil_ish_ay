@@ -123,7 +123,6 @@
         <section class="setup panel">
           <div class="kicker">${kicker}</div>
           <h2>${title}</h2>
-          <p class="sub">${desc}</p>
           ${max > min ? `<span class="l">Jamoalar soni</span>
           <div class="seg">${Array.from({ length: max - min + 1 }, (_, i) => min + i).map(k => `<button type="button" data-n="${k}" class="${k === n ? "on" : ""}">${k}</button>`).join("")}</div>` : ""}
           <span class="l">Jamoa nomlari</span>

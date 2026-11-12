@@ -44,7 +44,8 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 6. Oʻyinlar **internetsiz, oddiy HTML** sifatida ochilishi kerak (`file://`). `fetch` ishlatmang — maʼlumot `<script src>` orqali.
 7. Tarix savollari: **oson**, yillar kam; taxminan **50% zakovat uslubidagi mantiqiy savollar** (tarixga bogʻliq, lekin qiziqarli — dasturlash, fan va h.k.).
 8. **Javob vaqti har bir oʻyinda kamida 30 soniya.**
-9. Mustaqil ish: kamida 20 bet, betlarda boʻsh joy qolmasin (boʻlimlar uzluksiz oqadi), avval nazariya, keyin tahlil, keyin maqola.
+9. **Oʻyin tavsiflari (opisanie) yoʻq** — fan sahifasidagi kartochkalarda faqat raqam, ikonka, nom; sozlash ekranida tavsif jumlasi yoʻq (faqat qoidalar). Foydalanuvchi: “AI qilgani bilinib turibdi”.
+10. Mustaqil ish: kamida 20 bet, betlarda boʻsh joy qolmasin (boʻlimlar uzluksiz oqadi), avval nazariya, keyin tahlil, keyin maqola.
 
 ## Ishonchlilik (oldin “baʼzan ishlamay qolardi”)
 
