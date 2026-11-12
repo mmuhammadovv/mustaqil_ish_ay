@@ -90,6 +90,11 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 ## Rejadagi oʻyinlar
 
 - **Rasmdan top** — QILINMAGAN: rasmlarni foydalanuvchi oʻzi tanlab beradi (oʻzimiz chizgan rasmlar rad etildi). Gʻoya: rasm kattalashtirilgan holda chiqib asta-sekin ochiladi, qancha erta topilsa — shuncha koʻp ball; 4 variantli test.
+- **Keyingi navbatda (foydalanuvchi tanlagan, hali qilinmagan; hammasi tarix uchun):**
+  - **Harflab topish** (saytda) — teleoʻyinlardagi “harf ochish” mantigʻi: boshlovchi savol beradi, javob yopiq kataklarda (_ _ _); jamoalar navbat bilan harf aytadi, bor boʻlsa ochiladi va ball oladi, yoʻq boʻlsa navbat oʻtadi; soʻzni butunligicha aytsa — katta bonus. Test shakli emas (foydalanuvchi rozi).
+  - **Ipak yoʻli karvoni** (saytda) — kubik tashlab Xitoydan Oʻrta yer dengizigacha yoʻlda yurish; katakka qarab savol / hodisa (“qum boʻroni −2 qadam”) / savdo (+ball); birinchi yetgan yutadi.
+  - **Tarix bingosi** (jonli) — har jamoada 5×5 javoblar kartochkasi; boshlovchi savol oʻqiydi, javob kartochkada boʻlsa belgilanadi; birinchi toʻliq qator — “Bingo”. Chop etiladigan kartochkalar + sayt savollarni chiqaradi.
+  - **Taxmin** (saytda) — javob son (variantsiz); eng yaqin taxmin ball oladi, aniq topsa bonus. Test shakli emas (foydalanuvchi rozi).
 - Qilingan: **saytda** (faqat tarix) — Sirli konvert (konvert.html), Haqiqat yoki afsona (afsona.html); **jonli** (chop etiladigan) — BMT sessiyasi, Kim men?. (Diqqat: foydalanuvchi aniqlashtirgan — Sirli konvert saytda, BMT sessiyasi jonli.)
 
 ## Ochiq masalalar

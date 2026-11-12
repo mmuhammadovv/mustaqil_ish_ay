@@ -72,3 +72,6 @@ Foydalanuvchi talablari:
 - Jonli (chop etiladigan): Sirli konvert, Kim men?.
 - Rasmdan top — rasmlarni foydalanuvchi beradi, hozircha qilinmagan.
 - Tuzatish: foydalanuvchi aniqlashtirdi — Sirli konvert saytda (konvert.html), BMT sessiyasi esa jonli (jonli-oyinlar/bmt-sessiyasi.html).
+
+## 14. Yangi gʻoyalar tanlovi
+- Rejaga olindi: Harflab topish (sayt), Ipak yoʻli karvoni (sayt), Tarix bingosi (jonli), Taxmin (sayt). Talab: har oʻyinning mexanikasi bir-biridan tubdan farq qilsin (masalan, Sirli konvert va Ortiqchasini top bir xil deb topildi).
