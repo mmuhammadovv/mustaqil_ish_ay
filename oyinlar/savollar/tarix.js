@@ -6,7 +6,7 @@
 window.FANLAR = window.FANLAR || {};
 FANLAR.tarix = {
   fan: "Oʻzbekistonning eng yangi tarixi",
-  mavzu: "Oʻzbekiston va BMT",
+  mavzu: "Oʻzbekiston Respublikasining BMTga aʼzo boʻlishi va jahon hamjamiyatidagi oʻrni",
   kategoriyalar: [
     { nomi: "Mustaqillik yoʻli", qisqa: "Mustaqillik", savollar: [
       { s: "Oʻzbekistonda Mustaqillik kuni qaysi sanada nishonlanadi?", j: "1-sentabr", x: ["8-dekabr", "9-may", "21-mart"] },

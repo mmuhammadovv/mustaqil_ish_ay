@@ -74,6 +74,9 @@
   [data-fan="tarix"] .sec-h h3 { font-weight: 700; }
   [data-fan="tarix"] .lead { display: none; }
   [data-fan="akademik"] .mast .art { display: none; }
+  .topics { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px auto 0; max-width: 980px; }
+  .topics a { flex: 1 1 300px; max-width: 470px; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); color: var(--ink); text-decoration: none; font-weight: 700; line-height: 1.3; text-align: left; }
+  .topics a.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
   footer { text-align: center; color: var(--muted); font-size: 13px; padding: 30px 0 0; }
   @media (max-width: 1100px) { .games { grid-template-columns: repeat(2, 1fr); } [data-fan="akademik"] .game { border-bottom: 1px solid var(--line); } .lead { grid-template-columns: 1fr; } .lead .facts { border-left: 0; padding-left: 0; } }
   @media (max-width: 620px) { .games { grid-template-columns: 1fr; } [data-fan="akademik"] .game { border-right: 0; } }
@@ -89,9 +92,11 @@
 <div class="page" id="page"></div>
 <script src="oyinlar/savollar/akademik.js"></script>
 <script src="oyinlar/savollar/tarix.js"></script>
+<script src="oyinlar/savollar/tarix10.js"></script>
 <script src="oyinlar/assets/core.js"></script>
 <script>
-const { icon, esc, fan, data } = G;
+const { icon, esc, fan, data, mavzu, topics } = G;
+const MQ = mavzu ? "&mavzu=" + mavzu : "";
 G.themeButton(document.getElementById("thm"));
 const ROMAN = ["I", "II", "III", "IV", "V"];
 const GAMES = [
@@ -123,7 +128,8 @@ document.getElementById("page").innerHTML = `
     <div class="over">${ak ? "Mustaqil ish va interaktiv oʻyinlar" : "Interaktiv oʻyinlar"}</div>
     <div class="orn">${icon("star")}</div>
     <h1>${esc(data.fan)}</h1>
-    <div class="deck">Mavzu: ${ak ? "Publitsistik nutq uslubi. Publitsistik maqolalar tahlili; “Men tanlagan soha va OAV” mavzusida maqola" : "Oʻzbekiston Respublikasining BMTga aʼzo boʻlishi va jahon hamjamiyatidagi oʻziga xos oʻrni"}</div>
+    <div class="deck">${ak ? "Mavzu: Publitsistik nutq uslubi. Publitsistik maqolalar tahlili; “Men tanlagan soha va OAV” mavzusida maqola" : "Mavzular"}</div>
+    ${topics.length > 1 ? `<nav class="topics">${topics.map(x => `<a href="fan.html?fan=${fan}&mavzu=${x.k}" class="${x.k === mavzu ? "on" : ""}"${x.k === mavzu ? ' aria-current="true"' : ""}>${esc(x.data.mavzu)}</a>`).join("")}</nav>` : ""}
     <div class="art" aria-hidden="true"></div>
     <div class="dateline"><span>Muxamadov Muhammadali</span><span>2026-yil</span><span>Fan oʻqituvchisi: Yunusova Maftuna</span></div>
   </section>
@@ -136,7 +142,7 @@ document.getElementById("page").innerHTML = `
   </section>` : ""}
   <div class="sec-h"><h3>Oʻyinlar</h3><span>${data.kategoriyalar.length} kategoriya · ${data.kategoriyalar.length * 5} ta test savoli</span></div>
   <div class="games">${GAMES.filter(g => !g.only || g.only === fan).map((g, i) => `
-    <a class="game" href="oyinlar/${g.f}.html?fan=${fan}" style="--c:var(--t${i % 4})">
+    <a class="game" href="oyinlar/${g.f}.html?fan=${fan}${MQ}" style="--c:var(--t${i % 4})">
       <div class="no"><span><b>${ak ? String(i + 1).padStart(2, "0") : i + 1}</b></span>${icon(g.ic, "")}</div>
       <h4>${g.t}</h4>
       <span class="go">Oʻynash ${icon("arrow")}</span>

@@ -30,14 +30,16 @@
 <main class="wrap" id="app"></main>
 <script src="savollar/akademik.js"></script>
 <script src="savollar/tarix.js"></script>
+<script src="savollar/tarix10.js"></script>
 <script src="savollar/tarix-qoshimcha.js"></script>
+<script src="savollar/tarix10-qoshimcha.js"></script>
 <script src="assets/core.js"></script>
 <script>
 // Bu oʻyin faqat tarix fani uchun
 if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
 const { $, $$, esc, store, icon, sound } = G;
 const SK = G.saveKey("taxmin"), TIME = 30, NEAR = 300, EXACT = 500;
-const Q = ((window.QOSHIMCHA || {}).tarix || {}).taxminlar || [];
+const Q = G.extra.taxminlar || [];
 let S = store.get(SK), cur = { t: null };
 
 G.header("Taxmin", reset);

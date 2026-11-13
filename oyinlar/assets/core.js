@@ -12,7 +12,15 @@
 
   const html = document.documentElement;
   const fan = html.dataset.fan || "akademik";
-  const data = (window.FANLAR || {})[fan];
+  // Mavzular: har bir mavzuning oʻz savollar bazasi bor (FANLAR[kalit], QOSHIMCHA[kalit])
+  const MAVZULAR = { tarix: [{ k: "bmt", key: "tarix", q: "BMTga aʼzolik" }, { k: "10", key: "tarix10", q: "10-mavzu" }] };
+  const topics = (MAVZULAR[fan] || [{ k: "", key: fan }]).map(x => Object.assign({ data: (window.FANLAR || {})[x.key] }, x));
+  const topic = topics.find(x => x.k === html.dataset.mavzu) || topics[0];
+  const mavzu = topic.k, dkey = topic.key;
+  const data = (window.FANLAR || {})[dkey];
+  // Qoʻshimcha maʼlumot: mavzuniki boʻlmasa — fanning asosiy mavzusidan
+  const extra = Object.assign({}, (window.QOSHIMCHA || {})[topics[0].key], (window.QOSHIMCHA || {})[dkey]);
+  const menu = "../fan.html?fan=" + fan + (mavzu ? "&mavzu=" + mavzu : "");
 
   /* ---------- Ikonlar (oʻzimiz chizgan SVG) ---------- */
   const P = {
@@ -111,8 +119,8 @@
     const h = document.createElement("header"); h.className = "top";
     h.innerHTML = `
       <a class="brand" href="../index.html" title="Bosh sahifa"><img src="../favicon.svg" alt="Bosh sahifa" width="34" height="34"></a>
-      <a class="ib" href="../fan.html?fan=${fan}" title="Menyu">${icon("back")}<span class="lbl">Menyu</span></a>
-      <div class="ttl"><b>${esc(title)}</b><span>${data ? esc(data.fan) : ""}</span></div>
+      <a class="ib" href="${menu}" title="Menyu">${icon("back")}<span class="lbl">Menyu</span></a>
+      <div class="ttl"><b>${esc(title)}</b><span>${data ? esc(data.fan) + (topic.q ? " · " + esc(topic.q) : "") : ""}</span></div>
       <div class="acts">
         <button class="ib" id="thm" type="button" title="Tun / kun"></button>
         <button class="ib" id="snd" type="button" title="Ovoz">${icon(muted ? "mute" : "sound")}</button>
@@ -267,12 +275,12 @@
       <h2>${top.map(t => esc(t.name)).join(" va ")}</h2>
       <div class="sub">${top.length > 1 ? "Durang natija" : "Gʻolib jamoa"}</div>
       <table class="standings">${s.map((t, k) => `<tr><td>${String(k + 1).padStart(2, "0")}</td><td><span class="sw" style="--c:${tc(t)}"></span>${esc(t.name)}</td><td>${t.score} <small style="font-size:12px;color:var(--muted)">${unit}</small></td></tr>`).join("")}</table>
-      <div class="row-btns"><button class="btn primary" id="again" type="button">${icon("reset")} Yana oʻynash</button><a class="btn" href="../fan.html?fan=${fan}">Menyuga</a></div></div>`);
+      <div class="row-btns"><button class="btn primary" id="again" type="button">${icon("reset")} Yana oʻynash</button><a class="btn" href="${menu}">Menyuga</a></div></div>`);
     $("#again", c).onclick = () => { modal.close(); onAgain(); };
     sound.win(); confetti();
   }
   function toast(msg, ms = 1900) { const t = document.createElement("div"); t.className = "toast"; t.innerHTML = msg; document.body.appendChild(t); setTimeout(() => t.remove(), ms); }
 
   window.G = { swapped, $, $$, esc, shuffle, store, fan, data, icon, sound, header, setup, tc, scores, bump, modal, timer, ask, all, confetti, winner, toast, themeButton,
-    saveKey: g => "oyin2-" + g + "-" + fan };
+    mavzu, topics, extra, saveKey: g => "oyin2-" + g + "-" + dkey };
 })();

@@ -35,14 +35,16 @@
 <main class="wrap" id="app"></main>
 <script src="savollar/akademik.js"></script>
 <script src="savollar/tarix.js"></script>
+<script src="savollar/tarix10.js"></script>
 <script src="savollar/tarix-qoshimcha.js"></script>
+<script src="savollar/tarix10-qoshimcha.js"></script>
 <script src="assets/core.js"></script>
 <script>
 // Bu oʻyin faqat tarix fani uchun
 if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
 const { $, $$, esc, store, icon, sound } = G;
 const SK = G.saveKey("konvert"), PTS = [300, 200, 100], TIME = 30;
-const ENV = ((window.QOSHIMCHA || {}).tarix || {}).konvertlar || [];
+const ENV = G.extra.konvertlar || [];
 let S = store.get(SK), cur = null;
 
 G.header("Sirli konvert", reset);

@@ -11,6 +11,15 @@ Bu fayl Claude Code uchun. Terminalda `claude` ishga tushirilganda u avtomatik o
   2. **Oʻzbekistonning eng yangi tarixi** — mavzu: “Oʻzbekiston Respublikasining BMTga aʼzo boʻlishi va jahon hamjamiyatidagi oʻziga xos oʻrni”. **Faqat oʻyinlar kerak, mustaqil ish matni kerak emas** (foydalanuvchi aniq aytgan).
 - Git branch: `claude/wizardly-galileo-lkog9v`.
 
+## Mavzular (tarix)
+
+- Tarix fani mavzularga boʻlingan, har mavzuning oʻz savollari bor. Roʻyxat: `core.js` → `MAVZULAR` va `boot.js` → `MV` (ikkalasini birga oʻzgartiring).
+  - `bmt` — “BMTga aʼzo boʻlish va jahon hamjamiyatidagi oʻrni”: `savollar/tarix.js`, `tarix-qoshimcha.js` (kalit `tarix`).
+  - `10` — “10-mavzu. Oʻzbekiston va jahon hamjamiyati” (foydalanuvchi bergan maʼruza, 5 ta reja boʻyicha — bu BITTA mavzu): `savollar/tarix10.js`, `tarix10-qoshimcha.js` (kalit `tarix10`). `ipakYoli` asosiy mavzudan olinadi.
+- URL: `?fan=tarix&mavzu=10` (localStorage `mavzu-tarix`). `G.data`, `G.extra` (QOSHIMCHA), `G.mavzu`, `G.topics`; saqlash kaliti `oyin2-<oʻyin>-<kalit>`.
+- Yangi mavzu: savollar fayllari + `MAVZULAR`/`MV` ga qoʻshish + har oʻyin sahifasiga `<script src>` + `fan.html` ga `<script src>`.
+- Jonli (chop etiladigan) oʻyinlar hozircha mavzuga boʻlinmagan.
+
 ## Tuzilma
 
 ```
