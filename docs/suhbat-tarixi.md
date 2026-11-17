@@ -92,3 +92,6 @@ Foydalanuvchi talablari:
 
 ## 18. Svetofor klaviaturasi
 - Jamoalar klaviaturadan bosadi: 1-jamoa — Q, 2-jamoa — P (3 — Z, 4 — M). Ekrandagi belgilash ham qoldi.
+
+## 19. Jonli oʻyinlar — PPTX
+- jonli-oyinlar/taqdimot/: Kim_men.pptx (28 kartochka), Josus.pptx (3 raund), Tarix_bingosi.pptx (30 savol + javob slaydlari).

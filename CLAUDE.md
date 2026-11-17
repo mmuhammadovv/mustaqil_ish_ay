@@ -45,6 +45,7 @@ oyinlar/
 jonli-oyinlar/                     Sinfda oʻtkaziladigan oʻyinlar uchun chop etiladigan A4 varaqlar (chop.css)
   kim-men.html        28 kartochka — ESLATMA STIKERI (76×76) uchun 72×56 mm (varaqda 8 ta) — stikerning tepasidagi yopishqoq qismi ochiq qolsin, bloknotdan uzish uchun; qirqib stikerning pastki qismiga yopishtiriladi + qoidalar + boshlovchi maslahatlari
   josus.html          3 toʻplam × 10 kartochka (9 joy + 1 josus), rolsiz; buklanadigan — tashqi tomoni hammada bir xil; 2 ta katta kartochka qatorda
+  taqdimot/*.pptx     Kim_men, Josus, Tarix_bingosi — proyektor uchun taqdimotlar (tools/jonli_pptx.js, pptxgenjs; izohlarda boshlovchi maslahati/javob)
   bingo.html          8 ta har xil 5×5 kartochka + boshlovchi uchun 30 savol (katta shrift — oʻqish oson boʻlsin)
   savollar/akademik.js, savollar/tarix.js   Savollar bazasi (10 kategoriya × 5 daraja, faqat test)
   assets/boot.js   <head> da: fan va tun/kun rejimini oʻrnatadi (localStorage: fan, tema)
