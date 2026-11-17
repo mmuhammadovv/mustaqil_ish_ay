@@ -89,3 +89,6 @@ Foydalanuvchi talablari:
 ## 17. Mavzular
 - Tarix fani mavzularga boʻlindi: fan sahifasida mavzu tanlanadi, har mavzu uchun barcha 13 oʻyinning savollari alohida.
 - Foydalanuvchi bergan maʼruza asosida “10-mavzu. Oʻzbekiston va jahon hamjamiyati” qoʻshildi (5 ta reja — bitta mavzu): 50 test savoli, 12 afsona toʻplami, 14 konvert, 33 voqea, 15 soʻz, 15 taxmin.
+
+## 18. Svetofor klaviaturasi
+- Jamoalar klaviaturadan bosadi: 1-jamoa — Q, 2-jamoa — P (3 — Z, 4 — M). Ekrandagi belgilash ham qoldi.

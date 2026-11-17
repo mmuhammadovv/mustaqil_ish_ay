@@ -43,6 +43,7 @@
   .ctrl { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
   .react { font-size: 14px; color: var(--muted); }
   @media (max-width: 800px) { .stage { grid-template-columns: 1fr; } .tower { flex-direction: row; justify-content: center; } .light { flex-direction: row; width: auto; } .lamp { width: 52px; } }
+  .lane .key { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; margin-right: 6px; border: 1px solid currentColor; border-bottom-width: 3px; border-radius: 5px; font-family: var(--num); font-size: 14px; font-weight: 700; vertical-align: middle; }
 </style>
 </head>
 <body>
@@ -54,6 +55,8 @@
 <script>
 const { $, $$, esc, store, data, icon, sound } = G;
 const SK = G.saveKey("svetofor"), FOUL = 50, ANSWER = 30, WAIT = 10;
+// Jamoalar tugmalari klaviaturada: 1-jamoa — Q, 2-jamoa — P, 3-jamoa — Z, 4-jamoa — M (klaviatura chetlarida, bir-biridan uzoq)
+const KEYS = ["Q", "P", "Z", "M"];
 let S = store.get(SK), Q = null;
 
 G.header("Svetofor", reset);
@@ -67,7 +70,7 @@ function setup() {
     extra: `<span class="l">Savollar soni</span>
       <div class="seg" id="cnt">${[8, 12, 16, 20].map(n => `<button type="button" data-c="${n}" >${n}</button>`).join("")}</div>`,
     rules: [
-      "Har bir jamoaga <b>alohida tugma</b> beriladi. Kompyuterni faqat boshlovchi boshqaradi.",
+      "Har bir jamoaga <b>alohida tugma</b> beriladi yoki klaviaturadan foydalaniladi: 1-jamoa — <b>Q</b>, 2-jamoa — <b>P</b>, 3-jamoa — <b>Z</b>, 4-jamoa — <b>M</b>. Kompyuter klaviaturada kim birinchi bosganini oʻzi aniqlaydi.",
       "Boshlovchi savol va variantlarni oʻqiydi, soʻng <b>“Svetoforni yoqish”</b>ni bosadi. Avval <b>qizil</b> chiroq yonadi.",
       "Yashil chiroq <b>2 dan 10 soniyagacha</b> tasodifiy vaqtda yonadi. Qizil paytida <b>chalgʻituvchi tovushlar</b> eshitiladi — ularga aldanmang!",
       `Qizilda tugma bosgan jamoa — <b>falstart</b>: boshlovchi uni belgilaydi, jamoa −${FOUL} ball oladi va bu savolga javob bera olmaydi.`,
@@ -112,7 +115,7 @@ function render() {
       <div class="tower"><div class="light"><div class="lamp r"></div><div class="lamp y"></div><div class="lamp g"></div></div><div class="state" id="st"></div></div>
     </div>
     <div class="host"><span class="kicker">Boshlovchi paneli</span><span class="tip" id="tip">Qizilda bosgan jamoani — falstart, yashilda birinchi bosganini — javob beruvchi sifatida belgilang</span></div>
-    <div class="lanes" id="lanes">${S.teams.map((t, i) => `<button class="lane" type="button" data-i="${i}" style="--c:${G.tc(t)}"><div class="nm">${esc(t.name)}</div><div class="act"></div><div class="st"></div><div class="sc">${t.score}</div></button>`).join("")}</div>`;
+    <div class="lanes" id="lanes">${S.teams.map((t, i) => `<button class="lane" type="button" data-i="${i}" style="--c:${G.tc(t)}"><div class="nm"><kbd class="key">${KEYS[i]}</kbd> ${esc(t.name)}</div><div class="act"></div><div class="st"></div><div class="sc">${t.score}</div></button>`).join("")}</div>`;
   $("#arm").onclick = arm;
   $("#skip").onclick = () => reveal(null, "Savol oʻtkazib yuborildi");
   $$(".lane").forEach(b => b.onclick = () => press(+b.dataset.i));
@@ -204,11 +207,14 @@ function reveal(winner, why) {
   $("#next").onclick = () => render();
 }
 
-// Klaviatura faqat boshlovchi uchun: probel — svetoforni yoqish, A–D — javob varianti
+// Klaviatura: probel — svetoforni yoqish, A–D — javob varianti, Q/P/Z/M — jamoalar tugmasi
 document.addEventListener("keydown", e => {
   if (e.repeat || !Q || G.$(".modal.open") || e.target.closest("input")) return;
   const key = e.key.toUpperCase();
   if (Q.phase === "answer") { let k = "ABCD".indexOf(key); if (k < 0) k = "1234".indexOf(key); if (k >= 0 && !$$(".opt")[k].disabled) answer(k); }
+  // Jamoa tugmalari: Q / P / Z / M (klaviatura tili qanday boʻlishidan qatʼi nazar — e.code)
+  const ti = KEYS.indexOf((e.code || "").replace("Key", ""));
+  if (ti >= 0 && ti < S.teams.length && (Q.phase === "red" || Q.phase === "green")) { e.preventDefault(); press(ti); return; }
   if (e.key === " " && Q.phase === "read" && $("#arm") && !$("#arm").disabled) { e.preventDefault(); arm(); }
 });
 

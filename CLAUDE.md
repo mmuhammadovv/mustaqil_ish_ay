@@ -30,7 +30,7 @@ oyinlar/
   tavakkal.html   01 Gʻildirak + tikish (balans 500, ±tikish; daraja 1–5 tikishdan OLDIN koʻrinadi; bitta jamoa qolsa — darhol gʻolib)
   hududlar.html   02 Olti burchakli xarita (bazadan qoʻshni kataklarni egallash, hujum +1 daraja)
   svetofor.html   03 Reaksiya: qizil 2–10 s tasodifiy → yashil (baland, aniq ikki qavatli signal); qizilda chalgʻituvchi tovushlar (sound.decoy).
-                  Jamoalarda jismoniy tugma — klaviatura YOʻQ; boshlovchi ekranda kim bosganini belgilaydi (qizilda = falstart −50)
+                  Jamoalar tugmasi: klaviatura Q / P / Z / M (1–4-jamoa, e.code) yoki boshlovchi ekranda belgilaydi (qizilda = falstart −50)
   zinapoya.html   04 10 kategoriya × 5 pogʻona, davom etish/toʻxtash, 50/50 va +15 s
   arqon.html      05 Arqon tortish: 2 jamoa NAVBAT BILAN javob beradi (poyga emas)
   konvert.html    06 FAQAT TARIX — Sirli konvert: 14 muhrlangan konvert, 3 ishora (300/200/100), 4 variantli javob
