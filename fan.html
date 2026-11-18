@@ -115,11 +115,17 @@ const GAMES = [
   { f: "taxmin", ic: "gauge", t: "Taxmin", only: "tarix" }
 ];
 // Jonli (real hayotda) oʻtkaziladigan oʻyinlar uchun chop etiladigan materiallar
-const JONLI = [
-  { f: "kim-men", ic: "cards", t: "Kim men?" },
-  { f: "josus", ic: "spy", t: "Josus" },
-  { f: "bingo", ic: "bingo", t: "Tarix bingosi" }
-];
+const JONLI = {
+  tarix: [
+    { href: "jonli-oyinlar/kim-men.html", ic: "cards", t: "Kim men?" },
+    { href: "jonli-oyinlar/josus.html", ic: "spy", t: "Josus" },
+    { href: "jonli-oyinlar/bingo.html", ic: "bingo", t: "Tarix bingosi" }
+  ],
+  // Akademik yozuv: taqdimot (PPTX) — proyektorda koʻrsatiladi
+  akademik: [
+    { href: "jonli-oyinlar/taqdimot/Kim_men_akademik.pptx", ic: "cards", t: "Kim men?", pptx: true }
+  ]
+}[fan] || [];
 document.title = data.fan;
 document.getElementById("crumb").textContent = data.fan;
 const ak = fan === "akademik";
@@ -147,13 +153,13 @@ document.getElementById("page").innerHTML = `
       <h4>${g.t}</h4>
       <span class="go">Oʻynash ${icon("arrow")}</span>
     </a>`).join("")}</div>
-  ${ak ? "" : `<div class="sec-h"><h3>Jonli oʻyinlar</h3><span>Sinfda oʻtkazish uchun · chop etiladigan materiallar</span></div>
+  ${JONLI.length ? `<div class="sec-h"><h3>Jonli oʻyinlar</h3><span>Sinfda oʻtkazish uchun</span></div>
   <div class="games jonli">${JONLI.map((g, i) => `
-    <a class="game" href="jonli-oyinlar/${g.f}.html" style="--c:var(--t${(i + 2) % 4})">
-      <div class="no"><span><b>${i + 1}</b></span>${icon(g.ic, "")}</div>
+    <a class="game" href="${g.href}"${g.pptx ? " download" : ""} style="--c:var(--t${(i + 2) % 4})">
+      <div class="no"><span><b>${ak ? String(i + 1).padStart(2, "0") : i + 1}</b></span>${icon(g.ic, "")}</div>
       <h4>${g.t}</h4>
-      <span class="go">${icon("print")} Chop etish</span>
-    </a>`).join("")}</div>`}
+      <span class="go">${g.pptx ? icon("doc") + " Taqdimot (PPTX)" : icon("print") + " Chop etish"}</span>
+    </a>`).join("")}</div>` : ""}
   <footer>Topshiruvchi: Muxamadov Muhammadali</footer>`;
 </script>
 </body>
