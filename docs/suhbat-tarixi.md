@@ -95,3 +95,7 @@ Foydalanuvchi talablari:
 
 ## 19. Jonli oʻyinlar — PPTX
 - jonli-oyinlar/taqdimot/: Kim_men.pptx (28 kartochka), Josus.pptx (3 raund), Tarix_bingosi.pptx (30 savol + javob slaydlari).
+
+## 20. Mustaqil ish — 30 bet
+- Titul varagʻidan vazirlik nomi, oxiridan nazorat roʻyxati (2-ilova) olib tashlandi.
+- Yangi boʻlimlar: 1.8 argumentatsiya, 1.9 sarlavha va lid, 1.10 ogʻzaki publitsistika, 2.9 ijtimoiy tarmoq posti tahlili, 2.10 klikbeyt belgilari, 2.11 talabalar matnlaridagi uslubiy xatolar, 3.5 platformalarga moslashtirish, 3.6 birinchi va yakuniy variant qiyosi. Jami 30 bet.

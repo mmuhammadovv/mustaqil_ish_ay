@@ -25,7 +25,7 @@ Bu fayl Claude Code uchun. Terminalda `claude` ishga tushirilganda u avtomatik o
 ```
 index.html                         Bosh menyu — fan tanlash (ikki yarim ekran)
 fan.html?fan=akademik|tarix        Fan sahifasi (mustaqil ish + 5 oʻyin)
-mustaqil-ishlar/akademik-yozuv/    Mustaqil ish: index.html (A4 chop etish) + PDF (22 bet)
+mustaqil-ishlar/akademik-yozuv/    Mustaqil ish: index.html (A4 chop etish) + PDF (30 bet; titulda vazirlik nomi YOʻQ, nazorat roʻyxati YOʻQ — foydalanuvchi talabi)
 oyinlar/
   tavakkal.html   01 Gʻildirak + tikish (balans 500, ±tikish; daraja 1–5 tikishdan OLDIN koʻrinadi; bitta jamoa qolsa — darhol gʻolib)
   hududlar.html   02 Olti burchakli xarita (bazadan qoʻshni kataklarni egallash, hujum +1 daraja)
@@ -68,7 +68,7 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 7. Tarix savollari: **oson**, yillar kam; taxminan **50% zakovat uslubidagi mantiqiy savollar** (tarixga bogʻliq, lekin qiziqarli — dasturlash, fan va h.k.).
 8. **Javob vaqti har bir oʻyinda kamida 30 soniya.**
 9. **Oʻyin tavsiflari (opisanie) yoʻq** — fan sahifasidagi kartochkalarda faqat raqam, ikonka, nom; sozlash ekranida tavsif jumlasi yoʻq (faqat qoidalar). Foydalanuvchi: “AI qilgani bilinib turibdi”.
-10. Mustaqil ish: kamida 20 bet, betlarda boʻsh joy qolmasin (boʻlimlar uzluksiz oqadi), avval nazariya, keyin tahlil, keyin maqola.
+10. Mustaqil ish: 30 bet (foydalanuvchi talabi), titulda vazirlik nomi boʻlmasin, oxirida nazorat roʻyxati boʻlmasin; betlarda boʻsh joy qolmasin (boʻlimlar uzluksiz oqadi), avval nazariya, keyin tahlil, keyin maqola.
 
 ## Ishonchlilik (oldin “baʼzan ishlamay qolardi”)
 
