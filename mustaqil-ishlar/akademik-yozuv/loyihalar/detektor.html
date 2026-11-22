@@ -11,7 +11,6 @@
 <link rel="stylesheet" href="loyiha.css">
 <style>
   .out { min-height: 120px; font-size: 18px; line-height: 1.75; white-space: pre-wrap; word-wrap: break-word; }
-  .out:empty::before { content: "Matn kiritilgach, shu yerda belgilangan holda koʻrinadi."; color: var(--muted); font-size: 15px; }
   mark { background: none; color: inherit; padding: 1px 2px; border-bottom: 3px solid var(--mc); background: color-mix(in srgb, var(--mc) 16%, transparent); }
   mark.pos { border-bottom-style: dotted; }
   .score { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
@@ -21,7 +20,7 @@
   .meter i { position: absolute; inset: 0 auto 0 0; background: var(--mc, var(--accent)); transition: width .3s; }
   .verdict { font-family: var(--display); font-size: 22px; margin: 10px 0 0; }
   .cats { list-style: none; margin: 0; padding: 0; }
-  .cats li { display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: start; padding: 10px 0; border-top: 1px solid var(--line); }
+  .cats li { display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: start; padding: 7px 0; border-top: 1px solid var(--line); }
   .cats li:first-child { border-top: 0; }
   .cats .sw { width: 14px; height: 14px; margin-top: 4px; background: var(--mc); }
   .cats b { display: block; }
@@ -30,67 +29,45 @@
   .cats li.zero { opacity: .45; }
   .help ol { margin: 0; padding-left: 20px; }
   .help li { margin: 6px 0; }
+  .pg { font-family: var(--display); font-size: clamp(30px, 5vw, 48px); margin: 4px 0 18px; }
+  .verdict { margin: 8px 0 12px; }
 </style>
 </head>
 <body>
 <header class="top">
   <a class="brand" href="../../../index.html" title="Bosh sahifa"><img src="../../../favicon.svg" alt="Bosh sahifa" width="34" height="34"></a>
   <a class="ib" href="../index.html" id="back"><span class="lbl">Mustaqil ish</span></a>
-  <div class="ttl"><b>Soxta xabar detektori</b><span>Akademik yozuv · 1-loyiha</span></div>
-  <div class="acts"><a class="ib" href="janrlar.html" id="next"><span class="lbl">2-loyiha</span></a><button class="ib" id="thm" type="button"></button></div>
+  <div class="ttl"><b>Soxta xabar detektori</b><span>Akademik yozuv</span></div>
+  <div class="acts"><a class="ib" href="janrlar.html" id="next"><span class="lbl">Janrlar konstruktori</span></a><button class="ib" id="thm" type="button"></button></div>
 </header>
 
 <main class="wrap">
-  <section class="lp-head">
-    <div class="over"><span>1-loyiha</span><span>Mustaqil ishning 2.10-bandi asosida</span></div>
-    <h1>Soxta xabar detektori</h1>
-    <p>Sarlavha, post yoki xabar matnini kiriting — sahifa klikbeyt va manipulyatsiya belgilarini topib, rang bilan ajratadi va ishonchlilik balini hisoblaydi.</p>
-  </section>
+  <h1 class="pg">Soxta xabar detektori</h1>
 
   <div class="grid2">
-    <div>
-      <div class="box">
-        <span class="lbl">Matn</span>
-        <textarea id="txt" rows="6" placeholder="Masalan: SHOK! Hamma hayratda: bu mahsulotni isteʼmol qilsangiz nima boʻlishini bilmaysiz…"></textarea>
-        <div class="row">
-          <span class="muted small">Namunalar:</span>
-          <button class="chip" type="button" data-ex="0">Klikbeyt</button>
-          <button class="chip" type="button" data-ex="1">Shubhali post</button>
-          <button class="chip" type="button" data-ex="2">Oddiy xabar</button>
-          <button class="chip" type="button" id="clr">Tozalash</button>
-        </div>
-      </div>
-      <div class="box">
-        <span class="lbl">Tahlil</span>
-        <div class="out" id="out"></div>
-      </div>
-      <div class="box help">
-        <h2>Ulashishdan oldin 5 savol</h2>
-        <ol>
-          <li>Xabarning muallifi yoki manbasi kim? U nomi bilan koʻrsatilganmi?</li>
-          <li>Xabar birinchi marta qayerda eʼlon qilingan?</li>
-          <li>Boshqa ishonchli nashrlar ham bu haqda yozganmi?</li>
-          <li>Sarlavha matn mazmuniga mos keladimi?</li>
-          <li>Matn meni oʻylashga undayaptimi yoki faqat qoʻrqish va gʻazablanishgami?</li>
-        </ol>
-      </div>
+    <div class="box">
+      <span class="lbl">Natija</span>
+      <div class="out" id="out"></div>
     </div>
-
-    <div>
-      <div class="box">
-        <span class="lbl">Ishonchlilik bali</span>
-        <div class="score"><b id="sc">—</b><span>/ 100</span></div>
-        <div class="meter"><i id="bar" style="width:0"></i></div>
-        <p class="verdict" id="vd">Matn kiritilmagan</p>
-      </div>
-      <div class="box">
-        <span class="lbl">Topilgan belgilar</span>
-        <ul class="cats" id="cats"></ul>
-      </div>
+    <div class="box">
+      <div class="score"><b id="sc">—</b><span>/ 100</span></div>
+      <div class="meter"><i id="bar" style="width:0"></i></div>
+      <p class="verdict" id="vd"></p>
+      <ul class="cats" id="cats"></ul>
     </div>
   </div>
 
-  <div class="foot"><span>Topshiruvchi: Muxamadov Muhammadali · Akademik yozuv</span><span><a href="../index.html">Mustaqil ishga qaytish</a> · <a href="janrlar.html">2-loyiha: Janrlar konstruktori</a></span></div>
+  <div class="box" style="margin-top:18px">
+    <textarea id="txt" rows="4" placeholder="Matnni kiriting"></textarea>
+    <div class="row">
+      <button class="chip" type="button" data-ex="0">Klikbeyt</button>
+      <button class="chip" type="button" data-ex="1">Shubhali post</button>
+      <button class="chip" type="button" data-ex="2">Oddiy xabar</button>
+      <button class="chip" type="button" id="clr">Tozalash</button>
+    </div>
+  </div>
+
+  <div class="foot"><span>Muxamadov Muhammadali</span><span><a href="../index.html">Mustaqil ish</a> · <a href="janrlar.html">Janrlar konstruktori</a></span></div>
 </main>
 
 <script src="../../../oyinlar/savollar/akademik.js"></script>
@@ -103,18 +80,18 @@ document.getElementById("next").insertAdjacentHTML("beforeend", G.icon("arrow"))
 /* Belgilar. Naqshlar kichik harfda, barcha apostrof turlari ' ga keltiriladi.
    w — ishonchlilikdan ayiriladigan ball (manfiy w — ishonchlilik belgisi, ball qoʻshadi). */
 const CATS = [
-  { k: "his", t: "Haddan tashqari hissiy soʻzlar", d: "Fikrlash oʻrniga hissiyotni yoqadi.", c: "#b02a1c", w: 12,
+  { k: "his", t: "Hissiy soʻzlar", d: "Fikrlash oʻrniga hissiyotni yoqadi.", c: "#b02a1c", w: 12,
     p: ["shok", "dahshat", "hayratda", "hayratlanarli", "sensatsiya", "vahima", "qoʻrqinchli", "larzaga", "ishonmaysiz", "aql bovar qilmaydi", "tasavvur ham qilolmaysiz", "portladi", "jahannam", "kutilmagan voqea"] },
-  { k: "yash", t: "Maʼlumotni yashirish", d: "Javobni aytmay, faqat bosishga majburlaydi.", c: "#c26a00", w: 15,
+  { k: "yash", t: "Yashirilgan javob", d: "Javobni aytmay, faqat bosishga majburlaydi.", c: "#c26a00", w: 15,
     p: ["nima boʻlishini bilmaysiz", "nima boʻlganini bilmaysiz", "mana nima uchun", "sababi sizni", "oxirigacha oʻqing", "oxirigacha koʻring", "bilib oling", "sir ochildi", "hech kim aytmaydi", "siz bilmagan", "batafsil havolada"] },
   { k: "man", t: "Nomaʼlum manba", d: "Kim aytgani koʻrsatilmagan — tekshirib boʻlmaydi.", c: "#6b3fa0", w: 12,
     p: ["ishonchli manbalarga koʻra", "manbalarga koʻra", "aytishlaricha", "aytishicha", "mutaxassislar aytishicha", "olimlar aniqladi", "eshitishimcha", "deyishmoqda", "gap tarqaldi", "tarqalmoqda", "bir tanishim"] },
   { k: "shosh", t: "Shoshiltirish", d: "Tekshirishga vaqt qoldirmaydi.", c: "#1f6f8b", w: 15,
     p: ["tezroq", "shoshiling", "oʻchirib yuborishlaridan oldin", "zudlik bilan", "ulashing", "tarqating", "hammaga yuboring", "faqat bugun", "kechikmang", "darhol"] },
-  { k: "mut", t: "Mutlaq umumlashtirish", d: "Istisnolarni inkor etadi, mantiqan notoʻgʻri.", c: "#5c6b1f", w: 6,
+  { k: "mut", t: "Mutlaq gaplar", d: "Istisnolarni inkor etadi, mantiqan notoʻgʻri.", c: "#5c6b1f", w: 6,
     p: ["hamma", "hech kim", "barcha", "har doim", "hech qachon", "butunlay", "100 foiz", "yuz foiz", "mutlaqo"] },
-  { k: "tin", t: "Tinish belgilari va KATTA HARFLAR", d: "Baqiriq taassuroti — hissiy bosim.", c: "#8a6a2a", w: 8, special: true },
-  { k: "ish", t: "Ishonchlilik belgilari", d: "Aniq manba, raqam, sana — tekshirish mumkin.", c: "#2e7d4f", w: -8,
+  { k: "tin", t: "!!! va KATTA HARF", d: "Baqiriq taassuroti — hissiy bosim.", c: "#8a6a2a", w: 8, special: true },
+  { k: "ish", t: "Ishonchli belgilar", d: "Aniq manba, raqam, sana — tekshirish mumkin.", c: "#2e7d4f", w: -8,
     p: ["maʼlum qildi", "xabar berdi", "rasmiy", "matbuot xizmati", "vazirligi", "saytida", "bayonot", "maʼlumotiga koʻra", "statistika", "soʻrovnoma"] }
 ];
 const norm = s => s.toLowerCase().replace(/[ʻʼ‘’`'´]/g, "'");
@@ -157,8 +134,8 @@ function run() {
   document.getElementById("sc").textContent = empty ? "—" : score;
   document.getElementById("sc").style.color = empty ? "" : col;
   const bar = document.getElementById("bar"); bar.style.width = (empty ? 0 : score) + "%"; bar.style.setProperty("--mc", col);
-  document.getElementById("vd").textContent = empty ? "Matn kiritilmagan" : score >= 70 ? "Ishonchli koʻrinadi — baribir manbani tekshiring" : score >= 45 ? "Ehtiyot boʻling — shubhali belgilar bor" : "Klikbeyt belgilari koʻp — ulashishdan oldin tekshiring";
-  document.getElementById("cats").innerHTML = CATS.map(c => `<li class="${cnt[c.k] ? "" : "zero"}" style="--mc:${c.c}"><span class="sw"></span><span><b>${c.t}</b><small>${c.d}</small></span><span class="n">${cnt[c.k] || 0}</span></li>`).join("");
+  document.getElementById("vd").textContent = empty ? "" : score >= 70 ? "Ishonchli" : score >= 45 ? "Shubhali" : "Klikbeyt";
+  document.getElementById("cats").innerHTML = CATS.map(c => `<li class="${cnt[c.k] ? "" : "zero"}" style="--mc:${c.c}"><span class="sw"></span><span><b>${c.t}</b></span><span class="n">${cnt[c.k] || 0}</span></li>`).join("");
 }
 
 const EX = [

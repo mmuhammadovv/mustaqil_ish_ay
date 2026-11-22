@@ -15,7 +15,7 @@ mkdirSync(out);
 for (const f of files) {
   const src = join(root, f);
   if (!existsSync(src)) throw new Error(`Topilmadi: ${f}`);
-  cpSync(src, join(out, f), { recursive: true });
+  cpSync(src, join(out, f), { recursive: true, filter: s => !s.endsWith(".pdf") });
 }
 
 const count = dir => readdirSync(dir).reduce((n, f) => {

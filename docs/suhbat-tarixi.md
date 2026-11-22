@@ -105,3 +105,7 @@ Foydalanuvchi talablari:
 
 ## 22. Akademik yozuv loyihalari
 - 1-loyiha “Soxta xabar detektori” va 2-loyiha “Janrlar konstruktori” saytga qoʻshildi (mustaqil-ishlar/akademik-yozuv/loyihalar/). Mustaqil ish sahifasidagi tugmalar orqali ochiladi.
+
+## 23. Qisqartirish
+- Loyiha sahifalarida matn qisqartirildi, natija (ball, namuna, qoralama) tepaga chiqarildi; “1-loyiha/2-loyiha” soʻzlari olib tashlandi.
+- Saytdan mustaqil ish PDF havolasi, “Chop etish” tugmasi va hajm/format maʼlumotlari olib tashlandi; PDF saytga chiqmaydi.
