@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<title>Soxta xabar detektori</title>
+<script src="../../../oyinlar/assets/boot.js"></script>
+<script>document.documentElement.setAttribute("data-fan", "akademik");</script>
+<link rel="stylesheet" href="../../../oyinlar/assets/theme.css">
+<link rel="stylesheet" href="loyiha.css">
+<style>
+  .out { min-height: 120px; font-size: 18px; line-height: 1.75; white-space: pre-wrap; word-wrap: break-word; }
+  .out:empty::before { content: "Matn kiritilgach, shu yerda belgilangan holda koʻrinadi."; color: var(--muted); font-size: 15px; }
+  mark { background: none; color: inherit; padding: 1px 2px; border-bottom: 3px solid var(--mc); background: color-mix(in srgb, var(--mc) 16%, transparent); }
+  mark.pos { border-bottom-style: dotted; }
+  .score { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .score b { font-family: var(--display); font-size: 68px; line-height: 1; }
+  .score span { font-size: 15px; color: var(--muted); }
+  .meter { height: 10px; border: 1px solid var(--line-strong); margin: 12px 0 6px; position: relative; background: var(--bg); }
+  .meter i { position: absolute; inset: 0 auto 0 0; background: var(--mc, var(--accent)); transition: width .3s; }
+  .verdict { font-family: var(--display); font-size: 22px; margin: 10px 0 0; }
+  .cats { list-style: none; margin: 0; padding: 0; }
+  .cats li { display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: start; padding: 10px 0; border-top: 1px solid var(--line); }
+  .cats li:first-child { border-top: 0; }
+  .cats .sw { width: 14px; height: 14px; margin-top: 4px; background: var(--mc); }
+  .cats b { display: block; }
+  .cats small { color: var(--muted); font-size: 13.5px; line-height: 1.4; display: block; }
+  .cats .n { font-family: var(--num); font-weight: 700; font-size: 18px; }
+  .cats li.zero { opacity: .45; }
+  .help ol { margin: 0; padding-left: 20px; }
+  .help li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../../../index.html" title="Bosh sahifa"><img src="../../../favicon.svg" alt="Bosh sahifa" width="34" height="34"></a>
+  <a class="ib" href="../index.html" id="back"><span class="lbl">Mustaqil ish</span></a>
+  <div class="ttl"><b>Soxta xabar detektori</b><span>Akademik yozuv · 1-loyiha</span></div>
+  <div class="acts"><a class="ib" href="janrlar.html" id="next"><span class="lbl">2-loyiha</span></a><button class="ib" id="thm" type="button"></button></div>
+</header>
+
+<main class="wrap">
+  <section class="lp-head">
+    <div class="over"><span>1-loyiha</span><span>Mustaqil ishning 2.10-bandi asosida</span></div>
+    <h1>Soxta xabar detektori</h1>
+    <p>Sarlavha, post yoki xabar matnini kiriting — sahifa klikbeyt va manipulyatsiya belgilarini topib, rang bilan ajratadi va ishonchlilik balini hisoblaydi.</p>
+  </section>
+
+  <div class="grid2">
+    <div>
+      <div class="box">
+        <span class="lbl">Matn</span>
+        <textarea id="txt" rows="6" placeholder="Masalan: SHOK! Hamma hayratda: bu mahsulotni isteʼmol qilsangiz nima boʻlishini bilmaysiz…"></textarea>
+        <div class="row">
+          <span class="muted small">Namunalar:</span>
+          <button class="chip" type="button" data-ex="0">Klikbeyt</button>
+          <button class="chip" type="button" data-ex="1">Shubhali post</button>
+          <button class="chip" type="button" data-ex="2">Oddiy xabar</button>
+          <button class="chip" type="button" id="clr">Tozalash</button>
+        </div>
+      </div>
+      <div class="box">
+        <span class="lbl">Tahlil</span>
+        <div class="out" id="out"></div>
+      </div>
+      <div class="box help">
+        <h2>Ulashishdan oldin 5 savol</h2>
+        <ol>
+          <li>Xabarning muallifi yoki manbasi kim? U nomi bilan koʻrsatilganmi?</li>
+          <li>Xabar birinchi marta qayerda eʼlon qilingan?</li>
+          <li>Boshqa ishonchli nashrlar ham bu haqda yozganmi?</li>
+          <li>Sarlavha matn mazmuniga mos keladimi?</li>
+          <li>Matn meni oʻylashga undayaptimi yoki faqat qoʻrqish va gʻazablanishgami?</li>
+        </ol>
+      </div>
+    </div>
+
+    <div>
+      <div class="box">
+        <span class="lbl">Ishonchlilik bali</span>
+        <div class="score"><b id="sc">—</b><span>/ 100</span></div>
+        <div class="meter"><i id="bar" style="width:0"></i></div>
+        <p class="verdict" id="vd">Matn kiritilmagan</p>
+      </div>
+      <div class="box">
+        <span class="lbl">Topilgan belgilar</span>
+        <ul class="cats" id="cats"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot"><span>Topshiruvchi: Muxamadov Muhammadali · Akademik yozuv</span><span><a href="../index.html">Mustaqil ishga qaytish</a> · <a href="janrlar.html">2-loyiha: Janrlar konstruktori</a></span></div>
+</main>
+
+<script src="../../../oyinlar/savollar/akademik.js"></script>
+<script src="../../../oyinlar/assets/core.js"></script>
+<script>
+G.themeButton(document.getElementById("thm"));
+document.getElementById("back").insertAdjacentHTML("afterbegin", G.icon("back"));
+document.getElementById("next").insertAdjacentHTML("beforeend", G.icon("arrow"));
+
+/* Belgilar. Naqshlar kichik harfda, barcha apostrof turlari ' ga keltiriladi.
+   w — ishonchlilikdan ayiriladigan ball (manfiy w — ishonchlilik belgisi, ball qoʻshadi). */
+const CATS = [
+  { k: "his", t: "Haddan tashqari hissiy soʻzlar", d: "Fikrlash oʻrniga hissiyotni yoqadi.", c: "#b02a1c", w: 12,
+    p: ["shok", "dahshat", "hayratda", "hayratlanarli", "sensatsiya", "vahima", "qoʻrqinchli", "larzaga", "ishonmaysiz", "aql bovar qilmaydi", "tasavvur ham qilolmaysiz", "portladi", "jahannam", "kutilmagan voqea"] },
+  { k: "yash", t: "Maʼlumotni yashirish", d: "Javobni aytmay, faqat bosishga majburlaydi.", c: "#c26a00", w: 15,
+    p: ["nima boʻlishini bilmaysiz", "nima boʻlganini bilmaysiz", "mana nima uchun", "sababi sizni", "oxirigacha oʻqing", "oxirigacha koʻring", "bilib oling", "sir ochildi", "hech kim aytmaydi", "siz bilmagan", "batafsil havolada"] },
+  { k: "man", t: "Nomaʼlum manba", d: "Kim aytgani koʻrsatilmagan — tekshirib boʻlmaydi.", c: "#6b3fa0", w: 12,
+    p: ["ishonchli manbalarga koʻra", "manbalarga koʻra", "aytishlaricha", "aytishicha", "mutaxassislar aytishicha", "olimlar aniqladi", "eshitishimcha", "deyishmoqda", "gap tarqaldi", "tarqalmoqda", "bir tanishim"] },
+  { k: "shosh", t: "Shoshiltirish", d: "Tekshirishga vaqt qoldirmaydi.", c: "#1f6f8b", w: 15,
+    p: ["tezroq", "shoshiling", "oʻchirib yuborishlaridan oldin", "zudlik bilan", "ulashing", "tarqating", "hammaga yuboring", "faqat bugun", "kechikmang", "darhol"] },
+  { k: "mut", t: "Mutlaq umumlashtirish", d: "Istisnolarni inkor etadi, mantiqan notoʻgʻri.", c: "#5c6b1f", w: 6,
+    p: ["hamma", "hech kim", "barcha", "har doim", "hech qachon", "butunlay", "100 foiz", "yuz foiz", "mutlaqo"] },
+  { k: "tin", t: "Tinish belgilari va KATTA HARFLAR", d: "Baqiriq taassuroti — hissiy bosim.", c: "#8a6a2a", w: 8, special: true },
+  { k: "ish", t: "Ishonchlilik belgilari", d: "Aniq manba, raqam, sana — tekshirish mumkin.", c: "#2e7d4f", w: -8,
+    p: ["maʼlum qildi", "xabar berdi", "rasmiy", "matbuot xizmati", "vazirligi", "saytida", "bayonot", "maʼlumotiga koʻra", "statistika", "soʻrovnoma"] }
+];
+const norm = s => s.toLowerCase().replace(/[ʻʼ‘’`'´]/g, "'");
+CATS.forEach(c => { if (c.p) c.re = new RegExp("(?<![a-z'])(" + c.p.map(x => norm(x).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")[a-z']*", "g"); });
+
+function analyze(text) {
+  const n = norm(text), hits = [];
+  CATS.forEach(c => {
+    if (c.re) { c.re.lastIndex = 0; let m; while ((m = c.re.exec(n))) hits.push({ s: m.index, e: m.index + m[0].length, c }); }
+  });
+  const tin = CATS.find(c => c.k === "tin");
+  let m; const r1 = /[!?]{2,}|\.{3,}|…/g;
+  while ((m = r1.exec(text))) hits.push({ s: m.index, e: m.index + m[0].length, c: tin });
+  const r2 = /(?<![\p{L}])[\p{Lu}ʻʼ']{5,}(?![\p{L}])/gu;
+  while ((m = r2.exec(text))) hits.push({ s: m.index, e: m.index + m[0].length, c: tin });
+  // raqam va sanalar — ishonchlilik belgisi
+  const ish = CATS.find(c => c.k === "ish"), r3 = /\b\d{1,3}([.,]\d+)?\s?(%|foiz)|\b(19|20)\d{2}-yil|\bhttps?:\/\/\S+/g;
+  while ((m = r3.exec(text))) hits.push({ s: m.index, e: m.index + m[0].length, c: ish });
+  // ustma-ust tushganlarni olib tashlash
+  hits.sort((a, b) => a.s - b.s || b.e - a.e);
+  const clean = []; let end = -1;
+  hits.forEach(h => { if (h.s >= end) { clean.push(h); end = h.e; } });
+  return clean;
+}
+const esc = s => s.replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+
+function run() {
+  const text = document.getElementById("txt").value, hits = analyze(text);
+  let html = "", pos = 0;
+  hits.forEach(h => { html += esc(text.slice(pos, h.s)) + `<mark class="${h.c.w < 0 ? "pos" : ""}" style="--mc:${h.c.c}" title="${h.c.t}">${esc(text.slice(h.s, h.e))}</mark>`; pos = h.e; });
+  document.getElementById("out").innerHTML = html + esc(text.slice(pos));
+
+  const cnt = {}; hits.forEach(h => cnt[h.c.k] = (cnt[h.c.k] || 0) + 1);
+  let score = 100;
+  CATS.forEach(c => { const k = Math.min(cnt[c.k] || 0, 3); score -= c.w > 0 ? c.w * k : 0; });
+  score += Math.min((cnt.ish || 0) * 8, 24);
+  score = Math.max(0, Math.min(100, score));
+  const empty = !text.trim();
+  const col = score >= 70 ? "#2e7d4f" : score >= 45 ? "#c26a00" : "#b02a1c";
+  document.getElementById("sc").textContent = empty ? "—" : score;
+  document.getElementById("sc").style.color = empty ? "" : col;
+  const bar = document.getElementById("bar"); bar.style.width = (empty ? 0 : score) + "%"; bar.style.setProperty("--mc", col);
+  document.getElementById("vd").textContent = empty ? "Matn kiritilmagan" : score >= 70 ? "Ishonchli koʻrinadi — baribir manbani tekshiring" : score >= 45 ? "Ehtiyot boʻling — shubhali belgilar bor" : "Klikbeyt belgilari koʻp — ulashishdan oldin tekshiring";
+  document.getElementById("cats").innerHTML = CATS.map(c => `<li class="${cnt[c.k] ? "" : "zero"}" style="--mc:${c.c}"><span class="sw"></span><span><b>${c.t}</b><small>${c.d}</small></span><span class="n">${cnt[c.k] || 0}</span></li>`).join("");
+}
+
+const EX = [
+  "SHOK!!! Hamma hayratda: bu ichimlikni ichsangiz nima boʻlishini bilmaysiz… Mutaxassislar aytishicha, uni hech kim toʻxtata olmaydi. Oʻchirib yuborishlaridan oldin tezroq ulashing!",
+  "Ishonchli manbalarga koʻra, ertaga barcha universitetlarda darslar bekor qilinarmish. Bir tanishim aytdi, hammaga yuboring, kechikmang!",
+  "Oliy taʼlim vazirligi matbuot xizmati maʼlum qildi: 2026-yil 1-dekabrdan talabalar uchun yangi stipendiya dasturi boshlanadi. Batafsil maʼlumot vazirlik rasmiy saytida eʼlon qilingan."
+];
+document.querySelectorAll("[data-ex]").forEach(b => b.onclick = () => { document.getElementById("txt").value = EX[+b.dataset.ex]; run(); });
+document.getElementById("clr").onclick = () => { document.getElementById("txt").value = ""; run(); };
+document.getElementById("txt").addEventListener("input", run);
+document.getElementById("txt").value = EX[0]; run();
+</script>
+</body>
+</html>

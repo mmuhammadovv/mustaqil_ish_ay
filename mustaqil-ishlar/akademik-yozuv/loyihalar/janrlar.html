@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<title>Janrlar konstruktori</title>
+<script src="../../../oyinlar/assets/boot.js"></script>
+<script>document.documentElement.setAttribute("data-fan", "akademik");</script>
+<link rel="stylesheet" href="../../../oyinlar/assets/theme.css">
+<link rel="stylesheet" href="loyiha.css">
+<style>
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .fields label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 4px; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 18px; }
+  .tabs .chip { font-size: 16px; padding: 12px 18px; }
+  .meta { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); margin-bottom: 14px; }
+  .meta div { padding: 10px 12px; border-left: 1px solid var(--line); }
+  .meta div:first-child { border-left: 0; padding-left: 0; }
+  .meta small { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .meta b { font-size: 15px; }
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+  .steps li::before { content: counter(s); display: grid; place-items: center; width: 28px; height: 28px; background: var(--accent); color: var(--accent-ink); font: 700 14px var(--num); }
+  .steps b { display: block; }
+  .steps span { color: var(--muted); font-size: 14.5px; }
+  .tools { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tools span { font-size: 13.5px; padding: 5px 9px; border: 1px solid var(--line-strong); }
+  .sample { font-family: var(--display); font-style: italic; font-size: 18px; line-height: 1.55; border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; margin: 0; }
+  #draft { min-height: 230px; font-size: 16.5px; }
+  .ph { color: var(--accent); }
+  table.cmp { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  table.cmp th, table.cmp td { border: 1px solid var(--line-strong); padding: 8px 10px; text-align: left; vertical-align: top; }
+  table.cmp th { background: var(--surface-2); font-family: var(--display); }
+  .cmp-wrap { overflow-x: auto; }
+  .note { font-size: 13.5px; color: var(--muted); margin-top: 8px; }
+  @media (max-width: 620px) { .fields, .meta { grid-template-columns: 1fr; } .meta div { border-left: 0; padding-left: 0; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../../../index.html" title="Bosh sahifa"><img src="../../../favicon.svg" alt="Bosh sahifa" width="34" height="34"></a>
+  <a class="ib" href="../index.html" id="back"><span class="lbl">Mustaqil ish</span></a>
+  <div class="ttl"><b>Janrlar konstruktori</b><span>Akademik yozuv · 2-loyiha</span></div>
+  <div class="acts"><a class="ib" href="detektor.html" id="prev"><span class="lbl">1-loyiha</span></a><button class="ib" id="thm" type="button"></button></div>
+</header>
+
+<main class="wrap">
+  <section class="lp-head">
+    <div class="over"><span>2-loyiha</span><span>Mustaqil ishning 2.8 va 3.5-bandlari asosida</span></div>
+    <h1>Bitta fakt — oltita janr</h1>
+    <p>Faktni kiriting va janrni tanlang: sahifa shu janrning tuzilmasi, til vositalari, namunasi va sizning faktingiz asosidagi qoralamani koʻrsatadi.</p>
+  </section>
+
+  <div class="box">
+    <span class="lbl">Fakt</span>
+    <input type="text" id="fact" value="Universitetda talabalar uchun yangi IT-markaz ochildi">
+    <div class="fields">
+      <div><label for="who">Qahramon yoki manba (ixtiyoriy)</label><input type="text" id="who" placeholder="masalan: ikkinchi kurs talabasi Dilnoza"></div>
+      <div><label for="where">Joy va vaqt (ixtiyoriy)</label><input type="text" id="where" placeholder="masalan: bugun ertalab, bosh binoda"></div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="grid2">
+    <div>
+      <div class="box">
+        <h2 id="gt"></h2>
+        <div class="meta" id="meta"></div>
+        <span class="lbl">Tuzilma</span>
+        <ul class="steps" id="steps"></ul>
+        <h3>Til vositalari</h3>
+        <div class="tools" id="tools"></div>
+      </div>
+      <div class="box">
+        <span class="lbl">Namuna</span>
+        <p class="sample" id="sample"></p>
+        <p class="note" id="snote"></p>
+      </div>
+    </div>
+    <div>
+      <div class="box">
+        <span class="lbl">Sizning qoralamangiz</span>
+        <textarea id="draft"></textarea>
+        <p class="note">Kvadrat qavs ichidagi joylarni oʻzingiz toʻldiring. Matnni bemalol tahrir qiling.</p>
+        <div class="row"><button class="btn primary" id="copy" type="button"></button><button class="btn" id="regen" type="button"></button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:24px">
+    <h2>Janrlar qiyosi</h2>
+    <div class="cmp-wrap"><table class="cmp" id="cmp"></table></div>
+  </div>
+
+  <div class="foot"><span>Topshiruvchi: Muxamadov Muhammadali · Akademik yozuv</span><span><a href="../index.html">Mustaqil ishga qaytish</a> · <a href="detektor.html">1-loyiha: Soxta xabar detektori</a></span></div>
+</main>
+
+<script src="../../../oyinlar/savollar/akademik.js"></script>
+<script src="../../../oyinlar/assets/core.js"></script>
+<script>
+const { icon, esc } = G;
+G.themeButton(document.getElementById("thm"));
+document.getElementById("back").insertAdjacentHTML("afterbegin", icon("back"));
+document.getElementById("prev").insertAdjacentHTML("afterbegin", icon("back"));
+document.getElementById("copy").innerHTML = icon("doc") + " Nusxa olish";
+document.getElementById("regen").innerHTML = icon("reset") + " Qaytadan yaratish";
+
+// f — fakt, w — qahramon/manba, p — joy va vaqt (boʻsh boʻlsa — [qavs] ichida koʻrsatma)
+const W = (v, h) => v || `[${h}]`;
+const lc = s => s ? s.charAt(0).toLowerCase() + s.slice(1) : s;
+const uc = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+const GEN = [
+  { k: "xabar", t: "Xabar", guruh: "Axborot janri", maqsad: "Faktni tez va aniq yetkazish", hajm: "40–100 soʻz", men: "Yoʻq",
+    steps: [["Lid", "Eng muhim fakt: kim, nima, qayerda, qachon."], ["Tafsilot", "Qoʻshimcha maʼlumot: qanday, nima uchun."], ["Manba", "Maʼlumot kimdan olingani."]],
+    tools: ["neytral leksika", "darak gaplar", "aniq raqam va sana", "uchinchi shaxs"],
+    sample: "Universitetda talabalar uchun zamonaviy kompyuterlar bilan jihozlangan IT-markaz ochildi. Markazda dasturlash, dizayn va sunʼiy intellekt boʻyicha bepul kurslar tashkil etiladi.",
+    draft: (f, w, p) => `${f}. ${W(p, "Qachon va qayerda")}.\n\n${W("", "Qoʻshimcha tafsilot: nima uchun, qanday, kimlar uchun")}.\n\nBu haqda ${W(w, "manba: tashkilot yoki masʼul shaxs")} maʼlum qildi.` },
+  { k: "reportaj", t: "Reportaj", guruh: "Axborot janri", maqsad: "Oʻquvchini voqea joyiga olib kirish", hajm: "300–800 soʻz", men: "Kuzatuvchi sifatida",
+    steps: [["Manzara-lid", "Joy, vaqt, tovush, rang — “hozir” hissi."], ["Qahramon", "Voqea ishtirokchisining soʻzlari va harakati."], ["Fakt", "Nima boʻlayotgani haqida aniq maʼlumot."], ["Yakuniy lavha", "Esda qoladigan tafsilot yoki iqtibos."]],
+    tools: ["hozirgi zamon feʼllari", "qisqa gaplar", "koʻchirma gap", "tasviriy sifatlar"],
+    sample: "Ertalab soat toʻqqiz. Yangi markaz eshigi oldida navbat. Ikkinchi kurs talabasi Dilnoza qoʻlidagi noutbukni mahkam quchoqlab turibdi: ‘Nihoyat, oʻz loyihamni shu yerda boshlayman!’ — deydi u koʻzlari chaqnab.",
+    draft: (f, w, p) => `${W(p, "Vaqt va joy: masalan, ertalab soat toʻqqiz, bosh bino")}. ${W("", "Atrofdagi manzara: nima koʻrinadi, nima eshitiladi")}.\n\n${W(uc(w), "Qahramon")} ${W("", "nima qilyapti")}: “${W("", "qahramonning soʻzlari")}”, — deydi u.\n\nSababi oddiy: ${lc(f)}. ${W("", "Tafsilot: raqamlar, imkoniyatlar")}.\n\n${W("", "Yakuniy lavha — esda qoladigan tafsilot")}.` },
+  { k: "maqola", t: "Maqola", guruh: "Tahliliy janr", maqsad: "Muammoni tahlil qilish va yechim taklif etish", hajm: "600–1500 soʻz", men: "Aniq pozitsiya",
+    steps: [["Lid", "Fakt va undan kelib chiqadigan savol."], ["Tezis", "Muallifning asosiy fikri bir jumlada."], ["Dalillar", "Fakt, misol, mutaxassis fikri, qiyos."], ["Raddiya", "Qarshi fikrni koʻrib chiqish."], ["Xulosa va chaqiriq", "Yechim va oʻquvchiga murojaat."]],
+    tools: ["ritorik soʻroq", "antiteza", "metafora", "murojaat", "sanash", "kirish soʻzlar"],
+    sample: "Yangi IT-markaz — bu faqat kompyuterlar emas. Bu talabalar uchun bilimni amaliyotga aylantirish imkoniyati. Ammo savol tugʻiladi: bu imkoniyatdan hamma teng foydalana oladimi? Markaz samarali ishlashi uchun nimalar qilish kerak?",
+    draft: (f, w, p) => `${f}. Bu yangilik birinchi qarashda oddiy tuyuladi. Ammo savol tugʻiladi: ${W("", "muammoli savol")}?\n\nMening fikrimcha, ${W("", "asosiy fikr — tezis")}.\n\nBirinchidan, ${W("", "1-dalil: fakt yoki raqam")}. Ikkinchidan, ${W("", "2-dalil: misol")}. ${w ? w + " fikricha" : "[Mutaxassis fikri]"}, ${W("", "iqtibos")}.\n\nBaʼzilar ${W("", "qarshi fikr")}, deydi. Biroq ${W("", "raddiya")}.\n\nXulosa oʻrnida aytmoqchimanki, ${W("", "yechim")}. Keling, ${W("", "oʻquvchiga chaqiriq")}!` },
+  { k: "felyeton", t: "Felyeton", guruh: "Badiiy-publitsistik janr", maqsad: "Kamchilikni kulgi orqali fosh etish", hajm: "300–900 soʻz", men: "Kinoyali hikoyachi",
+    steps: [["Kutilmagan boshlanish", "Tantanali ohang yoki hazil."], ["Kamchilik", "Ijobiy fon ustida salbiy tafsilot."], ["Kinoya va mubolagʻa", "Holatni kulgili tomondan koʻrsatish."], ["Achchiq xulosa", "Kulgi ortidagi jiddiy fikr."]],
+    tools: ["kinoya", "mubolagʻa", "parcellyatsiya", "soʻzlashuv unsurlari", "undov gaplar"],
+    sample: "Markaz ochildi! Kompyuterlar yangi, stullar yumshoq, internet esa... internet hali ‘yoʻlda’. Aytishlaricha, u ham tez orada yetib kelarmish — keyingi oʻquv yili boshlanguncha.",
+    draft: (f, w, p) => `Xushxabar! ${f}! ${W("", "Tantanali tafsilotlar: hamma narsa yangi, chiroyli")}...\n\nFaqat bitta “kichkina” muammo bor: ${W("", "kamchilik")}. ${W("", "Kinoyali izoh: aytishlaricha, u ham tez orada…")}.\n\n${W("", "Achchiq xulosa — kulgi ortidagi jiddiy fikr")}.` },
+  { k: "intervyu", t: "Intervyu", guruh: "Axborot-tahliliy janr", maqsad: "Qahramon fikrini savol-javob orqali ochish", hajm: "400–1200 soʻz", men: "Savol beruvchi",
+    steps: [["Kirish", "Suhbatdosh kim va nega u bilan gaplashilmoqda."], ["Ochiq savollar", "“Qanday?”, “Nega?” bilan boshlanadigan savollar."], ["Aniqlovchi savollar", "Fakt va misollarni soʻrash."], ["Yakuniy savol", "Kelajak, maslahat yoki istak."]],
+    tools: ["soʻroq gaplar", "jonli soʻzlashuv", "iqtibos", "qisqa kirish matni"],
+    sample: "— Markazga birinchi kelganingizda nimani his qildingiz?\n— Rostini aytsam, ishonmadim. Avval dasturlashni faqat telefonda oʻrganardim. Endi esa haqiqiy kompyuterda, ustoz yonida ishlayman.",
+    draft: (f, w, p) => `${f}. Shu munosabat bilan ${W(w, "suhbatdosh: ism, kim")} bilan suhbatlashdik.\n\n— ${W("", "Ochiq savol: Bu yangilik siz uchun nimani anglatadi?")}\n— ${W("", "Javob")}\n\n— ${W("", "Aniqlovchi savol: Aniq misol keltira olasizmi?")}\n— ${W("", "Javob")}\n\n— ${W("", "Yakuniy savol: Tengdoshlaringizga qanday maslahat berasiz?")}\n— ${W("", "Javob")}` },
+  { k: "post", t: "Ijtimoiy tarmoq posti", guruh: "Internet publitsistikasi", maqsad: "Tez qiziqtirish va ulashishga undash", hajm: "30–120 soʻz", men: "Shaxsiy ohang",
+    steps: [["Ilgak", "Birinchi jumla — savol yoki kutilmagan fakt."], ["Asosiy fikr", "Fakt va unga munosabat, 2–3 gap."], ["Chaqiriq", "Izoh yozish, ulashish yoki harakatga undash."]],
+    tools: ["murojaat", "ritorik soʻroq", "qisqa abzaslar", "shior-xulosa", "havola"],
+    sample: "Bilasizmi, endi dasturlashni oʻrganish uchun pullik kursga yugurish shart emas? Universitetimizda yangi IT-markaz ochildi — kurslar bepul. Men allaqachon yozildim. Siz-chi? Izohda yozing, qaysi yoʻnalish sizga qiziq!",
+    draft: (f, w, p) => `${W("", "Ilgak: savol yoki kutilmagan fakt")}?\n\n${f}. ${W("", "Bu siz uchun nimani anglatadi — 1–2 gap")}.\n\n${W("", "Chaqiriq: Siz-chi? Izohda yozing…")}` }
+];
+let cur = 0;
+const val = id => document.getElementById(id).value.trim().replace(/[.!?]+$/, "");
+
+function render() {
+  const g = GEN[cur];
+  document.getElementById("tabs").innerHTML = GEN.map((x, i) => `<button class="chip ${i === cur ? "on" : ""}" type="button" data-i="${i}">${x.t}</button>`).join("");
+  document.querySelectorAll("#tabs .chip").forEach(b => b.onclick = () => { cur = +b.dataset.i; render(); });
+  document.getElementById("gt").textContent = g.t;
+  document.getElementById("meta").innerHTML = `<div><small>Guruh</small><b>${g.guruh}</b></div><div><small>Hajm</small><b>${g.hajm}</b></div><div><small>Muallif “men”i</small><b>${g.men}</b></div>`;
+  document.getElementById("steps").innerHTML = g.steps.map(([a, b]) => `<li><div><b>${a}</b><span>${b}</span></div></li>`).join("");
+  document.getElementById("tools").innerHTML = g.tools.map(t => `<span>${t}</span>`).join("");
+  document.getElementById("sample").innerHTML = esc(g.sample).replace(/\n/g, "<br>");
+  document.getElementById("snote").textContent = "Namuna fakti: “Universitetda talabalar uchun yangi IT-markaz ochildi” (mustaqil ishning 2.8-bandi).";
+  draft();
+}
+function draft() {
+  const f = val("fact") || "[Fakt]";
+  document.getElementById("draft").value = GEN[cur].draft(f, val("who"), val("where"));
+}
+document.getElementById("cmp").innerHTML = `<tr><th>Janr</th><th>Maqsad</th><th>Hajm</th><th>Muallif “men”i</th><th>Asosiy vositalar</th></tr>` +
+  GEN.map(g => `<tr><td><b>${g.t}</b></td><td>${g.maqsad}</td><td>${g.hajm}</td><td>${g.men}</td><td>${g.tools.slice(0, 3).join(", ")}</td></tr>`).join("");
+["fact", "who", "where"].forEach(id => document.getElementById(id).addEventListener("input", draft));
+document.getElementById("regen").onclick = draft;
+document.getElementById("copy").onclick = async e => {
+  const t = document.getElementById("draft");
+  try { await navigator.clipboard.writeText(t.value); } catch (err) { t.select(); document.execCommand("copy"); }
+  e.currentTarget.innerHTML = icon("check") + " Nusxa olindi";
+  setTimeout(() => document.getElementById("copy").innerHTML = icon("doc") + " Nusxa olish", 1600);
+};
+render();
+</script>
+</body>
+</html>

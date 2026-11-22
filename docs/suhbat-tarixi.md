@@ -102,3 +102,6 @@ Foydalanuvchi talablari:
 
 ## 21. Akademik yozuv — Kim men? (PPTX)
 - Gazeta uslubidagi taqdimot: 40 kartochka — publitsistika atamalari va adiblar, mashhur aktyorlar, blogerlar, sportchilar, qoʻshiqchilar, olim va tadbirkorlar, personajlar, joylar, narsalar. Fan sahifasida yuklab olish havolasi.
+
+## 22. Akademik yozuv loyihalari
+- 1-loyiha “Soxta xabar detektori” va 2-loyiha “Janrlar konstruktori” saytga qoʻshildi (mustaqil-ishlar/akademik-yozuv/loyihalar/). Mustaqil ish sahifasidagi tugmalar orqali ochiladi.

@@ -26,6 +26,9 @@ Bu fayl Claude Code uchun. Terminalda `claude` ishga tushirilganda u avtomatik o
 index.html                         Bosh menyu — fan tanlash (ikki yarim ekran)
 fan.html?fan=akademik|tarix        Fan sahifasi (mustaqil ish + 5 oʻyin)
 mustaqil-ishlar/akademik-yozuv/    Mustaqil ish: index.html (A4 chop etish) + PDF (30 bet; titulda vazirlik nomi YOʻQ, nazorat roʻyxati YOʻQ — foydalanuvchi talabi)
+  loyihalar/detektor.html          1-loyiha: Soxta xabar detektori (klikbeyt belgilarini rang bilan ajratadi, ishonchlilik bali 0–100)
+  loyihalar/janrlar.html           2-loyiha: Janrlar konstruktori (bitta fakt → xabar/reportaj/maqola/felyeton/intervyu/post: tuzilma, vositalar, namuna, qoralama)
+                                   Mustaqil ish sahifasida (index.html) tepadagi .proj-nav tugmalari orqali ochiladi (chop etishda yashirin); fan.html da ham tugmalar.
 oyinlar/
   tavakkal.html   01 Gʻildirak + tikish (balans 500, ±tikish; daraja 1–5 tikishdan OLDIN koʻrinadi; bitta jamoa qolsa — darhol gʻolib)
   hududlar.html   02 Olti burchakli xarita (bazadan qoʻshni kataklarni egallash, hujum +1 daraja)
