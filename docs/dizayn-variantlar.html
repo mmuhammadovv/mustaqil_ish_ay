@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tarix dizayni — variantlar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=EB+Garamond:wght@400;500;600&family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Jost:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Crimson+Pro:wght@400;600&family=Marcellus&family=Nunito+Sans:wght@400;600;700&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #d9d4ca; font-family: system-ui, sans-serif; color: #222; }
+  .intro { max-width: 1180px; margin: 0 auto; padding: 28px 16px 8px; }
+  .intro h1 { margin: 0 0 6px; font-size: 28px; }
+  .intro p { margin: 0; color: #555; }
+  .v { max-width: 1180px; margin: 22px auto; padding: 0 16px; }
+  .tag { display: flex; align-items: baseline; gap: 12px; margin: 0 0 10px; }
+  .tag b { display: inline-grid; place-items: center; width: 40px; height: 40px; background: #222; color: #fff; font-size: 20px; border-radius: 50%; }
+  .tag span { font-size: 22px; font-weight: 700; }
+  .tag small { color: #555; font-size: 15px; }
+  .mock { overflow: hidden; border-radius: 6px; box-shadow: 0 20px 50px -24px rgba(0,0,0,.5); }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 12px 20px; }
+  .bar .lg { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; }
+  .bar .nm { font-weight: 700; flex: 1; }
+  .bar .bt { padding: 6px 12px; font-size: 13px; }
+  .hero { text-align: center; padding: 34px 20px 26px; position: relative; }
+  .hero .ov { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; }
+  .hero h2 { margin: 12px 0 6px; line-height: 1; }
+  .body { display: grid; grid-template-columns: 1.25fr 1fr; gap: 22px; padding: 6px 24px 28px; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .cd { padding: 16px; min-height: 118px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+  .cd .no { font-size: 13px; }
+  .cd h4 { margin: 0; font-size: 22px; }
+  .q { padding: 20px; }
+  .q .qt { font-size: 21px; margin: 6px 0 14px; line-height: 1.25; }
+  .q .o { display: flex; gap: 10px; align-items: center; padding: 10px 12px; margin-top: 8px; font-size: 15px; }
+  .q .o i { font-style: normal; width: 26px; height: 26px; display: grid; place-items: center; font-size: 13px; flex: none; }
+  @media (max-width: 760px) { .body { grid-template-columns: 1fr; } }
+
+  /* ===== A. Qoʻlyozma (Temuriylar kitobat sanʼati) ===== */
+  .vA .mock { background: #efe3c6; color: #2a1a10; font-family: "EB Garamond", serif; }
+  .vA .bar { background: #1d3f8a; color: #f6ecd2; border-bottom: 3px double #c9a23f; }
+  .vA .lg { background: #c9a23f; color: #1d3f8a; }
+  .vA .bt { border: 1px solid #c9a23f; color: #f6ecd2; }
+  .vA .hero { margin: 22px 24px 18px; border: 2px solid #b8892d; outline: 1px solid #b8892d; outline-offset: 5px; background: #f6ecd2; }
+  .vA .hero::before, .vA .hero::after { content: ""; position: absolute; width: 46px; height: 46px; top: -12px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23b8892d' stroke-width='1.6'%3E%3Ccircle cx='20' cy='20' r='6' fill='%23b33a26'/%3E%3Cpath d='M20 2c4 8 4 10 0 12-4-2-4-4 0-12zM20 38c4-8 4-10 0-12-4 2-4 4 0 12zM2 20c8-4 10-4 12 0-2 4-4 4-12 0zM38 20c-8-4-10-4-12 0 2 4 4 4 12 0z' fill='%231d3f8a'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat; }
+  .vA .hero::before { left: -12px; } .vA .hero::after { right: -12px; }
+  .vA .ov { color: #b33a26; font-family: "Cormorant Garamond", serif; font-style: italic; letter-spacing: .1em; text-transform: none; font-size: 18px; }
+  .vA h2 { font-family: "Cormorant Garamond", serif; font-weight: 700; font-size: clamp(36px, 6vw, 66px); color: #1d3f8a; }
+  .vA h2 .cap { color: #b33a26; font-size: 1.3em; font-style: italic; }
+  .vA .hero p { margin: 6px 0 0; font-style: italic; color: #6b5238; }
+  .vA .cd { background: #f6ecd2; border: 1px solid #b8892d; box-shadow: inset 0 0 0 4px #f6ecd2, inset 0 0 0 5px #b8892d; }
+  .vA .cd .no { font-family: "Cormorant Garamond", serif; font-style: italic; color: #b33a26; font-size: 18px; }
+  .vA .cd h4 { font-family: "Cormorant Garamond", serif; font-weight: 700; color: #1d3f8a; font-size: 26px; }
+  .vA .cd::after { content: "❦"; position: absolute; right: 14px; top: 10px; color: #b8892d; font-size: 20px; }
+  .vA .q { background: #f6ecd2; border: 2px solid #1d3f8a; outline: 1px solid #b8892d; outline-offset: -7px; }
+  .vA .qt { font-family: "Cormorant Garamond", serif; font-weight: 700; font-size: 25px; color: #2a1a10; }
+  .vA .o { border-bottom: 1px solid #d8c49a; }
+  .vA .o i { border: 1px solid #b8892d; border-radius: 50%; color: #b33a26; font-family: "Cormorant Garamond", serif; font-style: italic; }
+  .vA .o.ok { background: #2f6f52; color: #f6ecd2; } .vA .o.ok i { border-color: #f6ecd2; color: #f6ecd2; }
+
+  /* ===== B. Muzey zali ===== */
+  .vB .mock { background: radial-gradient(ellipse at 50% 0, #2b2824 0, #121110 62%); color: #efe9de; font-family: "Jost", sans-serif; }
+  .vB .bar { border-bottom: 1px solid #3a352e; }
+  .vB .lg { border: 1px solid #c9a45c; color: #c9a45c; }
+  .vB .bt { border: 1px solid #5a5246; color: #cfc6b6; }
+  .vB .ov { color: #c9a45c; letter-spacing: .4em; }
+  .vB h2 { font-family: "Bodoni Moda", serif; font-weight: 500; font-size: clamp(38px, 6.4vw, 74px); letter-spacing: -.01em; }
+  .vB .hero p { color: #9d9486; margin: 10px 0 0; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; }
+  .vB .cd { background: #f2ede3; color: #151311; border-radius: 1px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.9); }
+  .vB .cd .no { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: #6f6758; border-bottom: 1px solid #151311; padding-bottom: 6px; }
+  .vB .cd h4 { font-family: "Bodoni Moda", serif; font-size: 26px; font-weight: 700; }
+  .vB .cd::after { content: attr(data-n); position: absolute; right: 14px; bottom: 6px; font-family: "Bodoni Moda", serif; font-size: 44px; color: #d8d0c0; }
+  .vB .q { border: 1px solid #3a352e; background: rgba(255,255,255,.03); }
+  .vB .qt { font-family: "Bodoni Moda", serif; font-size: 24px; }
+  .vB .o { border: 1px solid #3a352e; } .vB .o i { border: 1px solid #c9a45c; color: #c9a45c; }
+  .vB .o.ok { border-color: #c9a45c; background: rgba(201,164,92,.14); }
+
+  /* ===== C. Ipak yoʻli xaritasi ===== */
+  .vC .mock { background: #eadcbd; color: #3a2a18; font-family: "Crimson Pro", serif;
+    background-image: linear-gradient(rgba(120,90,50,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(120,90,50,.13) 1px, transparent 1px); background-size: 64px 64px; }
+  .vC .bar { background: #3a2a18; color: #eadcbd; }
+  .vC .lg { border: 1px solid #eadcbd; }
+  .vC .bt { border: 1px dashed #eadcbd; color: #eadcbd; }
+  .vC .ov { font-family: "IM Fell English SC", serif; color: #8a3b1e; letter-spacing: .2em; }
+  .vC h2 { font-family: "IM Fell English", serif; font-size: clamp(38px, 6vw, 70px); font-weight: 400; }
+  .vC .hero p { margin: 8px 0 0; font-family: "IM Fell English", serif; font-style: italic; }
+  .vC .rose { position: absolute; right: 30px; top: 18px; width: 110px; opacity: .8; }
+  .vC .route { display: block; width: 100%; height: 70px; margin-top: 10px; }
+  .vC .cd { background: rgba(255,250,235,.55); border: 1.5px dashed #8a3b1e; border-radius: 3px; }
+  .vC .cd .no { font-family: "IM Fell English SC", serif; color: #8a3b1e; letter-spacing: .14em; }
+  .vC .cd h4 { font-family: "IM Fell English", serif; font-weight: 400; font-size: 27px; }
+  .vC .cd::after { content: ""; position: absolute; right: 14px; top: 12px; width: 14px; height: 14px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #8a3b1e; }
+  .vC .q { background: rgba(255,250,235,.7); border: 1px solid #3a2a18; box-shadow: 4px 4px 0 #3a2a18; }
+  .vC .qt { font-family: "IM Fell English", serif; font-size: 25px; }
+  .vC .o { border-bottom: 1px dashed #a88e62; } .vC .o i { border: 1px solid #3a2a18; border-radius: 50%; font-family: "IM Fell English SC", serif; }
+  .vC .o.ok { color: #2f5d3a; font-weight: 600; } .vC .o.ok i { background: #2f5d3a; color: #eadcbd; border-color: #2f5d3a; }
+
+  /* ===== D. Suzani ===== */
+  .vD .mock { background: #f3e9d6; color: #1f1a14; font-family: "Nunito Sans", sans-serif; position: relative; }
+  .vD .bar { background: #1f1a14; color: #f3e9d6; }
+  .vD .lg { background: #a52a1f; color: #f3e9d6; }
+  .vD .bt { border: 1px solid #c78b2a; color: #f3e9d6; }
+  .vD .hero { overflow: hidden; }
+  .vD .hero .med { position: absolute; width: 180px; height: 180px; opacity: .35; }
+  .vD .ov { color: #a52a1f; font-weight: 700; }
+  .vD h2 { font-family: "Marcellus", serif; font-size: clamp(36px, 6vw, 68px); font-weight: 400; position: relative; }
+  .vD .hero p { margin: 6px 0 0; position: relative; }
+  .vD .cd { background: #fffaf0; border: 2px dashed #a52a1f; outline: 2px solid #fffaf0; border-radius: 14px; }
+  .vD .cd .no { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #a52a1f; color: #fffaf0; font-weight: 700; }
+  .vD .cd h4 { font-family: "Marcellus", serif; font-size: 25px; font-weight: 400; }
+  .vD .cd:nth-child(2) { border-color: #3b5e3a; } .vD .cd:nth-child(2) .no { background: #3b5e3a; }
+  .vD .cd:nth-child(3) { border-color: #c78b2a; } .vD .cd:nth-child(3) .no { background: #c78b2a; }
+  .vD .cd:nth-child(4) { border-color: #1f1a14; } .vD .cd:nth-child(4) .no { background: #1f1a14; }
+  .vD .q { background: #fffaf0; border-radius: 14px; border: 2px dashed #1f1a14; }
+  .vD .qt { font-family: "Marcellus", serif; font-size: 24px; }
+  .vD .o { border-radius: 99px; border: 1.5px solid #e0cfae; } .vD .o i { border-radius: 50%; background: #f3e9d6; font-weight: 700; }
+  .vD .o.ok { background: #3b5e3a; color: #fffaf0; border-color: #3b5e3a; } .vD .o.ok i { background: #fffaf0; color: #3b5e3a; }
+</style>
+</head>
+<body>
+<div class="intro">
+  <h1>Tarix fani — yangi dizayn variantlari</h1>
+  <p>Toʻrt xil tarixiy uslub. Birini tanlang (A, B, C yoki D) — butun tarix boʻlimi (fan sahifasi, 15 ta oʻyin) shu uslubga oʻtkaziladi, kunduzgi va tungi rejimi bilan.</p>
+</div>
+
+<script>
+// Har bir variant uchun bir xil tarkib: sarlavha paneli, bosh qism, 4 ta oʻyin kartochkasi va savol oynasi
+const V = [
+  ["A", "Qoʻlyozma", "Temuriylar davri kitobat sanʼati: aharlangan qogʻoz, lojuvard va oltin hoshiya, gulli burchak bezaklari, bosh harf qizil."],
+  ["B", "Muzey zali", "Qorongʻi zal, yoritilgan eksponatlar: oʻyinlar — muzey yorliqlari kabi, katta raqamlar, mis rangli urgʻu."],
+  ["C", "Ipak yoʻli xaritasi", "Eski xarita: pergament, kenglik-uzunlik toʻri, kompas, punktir karvon yoʻli, xaritadagi belgilar."],
+  ["D", "Suzani", "Oʻzbek kashtasi: katta gul-medalyonlar, tikuv chiziqlari (punktir), qizil-zaʼfaron-yashil ranglar, yumaloq shakllar."]
+];
+const GAMES = ["Tavakkal", "Sirli konvert", "Labirint", "Juftini top"];
+const rose = `<svg class="rose" viewBox="0 0 100 100" fill="none" stroke="#3a2a18" stroke-width="1.2"><circle cx="50" cy="50" r="30"/><circle cx="50" cy="50" r="22" stroke-dasharray="2 3"/><path d="M50 4l6 40-6 6-6-6zM50 96l6-40-6-6-6 6zM4 50l40-6 6 6-6 6zM96 50l-40-6-6 6 6 6z" fill="#8a3b1e" fill-opacity=".85"/><text x="50" y="12" font-size="9" text-anchor="middle" fill="#3a2a18" stroke="none">N</text></svg>`;
+const route = `<svg class="route" viewBox="0 0 1000 70" preserveAspectRatio="none" fill="none"><path d="M20 50 C 180 10, 300 60, 460 30 S 760 10, 980 40" stroke="#8a3b1e" stroke-width="2" stroke-dasharray="7 7"/><g fill="#3a2a18" font-family="IM Fell English" font-size="16"><circle cx="20" cy="50" r="5"/><text x="30" y="68">Sian</text><circle cx="460" cy="30" r="5"/><text x="440" y="18">Samarqand</text><circle cx="980" cy="40" r="5"/><text x="880" y="64">Konstantinopol</text></g></svg>`;
+const med = (x, y, c) => `<svg class="med" style="left:${x};top:${y}" viewBox="0 0 100 100"><g fill="none" stroke="${c}" stroke-width="3" stroke-dasharray="4 3"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="30"/></g><circle cx="50" cy="50" r="18" fill="${c}"/><g fill="${c}">${[0, 45, 90, 135, 180, 225, 270, 315].map(a => `<ellipse cx="50" cy="12" rx="5" ry="9" transform="rotate(${a} 50 50)"/>`).join("")}</g></svg>`;
+document.write(V.map(([k, name, d]) => `
+<section class="v v${k}">
+  <div class="tag"><b>${k}</b><span>${name}</span><small>${d}</small></div>
+  <div class="mock">
+    <div class="bar"><span class="lg"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l6 9-6 10-6-10z"/><path d="M12 12v10"/></svg></span><span class="nm">Oʻzbekistonning eng yangi tarixi</span><span class="bt">Mavzular</span><span class="bt">Tungi</span></div>
+    <div class="hero">
+      ${k === "C" ? rose : ""}${k === "D" ? med("-40px", "-30px", "#a52a1f") + med("calc(100% - 140px)", "20px", "#3b5e3a") : ""}
+      <div class="ov">Interaktiv oʻyinlar · 12-mavzu</div>
+      <h2>${k === "A" ? `<span class="cap">O</span>ʻzbekistonning eng yangi tarixi` : "Oʻzbekistonning eng yangi tarixi"}</h2>
+      <p>Yangi Oʻzbekistonda amalga oshirilgan islohotlar</p>
+      ${k === "C" ? route : ""}
+    </div>
+    <div class="body">
+      <div class="cards">${GAMES.map((g, i) => `<div class="cd" data-n="0${i + 1}"><span class="no">${k === "B" ? "Eksponat · 0" + (i + 1) : k === "D" ? i + 1 : k === "C" ? "Manzil " + (i + 1) : (i + 1) + "-oʻyin"}</span><h4>${g}</h4></div>`).join("")}</div>
+      <div class="q">
+        <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.7">Yangi Konstitutsiya · 300 ball</div>
+        <div class="qt">Konstitutsiyaviy referendum qachon boʻlib oʻtdi?</div>
+        <div class="o"><i>A</i>1992-yil 8-dekabrda</div>
+        <div class="o ok"><i>B</i>2023-yil 30-aprelda</div>
+        <div class="o"><i>C</i>2016-yil 4-dekabrda</div>
+        <div class="o"><i>D</i>2021-yil 24-oktabrda</div>
+      </div>
+    </div>
+  </div>
+</section>`).join(""));
+</script>
+</body>
+</html>
