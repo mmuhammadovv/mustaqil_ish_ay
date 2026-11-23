@@ -84,6 +84,73 @@
   .tgrid .game .no b svg { width: 14px; height: 14px; }
   .tgrid .game h4 { font-size: 22px; line-height: 1.2; }
   .tgrid .game .no small { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+  /* =========================================================
+     TARIX: tungi Registon sahnasi (foydalanuvchi illyustratsiyalari) + oʻyinlarga kirish — bezakli lavhalar
+     ========================================================= */
+  [data-fan="tarix"] body { background: #050a1c; }
+  .tsc { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+  .tsc .sc { position: absolute; left: 50%; top: 50%; width: max(100vw, 177.7vh); height: max(56.28vw, 100vh); transform: translate(-50%, -50%); }
+  .tsc .ly { position: absolute; inset: 0; transition: transform .6s cubic-bezier(.2,.7,.3,1); }
+  .tsc .bg { position: absolute; inset: 0; background: url(oyinlar/assets/rasm/registon.webp) center / 100% 100% no-repeat; animation: tDawn 2.6s ease both, tBreathe 40s ease-in-out 2.6s infinite alternate; }
+  .tsc .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,10,28,.15) 0, rgba(5,10,28,0) 30%, rgba(5,10,28,.55) 70%, rgba(5,10,28,.85) 100%); }
+  [data-theme="light"] .tsc .bg { filter: brightness(1.18) saturate(.92); }
+  [data-theme="light"] .tsc .shade { background: linear-gradient(180deg, rgba(246,234,208,0) 0, rgba(246,234,208,0) 35%, rgba(246,234,208,.45) 75%, rgba(246,234,208,.8) 100%); }
+  @keyframes tDawn { from { filter: brightness(.15) saturate(.6); } }
+  @keyframes tBreathe { to { transform: scale(1.035); } }
+  .tsc .st i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff6d8; box-shadow: 0 0 6px 2px rgba(255,236,170,.7); opacity: 0; animation: tTw var(--d) ease-in-out var(--de) infinite; }
+  @keyframes tTw { 50% { opacity: .95; transform: scale(1.4); } }
+  .tsc .gl { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(255,196,96,.55), rgba(255,170,60,.18) 45%, transparent 70%); mix-blend-mode: screen; opacity: 0; animation: tLit 2s ease var(--de) forwards, tFlick 3.4s ease-in-out calc(var(--de) + 2s) infinite; }
+  @keyframes tLit { to { opacity: .8; } }
+  @keyframes tFlick { 0%, 100% { opacity: .8; } 45% { opacity: .55; } 60% { opacity: .9; } }
+  .tsc .shoot { position: absolute; top: 8%; left: 34%; width: 160px; height: 2px; background: linear-gradient(90deg, transparent, #fff3c8); opacity: 0; animation: tShoot 11s ease-in 4s infinite; }
+  @keyframes tShoot { 0% { opacity: 0; transform: translate(0,0) rotate(-18deg); } 3% { opacity: 1; } 8% { opacity: 0; transform: translate(380px, 120px) rotate(-18deg); } 100% { opacity: 0; } }
+  .tsc .ob { position: absolute; opacity: 0; animation: tIn 1.4s ease var(--de) forwards; }
+  .tsc .ob img { display: block; width: 100%; height: auto; filter: drop-shadow(0 12px 18px rgba(0,0,0,.55)); }
+  .tsc .ob .in { animation: var(--an); transform-origin: var(--to, 50% 50%); }
+  @keyframes tIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes tFloat { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-14px) rotate(2deg); } }
+  @keyframes tSwing { 0%, 100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
+  @keyframes tBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  .tsc .chain { position: absolute; left: 50%; bottom: 100%; width: 2px; height: 60vh; margin-left: -1px; background: linear-gradient(#b8893a, #8a6424); }
+  .tsc .fl { position: absolute; left: 50%; top: 58%; width: 260%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255,190,90,.35), transparent 60%); mix-blend-mode: screen; animation: tFlick 2.6s ease-in-out infinite; }
+  .tsc .walk { left: 0; opacity: 1; animation: tWalk 50s linear infinite; }
+  @keyframes tWalk { from { transform: translateX(-20vw); } to { transform: translateX(120vw); } }
+
+  /* Sahna ustidagi matn va lavhalar */
+  [data-fan="tarix"] .top { background: transparent; border-bottom: 0; backdrop-filter: none; }
+  [data-fan="tarix"] .top .ttl b { color: #fbefd2; }
+  [data-fan="tarix"] .top .ib { background: rgba(10,22,58,.55); border-color: rgba(227,194,122,.45); color: #f6ead0; }
+  [data-fan="tarix"] .page { position: relative; z-index: 2; max-width: 1240px; }
+  .thead { padding: 8px 0 0; }
+  .thead .ov { font: 600 12px "Cinzel", serif; letter-spacing: .4em; color: #e3c27a; text-transform: uppercase; }
+  .thead h1 { margin: 8px 0 6px; font: 600 clamp(30px, 4.4vw, 60px)/1.05 "Cinzel", serif; color: #fbefd2; text-shadow: 0 2px 0 #071233, 0 0 30px rgba(255,200,110,.35); }
+  .thead p { margin: 0; font: italic 500 20px "Cormorant Garamond", "Cinzel", serif; color: #e6d6ae; text-shadow: 0 1px 2px #000; }
+  .thead .back { margin-top: 16px; }
+  .plqs { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 22px 26px; margin-top: 44vh; padding-bottom: 40px; }
+  .plqs.big { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .plqs.small { margin-top: 26px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .slab { margin: 34px 0 4px; font: 600 12px "Cinzel", serif; letter-spacing: .35em; color: #e3c27a; text-transform: uppercase; text-shadow: 0 1px 2px #000; }
+  /* Lavha (kartush): lojuvard, oltin hoshiya, yonlarida romb */
+  .plq { position: relative; display: block; text-align: center; text-decoration: none; color: #f6ead0; padding: 16px 20px 15px;
+    background: linear-gradient(180deg, rgba(23,48,110,.93), rgba(10,22,58,.95)); border: 1px solid #e3c27a; outline: 1px solid rgba(227,194,122,.5); outline-offset: 4px;
+    box-shadow: 0 18px 34px rgba(0,0,0,.5); opacity: 0; animation: plqIn .9s cubic-bezier(.2,.8,.2,1) var(--de) forwards; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, outline-color .35s; }
+  .plq::before, .plq::after { content: ""; position: absolute; top: 50%; width: 10px; height: 10px; margin-top: -5px; background: #e3c27a; transform: rotate(45deg); transition: transform .35s, box-shadow .35s; }
+  .plq::before { left: -6px; } .plq::after { right: -6px; }
+  .plq small { display: block; font: 600 11px "Cinzel", serif; letter-spacing: .3em; color: #e3c27a; }
+  .plq b { display: block; font: 600 22px/1.15 "Cinzel", serif; margin: 6px 0 4px; }
+  .plq span { font: italic 500 15px "Cormorant Garamond", serif; color: #d9c9a2; }
+  .plq:hover, .plq:focus-visible { transform: translateY(-6px); outline-color: #e3c27a; box-shadow: 0 0 0 1px rgba(227,194,122,.35), 0 0 34px rgba(255,200,110,.35), 0 26px 40px rgba(0,0,0,.55); }
+  .plq:hover::before, .plq:hover::after { transform: rotate(225deg); box-shadow: 0 0 10px #ffd27a; }
+  .plqs.big .plq { padding: 22px 22px 20px; } .plqs.big .plq b { font-size: 21px; line-height: 1.25; }
+  @keyframes plqIn { from { opacity: 0; transform: translateY(24px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+  [data-theme="light"] .plq { background: linear-gradient(180deg, rgba(251,244,228,.95), rgba(240,226,196,.95)); color: #13235a; border-color: #b8893a; outline-color: rgba(184,137,58,.5); }
+  [data-theme="light"] .plq small, [data-theme="light"] .plq::before, [data-theme="light"] .plq::after { color: #8a5f1c; background-color: #b8893a; }
+  [data-theme="light"] .plq small { background: none; }
+  [data-theme="light"] .plq span { color: #6b5536; }
+  [data-fan="tarix"] footer { position: relative; z-index: 2; color: #d9c9a2; text-shadow: 0 1px 2px #000; }
+  @media (max-width: 760px) { .plqs, .plqs.small { margin-top: 30vh; grid-template-columns: 1fr 1fr; gap: 14px 16px; } .plqs.small { margin-top: 16px; } .plqs.big { grid-template-columns: 1fr; } .plq { padding: 12px 10px 11px; } .plq b { font-size: 15px; } .plq span { font-size: 13px; } }
+  @media (prefers-reduced-motion: reduce) { .tsc *, .plq { animation: none !important; opacity: 1 !important; } }
   footer { text-align: center; color: var(--muted); font-size: 13px; padding: 30px 0 0; }
   @media (max-width: 1100px) { .games { grid-template-columns: repeat(2, 1fr); } [data-fan="akademik"] .game { border-bottom: 1px solid var(--line); } .lead { grid-template-columns: 1fr; } .lead .facts { border-left: 0; padding-left: 0; } }
   @media (max-width: 620px) { .games { grid-template-columns: 1fr; } [data-fan="akademik"] .game { border-right: 0; } }
@@ -183,6 +250,38 @@ document.getElementById("page").innerHTML = `
       <span class="go">${g.pptx ? icon("doc") + " Taqdimot (PPTX)" : icon("print") + " Chop etish"}</span>
     </a>`).join("")}</div>` : ""}
   <footer>Topshiruvchi: Muxamadov Muhammadali</footer>`;
+// ===== Tarix: sahna + lavhalar (oddiy sahifa oʻrniga) =====
+if (!ak) {
+  document.querySelectorAll(".amb").forEach(x => x.remove());
+  const OB = [
+    { i: "konvert", x: 56, y: 31, w: 8, an: "tFloat 6s ease-in-out infinite", de: 2.4 },
+    { i: "fonus", x: 38, y: 30, w: 3, an: "tSwing 5s ease-in-out infinite", to: "50% -40vh", de: 2.6, chain: 1, light: 1 },
+    { i: "qumsoat", x: 19, y: 64, w: 4.6, an: "tBob 4s ease-in-out infinite", de: 2.8 },
+    { i: "minora", x: 80, y: 46, w: 2.8, an: "none", de: 3 },
+    { i: "karvon", y: 74, w: 13, an: "tBob .9s ease-in-out infinite", de: 3.2, walk: 1 }
+  ];
+  const sc = document.createElement("div"); sc.className = "tsc"; sc.setAttribute("aria-hidden", "true");
+  sc.innerHTML = `<div class="sc"><div class="ly" data-k="10"><div class="bg"></div>
+      <div class="st">${Array.from({ length: 70 }, () => `<i style="left:${Math.random() * 100}%;top:${Math.random() * 38}%;--d:${2 + Math.random() * 4}s;--de:${Math.random() * 5}s"></i>`).join("")}</div><i class="shoot"></i>
+      ${[[50, 46, 9], [25.5, 40, 8], [76, 40, 8], [37, 52, 5], [63, 52, 5]].map(([x, y, w], k) => `<i class="gl" style="left:${x - w / 2}%;top:${y - w}%;width:${w}%;height:${w * 1.8}%;--de:${.8 + k * .3}s"></i>`).join("")}</div>
+    <div class="ly" data-k="24">${OB.map(o => `<div class="ob ${o.walk ? "walk" : ""}" style="${o.walk ? "" : `left:${o.x}%;`}top:${o.y}%;width:${o.w}%;--de:${o.de}s;--an:${o.an};${o.to ? `--to:${o.to};` : ""}"><div class="in">${o.chain ? '<span class="chain"></span>' : ""}${o.light ? '<span class="fl"></span>' : ""}<img src="oyinlar/assets/rasm/${o.i}.webp" alt=""></div></div>`).join("")}</div>
+    <div class="shade"></div></div>`;
+  document.body.prepend(sc);
+  addEventListener("pointermove", e => { const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5; sc.querySelectorAll(".ly").forEach(l => l.style.transform = `translate(${-x * l.dataset.k}px, ${-y * l.dataset.k * .6}px)`); });
+
+  const plq = (href, small, name, sub, k, extra = "") => `<a class="plq" href="${href}" style="--de:${1.6 + k * .09}s"${extra}><small>${small}</small><b>${name}</b><span>${sub}</span></a>`;
+  const games = GAMES.filter(g => !g.only || g.only === fan);
+  document.getElementById("page").innerHTML = landing ? `
+    <section class="thead"><div class="ov">Interaktiv oʻyinlar</div><h1>Oʻzbekistonning eng yangi tarixi</h1><p>Mavzuni tanlang</p></section>
+    <div class="plqs big">${topics.map((x, k) => plq(`fan.html?fan=${fan}&mavzu=${x.k}`, tLabel(x), esc(tName(x)), "oʻyinlarga kirish", k)).join("")}</div>
+    <div class="slab">Jonli oʻyinlar</div>
+    <div class="plqs small">${JONLI.map((g, k) => plq(g.href, String(k + 1).padStart(2, "0"), g.t, g.pptx ? "taqdimot" : "chop etish", k + 4)).join("")}</div>
+    <footer>Topshiruvchi: Muxamadov Muhammadali</footer>` : `
+    <section class="thead"><div class="ov">${tLabel(cur)}</div><h1>${esc(tName(cur))}</h1><p>Oʻyinni tanlang</p>
+      <div class="back"><a class="plq" href="fan.html?fan=${fan}" style="--de:.4s;display:inline-block;padding:9px 18px"><small>‹ Mavzular</small></a></div></section>
+    <div class="plqs">${games.map((g, k) => plq(`oyinlar/${g.f}.html?fan=${fan}${MQ}`, String(k + 1).padStart(2, "0"), g.t, "oʻynash", k)).join("")}</div>
+    <footer>Topshiruvchi: Muxamadov Muhammadali</footer>`;
+}
 </script>
 </body>
 </html>

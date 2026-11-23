@@ -120,3 +120,6 @@ Foydalanuvchi talablari:
 
 ## 26. Tarix dizayni — Muzey zali
 - Koʻp variantlardan keyin foydalanuvchi “Muzey zali”ni tanladi: shrift Cinzel + Raleway, animatsiya “Chizgi” (A4). Animatsiya hamma elementlarda va fonda doimiy (nurlar, chang, naqsh). Avvalgi “wow” effektlar olib tashlandi.
+
+## 27. Illyustratsiyali sahna
+- Foydalanuvchi 6 ta miniatyura uslubidagi rasm berdi (Registon, karvon, minora, qum soati, konvert, fonus). Tarix fan sahifasi: rasm sahna (harakatli bezaklar) + oʻyin/mavzularga kirish bezakli lavhalar orqali.
