@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oʻzbekistonning eng yangi tarixi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
+<style>
+  :root { --gold: #e3c27a; --gold2: #b8893a; --lapis: #0f1f4d; --lapis2: #17306e; --ink: #f6ead0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #050a1c; color: var(--ink); font-family: "Cormorant Garamond", serif; }
+
+  /* Sahna: rasm nisbati saqlanib, butun ekranni qoplaydi */
+  .view { position: fixed; inset: 0; overflow: hidden; }
+  .scene { position: absolute; left: 50%; top: 50%; width: max(100vw, 177.7vh); height: max(56.28vw, 100vh); transform: translate(-50%, -50%); }
+  .layer { position: absolute; inset: 0; transition: transform .6s cubic-bezier(.2,.7,.3,1); }
+  .bg { position: absolute; inset: 0; background: url(__registon__) center / 100% 100% no-repeat; animation: dawn 3s ease both, breathe 40s ease-in-out 3s infinite alternate; }
+  @keyframes dawn { from { filter: brightness(.15) saturate(.6); } }
+  @keyframes breathe { to { transform: scale(1.035); } }
+
+  /* Yulduzlar va ravoqlardagi chiroq nuri */
+  .stars i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff6d8; box-shadow: 0 0 6px 2px rgba(255,236,170,.7); opacity: 0; animation: tw var(--d) ease-in-out var(--de) infinite; }
+  @keyframes tw { 50% { opacity: .95; transform: scale(1.4); } }
+  .glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(255,196,96,.55), rgba(255,170,60,.18) 45%, transparent 70%); mix-blend-mode: screen; opacity: 0; animation: lit 2.2s ease var(--de) forwards, flick 3.4s ease-in-out calc(var(--de) + 2.2s) infinite; }
+  @keyframes lit { to { opacity: .8; } }
+  @keyframes flick { 0%, 100% { opacity: .8; } 45% { opacity: .55; } 60% { opacity: .9; } }
+  .shoot { position: absolute; top: 8%; left: 30%; width: 160px; height: 2px; background: linear-gradient(90deg, transparent, #fff3c8); transform: rotate(-18deg); opacity: 0; animation: shoot 9s ease-in 5s infinite; }
+  @keyframes shoot { 0% { opacity: 0; transform: translate(0,0) rotate(-18deg); } 3% { opacity: 1; } 8% { opacity: 0; transform: translate(380px, 120px) rotate(-18deg); } 100% { opacity: 0; } }
+
+  /* Buyumlar — oʻyinlar */
+  .obj { position: absolute; cursor: pointer; opacity: 0; animation: appear 1.4s cubic-bezier(.2,.7,.3,1) var(--de) forwards; }
+  .obj img { display: block; width: 100%; height: auto; filter: drop-shadow(0 12px 18px rgba(0,0,0,.55)); transition: filter .4s, transform .4s; }
+  .obj:hover img, .obj:focus-visible img { filter: drop-shadow(0 0 18px rgba(255,214,120,.95)) drop-shadow(0 0 40px rgba(255,190,80,.6)) brightness(1.12); transform: scale(1.06); }
+  @keyframes appear { from { opacity: 0; filter: blur(8px) brightness(2); transform: translateY(18px); } to { opacity: 1; filter: none; transform: none; } }
+  .obj .in { animation: var(--anim); transform-origin: var(--to, 50% 50%); }
+  .obj:hover .in { animation-play-state: paused; }
+  @keyframes float { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-14px) rotate(2deg); } }
+  @keyframes swing { 0%, 100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  @keyframes flip { 0%, 78% { transform: rotate(0); } 88%, 100% { transform: rotate(180deg); } }
+  .chain { position: absolute; left: 50%; bottom: 100%; width: 2px; height: 60vh; margin-left: -1px; background: linear-gradient(var(--gold2), #8a6424); }
+  .walker { position: absolute; left: 0; opacity: 1; animation: walk 46s linear infinite; }
+  .walker:hover { animation-play-state: paused; }
+  @keyframes walk { from { transform: translateX(-20vw); } to { transform: translateX(120vw); } }
+  .walker .in { animation: bob .9s ease-in-out infinite; }
+  .fonus-light { position: absolute; left: 50%; top: 58%; width: 260%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255,190,90,.35), transparent 60%); mix-blend-mode: screen; animation: flick 2.6s ease-in-out infinite; pointer-events: none; }
+  .spark { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #ffe7a8; box-shadow: 0 0 8px #ffd27a; opacity: 0; animation: spark 3s ease-out infinite; animation-delay: var(--de); }
+  @keyframes spark { 0% { opacity: 0; transform: translate(0,0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)); } }
+
+  /* Yorliq (kartush) — buyum ustiga borilganda */
+  .cart { position: fixed; z-index: 20; pointer-events: none; min-width: 230px; padding: 14px 22px 16px; text-align: center; color: var(--ink);
+    background: linear-gradient(180deg, rgba(23,48,110,.95), rgba(10,22,58,.96)); border: 1px solid var(--gold); outline: 1px solid rgba(227,194,122,.5); outline-offset: 4px; box-shadow: 0 20px 40px rgba(0,0,0,.5);
+    opacity: 0; transform: translate(-50%, calc(-100% - 18px)) scale(.94); transition: opacity .3s, transform .35s cubic-bezier(.2,.8,.2,1); }
+  .cart.on { opacity: 1; transform: translate(-50%, calc(-100% - 24px)) scale(1); }
+  .cart::before, .cart::after { content: ""; position: absolute; top: 50%; width: 10px; height: 10px; margin-top: -5px; background: var(--gold); transform: rotate(45deg); }
+  .cart::before { left: -6px; } .cart::after { right: -6px; }
+  .cart small { display: block; font: 600 11px "Cinzel", serif; letter-spacing: .3em; color: var(--gold); }
+  .cart b { display: block; font: 600 26px "Cinzel", serif; margin: 4px 0 2px; }
+  .cart span { font-style: italic; font-size: 16px; color: #d9c9a2; }
+
+  /* Sarlavha va mavzular */
+  .hud { position: fixed; z-index: 10; left: 0; right: 0; top: 0; padding: 22px 28px; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; }
+  .hud > * { pointer-events: auto; }
+  .ttl { text-align: left; opacity: 0; animation: appear 1.6s 1.2s ease forwards; }
+  .ttl .ov { font: 600 12px "Cinzel", serif; letter-spacing: .4em; color: var(--gold); }
+  .ttl h1 { margin: 6px 0 0; font: 600 clamp(26px, 3.3vw, 48px)/1.05 "Cinzel", serif; color: #fbefd2; text-shadow: 0 2px 0 #071233, 0 0 30px rgba(255,200,110,.35); }
+  .ttl p { margin: 6px 0 0; font-size: 19px; font-style: italic; color: #d9c9a2; }
+  .tops { display: flex; gap: 8px; opacity: 0; animation: appear 1.4s 1.8s ease forwards; }
+  .tops button { font: 600 12px "Cinzel", serif; letter-spacing: .14em; color: var(--ink); background: rgba(10,22,58,.6); border: 1px solid rgba(227,194,122,.45); padding: 9px 14px; cursor: pointer; backdrop-filter: blur(4px); transition: .25s; }
+  .tops button.on, .tops button:hover { border-color: var(--gold); background: rgba(23,48,110,.85); color: var(--gold); }
+
+  /* Pastki tokcha: qolgan oʻyinlar (rasmlari kelguncha) */
+  .shelf { position: fixed; z-index: 10; left: 0; right: 0; margin: 0 auto; width: max-content; bottom: 18px; display: flex; gap: 10px; padding: 10px 14px; background: rgba(8,16,44,.7); border: 1px solid rgba(227,194,122,.4); backdrop-filter: blur(6px); opacity: 0; animation: appear 1.4s 2.6s ease forwards; max-width: 96vw; overflow-x: auto; }
+  .shelf a { flex: none; display: grid; place-items: center; width: 46px; height: 46px; color: var(--gold); border: 1px solid rgba(227,194,122,.35); transform: rotate(45deg); transition: .25s; text-decoration: none; }
+  .shelf a svg { width: 22px; height: 22px; transform: rotate(-45deg); }
+  .shelf a:hover { background: rgba(227,194,122,.15); border-color: var(--gold); }
+  .shelf .lb { align-self: center; font: 600 11px "Cinzel", serif; letter-spacing: .25em; color: #d9c9a2; padding-right: 6px; white-space: nowrap; }
+  /* Telefon: rasm panorama — barmoq bilan suriladi */
+  @media (max-aspect-ratio: 1/1) { .view { overflow-x: auto; overflow-y: hidden; } .scene { left: 0; top: 0; transform: none; width: 177.7vh; height: 100vh; } .layer { transform: none !important; } }
+  @media (max-width: 760px) { .hud { flex-direction: column; gap: 12px; padding: 14px; } .ttl h1 { font-size: 24px; } .tops { flex-wrap: wrap; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; } }
+</style>
+</head>
+<body>
+<div class="view"><div class="scene" id="scene">
+  <div class="layer" data-k="10"><div class="bg"></div><div class="stars" id="stars"></div><i class="shoot"></i><div id="glows"></div></div>
+  <div class="layer" data-k="26" id="objs"></div>
+</div></div>
+
+<div class="hud">
+  <div class="ttl"><div class="ov">Interaktiv oʻyinlar</div><h1>Oʻzbekistonning eng yangi tarixi</h1><p>Sahnadagi buyumlardan birini tanlang</p></div>
+  <div class="tops" id="tops"></div>
+</div>
+<div class="cart" id="cart"><small></small><b></b><span>bosing va oʻynang</span></div>
+<div class="shelf" id="shelf"></div>
+
+<script>
+const IMG = __IMAGES__;
+const ICONS = __ICONS__;
+const icon = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[n] || ""}</svg>`;
+const TOP = [["bmt", "BMT"], ["10", "10-mavzu"], ["11", "11-mavzu"], ["12", "12-mavzu"]];
+let topic = "12";
+
+// Sahnadagi buyumlar: joylashuvi sahnaga nisbatan foizda
+const OBJ = [
+  { img: "konvert", g: "konvert", n: "Sirli konvert", x: 47, y: 22, w: 9, anim: "float 6s ease-in-out infinite", de: 3.0, sparks: true },
+  { img: "fonus", g: "svetofor", n: "Svetofor", x: 33, y: 22, w: 3.2, anim: "swing 5s ease-in-out infinite", to: "50% -40vh", de: 3.3, chain: true, light: true },
+  { img: "qumsoat", g: "oldin", n: "Oldinmi, keyinmi?", x: 19, y: 64, w: 4.6, anim: "bob 4s ease-in-out infinite", de: 3.6 },
+  { img: "minora", g: "minora", n: "Minora qurish", x: 80, y: 46, w: 2.8, anim: "none", de: 3.9 },
+  { img: "karvon", g: "karvon", n: "Ipak yoʻli karvoni", y: 74, w: 13, walker: true, de: 4.2 }
+];
+const REST = [["tavakkal", "wheel", "Tavakkal"], ["hududlar", "hex", "Hududlar"], ["zinapoya", "ladder", "Zinapoya"], ["arqon", "rope", "Arqon tortish"], ["afsona", "scroll", "Haqiqat yoki afsona"], ["labirint", "maze", "Labirint"], ["harf", "letters", "Harflab topish"], ["taxmin", "gauge", "Taxmin"], ["viselitsa", "gallows", "Viselitsa"], ["juftlik", "cards", "Juftini top"]];
+const href = g => `../oyinlar/${g}.html?fan=tarix&mavzu=${topic}`;
+
+document.getElementById("objs").innerHTML = OBJ.map((o, i) => `
+  <a class="obj ${o.walker ? "walker" : ""}" data-i="${i}" href="${href(o.g)}" style="${o.walker ? "" : `left:${o.x}%;`}top:${o.y}%;width:${o.w}%;--de:${o.de}s;--anim:${o.anim};${o.to ? `--to:${o.to};` : ""}">
+    <div class="in">${o.chain ? '<span class="chain"></span>' : ""}${o.light ? '<span class="fonus-light"></span>' : ""}<img src="${IMG[o.img]}" alt="${o.n}">
+    ${o.sparks ? Array.from({ length: 8 }, (_, k) => `<i class="spark" style="left:${20 + Math.random() * 60}%;top:${30 + Math.random() * 40}%;--de:${k * .4}s;--dx:${(Math.random() - .5) * 80}px;--dy:${-30 - Math.random() * 60}px"></i>`).join("") : ""}</div></a>`).join("");
+document.getElementById("stars").innerHTML = Array.from({ length: 70 }, () => `<i style="left:${Math.random() * 100}%;top:${Math.random() * 38}%;--d:${2 + Math.random() * 4}s;--de:${Math.random() * 5}s"></i>`).join("");
+// Ravoqlar ichidagi chiroq nurlari
+document.getElementById("glows").innerHTML = [[50, 46, 9], [25.5, 40, 8], [76, 40, 8], [37, 52, 5], [63, 52, 5]].map(([x, y, s], i) => `<i class="glow" style="left:${x - s / 2}%;top:${y - s}%;width:${s}%;height:${s * 1.8}%;--de:${1 + i * .3}s"></i>`).join("");
+document.getElementById("tops").innerHTML = TOP.map(([k, n]) => `<button type="button" data-k="${k}" class="${k === topic ? "on" : ""}">${n}</button>`).join("");
+document.getElementById("shelf").innerHTML = `<span class="lb">Boshqa oʻyinlar</span>` + REST.map(([g, ic, n]) => `<a href="${href(g)}" data-n="${n}" title="${n}">${icon(ic)}</a>`).join("");
+
+// Mavzu tanlash — havolalar yangilanadi
+document.querySelectorAll("#tops button").forEach(b => b.onclick = () => {
+  topic = b.dataset.k; document.querySelectorAll("#tops button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".obj").forEach(a => a.href = href(OBJ[+a.dataset.i].g));
+  document.querySelectorAll(".shelf a").forEach((a, i) => a.href = href(REST[i][0]));
+});
+
+// Yorliq (kartush)
+const cart = document.getElementById("cart");
+const showCart = (el, small, name) => { const r = el.getBoundingClientRect(); cart.style.left = r.left + r.width / 2 + "px"; cart.style.top = Math.max(110, r.top) + "px";
+  cart.querySelector("small").textContent = small; cart.querySelector("b").textContent = name; cart.classList.add("on"); };
+document.querySelectorAll(".obj").forEach(a => { a.addEventListener("mouseenter", () => { const o = OBJ[+a.dataset.i]; showCart(a.querySelector("img"), TOP.find(t => t[0] === topic)[1], o.n); }); a.addEventListener("mouseleave", () => cart.classList.remove("on")); });
+document.querySelectorAll(".shelf a").forEach(a => { a.addEventListener("mouseenter", () => showCart(a, TOP.find(t => t[0] === topic)[1], a.dataset.n)); a.addEventListener("mouseleave", () => cart.classList.remove("on")); });
+
+// Telefonda panorama oʻrtadan boshlanadi
+const view = document.querySelector(".view"); if (view.scrollWidth > view.clientWidth) view.scrollLeft = (view.scrollWidth - view.clientWidth) / 2;
+// Sichqoncha bilan chuqurlik (parallaks)
+addEventListener("pointermove", e => { const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
+  document.querySelectorAll(".layer").forEach(l => l.style.transform = `translate(${-x * l.dataset.k}px, ${-y * l.dataset.k * .6}px)`); });
+</script>
+</body>
+</html>
