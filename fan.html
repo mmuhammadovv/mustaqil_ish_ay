@@ -142,7 +142,7 @@ document.getElementById("page").innerHTML = `
   ${ak ? `<section class="lead">
     <div><div class="kicker">Mustaqil ish</div>
       <h2>Publitsistik nutq uslubi va “Men tanlagan soha va OAV” maqolasi</h2>
-      <div class="acts"><a class="btn primary" href="mustaqil-ishlar/akademik-yozuv/index.html">${icon("doc")} Mustaqil ish</a><a class="btn" href="mustaqil-ishlar/akademik-yozuv/loyihalar/detektor.html">Soxta xabar detektori</a><a class="btn" href="mustaqil-ishlar/akademik-yozuv/loyihalar/janrlar.html">Janrlar konstruktori</a></div></div>
+      <div class="acts"><a class="btn primary" href="mustaqil-ishlar/akademik-yozuv/index.html">${icon("doc")} Mustaqil ish</a><a class="btn" href="mustaqil-ishlar/akademik-yozuv/loyihalar/detektor.html">Soxta xabar detektori</a><a class="btn" href="mustaqil-ishlar/akademik-yozuv/loyihalar/janrlar.html">Janrlar konstruktori</a><a class="btn" href="mustaqil-ishlar/akademik-yozuv/loyihalar/tozalagich.html">Matn tozalagich</a><a class="btn" href="mustaqil-ishlar/akademik-yozuv/loyihalar/oqish.html">Oʻqish vaqti</a></div></div>
   </section>` : ""}
   <div class="sec-h"><h3>Oʻyinlar</h3><span>${data.kategoriyalar.length} kategoriya · ${data.kategoriyalar.length * 5} ta test savoli</span></div>
   <div class="games">${GAMES.filter(g => !g.only || g.only === fan).map((g, i) => `

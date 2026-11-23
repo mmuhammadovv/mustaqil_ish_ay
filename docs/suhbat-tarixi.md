@@ -109,3 +109,6 @@ Foydalanuvchi talablari:
 ## 23. Qisqartirish
 - Loyiha sahifalarida matn qisqartirildi, natija (ball, namuna, qoralama) tepaga chiqarildi; “1-loyiha/2-loyiha” soʻzlari olib tashlandi.
 - Saytdan mustaqil ish PDF havolasi, “Chop etish” tugmasi va hajm/format maʼlumotlari olib tashlandi; PDF saytga chiqmaydi.
+
+## 24. Yana 2 loyiha
+- Matn tozalagich (tozalagich.html) va Oʻqish vaqti va soddalik (oqish.html) qoʻshildi; mustaqil ish sahifasi va fan sahifasida tugmalar.

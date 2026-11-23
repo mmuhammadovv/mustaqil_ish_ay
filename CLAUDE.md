@@ -28,6 +28,9 @@ fan.html?fan=akademik|tarix        Fan sahifasi (mustaqil ish + 5 oʻyin)
 mustaqil-ishlar/akademik-yozuv/    Mustaqil ish: index.html + PDF (30 bet; PDF va “Chop etish” saytda YOʻQ — foydalanuvchi talabi, build.mjs .pdf ni chiqarmaydi; titulda vazirlik nomi YOʻQ, nazorat roʻyxati YOʻQ — foydalanuvchi talabi)
   loyihalar/detektor.html          Soxta xabar detektori (klikbeyt belgilarini rang bilan ajratadi, ishonchlilik bali 0–100)
   loyihalar/janrlar.html           Janrlar konstruktori (bitta fakt → xabar/reportaj/maqola/felyeton/intervyu/post: tuzilma, vositalar, namuna, qoralama)
+  loyihalar/tozalagich.html        Matn tozalagich (rasmiy qolip, boʻsh kirish, ortiqcha soʻz, takror → toza variant)
+  loyihalar/oqish.html             Oʻqish vaqti va soddalik (oʻqish/ovozli vaqt, soʻz/gap, soddalik bali, uzun gaplar, platformalarga moslik)
+  loyihalar/nav.js                 Loyihalar orasidagi pastki havolalar
                                    Mustaqil ish sahifasida (index.html) tepadagi .proj-nav tugmalari orqali ochiladi (chop etishda yashirin); fan.html da ham tugmalar. Loyiha sahifalarida matn minimal: “1-loyiha” kabi soʻzlar YOʻQ, faqat nom; natija tepada (foydalanuvchi: “AI qilgani bilinyapti”).
 oyinlar/
   tavakkal.html   01 Gʻildirak + tikish (balans 500, ±tikish; daraja 1–5 tikishdan OLDIN koʻrinadi; bitta jamoa qolsa — darhol gʻolib)

@@ -46,7 +46,7 @@
   <a class="brand" href="../../../index.html" title="Bosh sahifa"><img src="../../../favicon.svg" alt="Bosh sahifa" width="34" height="34"></a>
   <a class="ib" href="../index.html" id="back"><span class="lbl">Mustaqil ish</span></a>
   <div class="ttl"><b>Janrlar konstruktori</b><span>Akademik yozuv</span></div>
-  <div class="acts"><a class="ib" href="detektor.html" id="prev"><span class="lbl">Soxta xabar detektori</span></a><button class="ib" id="thm" type="button"></button></div>
+  <div class="acts"><a class="ib" href="tozalagich.html" id="prev"><span class="lbl">Matn tozalagich</span></a><button class="ib" id="thm" type="button"></button></div>
 </header>
 
 <main class="wrap">
@@ -68,16 +68,17 @@
     </div>
   </div>
 
-  <div class="foot"><span>Muxamadov Muhammadali</span><span><a href="../index.html">Mustaqil ish</a> · <a href="detektor.html">Soxta xabar detektori</a></span></div>
+  <div class="foot"><span>Muxamadov Muhammadali</span><span id="nav"></span></div>
 </main>
 
 <script src="../../../oyinlar/savollar/akademik.js"></script>
 <script src="../../../oyinlar/assets/core.js"></script>
+<script src="nav.js"></script>
 <script>
 const { icon, esc } = G;
 G.themeButton(document.getElementById("thm"));
 document.getElementById("back").insertAdjacentHTML("afterbegin", icon("back"));
-document.getElementById("prev").insertAdjacentHTML("afterbegin", icon("back"));
+document.getElementById("prev").insertAdjacentHTML("beforeend", icon("arrow"));
 document.getElementById("copy").innerHTML = icon("doc") + " Nusxa";
 document.getElementById("regen").innerHTML = icon("reset") + " Qayta";
 

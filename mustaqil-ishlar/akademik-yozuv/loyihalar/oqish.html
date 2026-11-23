@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<title>Oʻqish vaqti va soddalik</title>
+<script src="../../../oyinlar/assets/boot.js"></script>
+<script>document.documentElement.setAttribute("data-fan", "akademik");</script>
+<link rel="stylesheet" href="../../../oyinlar/assets/theme.css">
+<link rel="stylesheet" href="loyiha.css">
+<style>
+  .pg { font-family: var(--display); font-size: clamp(30px, 5vw, 48px); margin: 4px 0 18px; }
+  .big { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 4px double var(--line-strong); border-bottom: 1px solid var(--line-strong); margin-bottom: 18px; }
+  .big div { padding: 16px 14px; border-left: 1px solid var(--line); }
+  .big div:first-child { border-left: 0; padding-left: 0; }
+  .big b { display: block; font-family: var(--display); font-size: clamp(34px, 5vw, 52px); line-height: 1; }
+  .big small { color: var(--muted); font-size: 13.5px; }
+  .out { font-size: 18px; line-height: 1.75; white-space: pre-wrap; word-wrap: break-word; min-height: 80px; }
+  mark { color: inherit; padding: 1px 0; background: color-mix(in srgb, var(--mc) 18%, transparent); border-bottom: 2px solid var(--mc); }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13.5px; color: var(--muted); margin-top: 12px; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 6px; background: var(--mc); }
+  .plat { list-style: none; margin: 0; padding: 0; }
+  .plat li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+  .plat li:first-child { border-top: 0; }
+  .plat .i { width: 22px; height: 22px; }
+  .plat li.ok .i { color: #2e7d4f; }
+  .plat li.no .i { color: var(--accent); }
+  .plat b { font-size: 16px; }
+  .plat small { color: var(--muted); font-size: 13.5px; text-align: right; }
+  @media (max-width: 720px) { .big { grid-template-columns: 1fr 1fr; } .big div:nth-child(3) { border-left: 0; padding-left: 0; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../../../index.html" title="Bosh sahifa"><img src="../../../favicon.svg" alt="Bosh sahifa" width="34" height="34"></a>
+  <a class="ib" href="../index.html" id="back"><span class="lbl">Mustaqil ish</span></a>
+  <div class="ttl"><b>Oʻqish vaqti va soddalik</b><span>Akademik yozuv</span></div>
+  <div class="acts"><a class="ib" href="detektor.html" id="next"><span class="lbl">Soxta xabar detektori</span></a><button class="ib" id="thm" type="button"></button></div>
+</header>
+
+<main class="wrap">
+  <h1 class="pg">Oʻqish vaqti va soddalik</h1>
+
+  <div class="big">
+    <div><b id="tRead">0</b><small>oʻqish</small></div>
+    <div><b id="tSay">0</b><small>ovoz chiqarib</small></div>
+    <div><b id="avg">0</b><small>soʻz / gap</small></div>
+    <div><b id="simp">—</b><small>soddalik, 100 dan</small></div>
+  </div>
+
+  <div class="grid2">
+    <div class="box">
+      <span class="lbl">Matn</span>
+      <div class="out" id="out"></div>
+      <div class="legend"><span style="--mc:#c26a00">uzun gap (16–25 soʻz)</span><span style="--mc:#b02a1c">juda uzun (25+)</span></div>
+    </div>
+    <div class="box">
+      <span class="lbl">Qayerga mos</span>
+      <ul class="plat" id="plat"></ul>
+      <div class="nums small muted" id="cnt" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:18px">
+    <textarea id="txt" rows="5" placeholder="Matnni kiriting"></textarea>
+    <div class="row">
+      <button class="chip" type="button" data-ex="0">Telegram post</button>
+      <button class="chip" type="button" data-ex="1">Radio matni</button>
+      <button class="chip" type="button" data-ex="2">Rasmiy matn</button>
+      <button class="chip" type="button" id="clr">Tozalash</button>
+    </div>
+  </div>
+
+  <div class="foot"><span>Muxamadov Muhammadali</span><span id="nav"></span></div>
+</main>
+
+<script src="../../../oyinlar/savollar/akademik.js"></script>
+<script src="../../../oyinlar/assets/core.js"></script>
+<script src="nav.js"></script>
+<script>
+const { icon, esc } = G;
+G.themeButton(document.getElementById("thm"));
+document.getElementById("back").insertAdjacentHTML("afterbegin", icon("back"));
+document.getElementById("next").insertAdjacentHTML("beforeend", icon("arrow"));
+
+const READ = 180, SAY = 120; // soʻz / daqiqa: ichida oʻqish va ovoz chiqarib oʻqish
+const words = s => s.match(/[\p{L}\p{N}ʻʼ'-]+/gu) || [];
+const fmt = sec => sec < 60 ? Math.max(1, Math.round(sec)) + " s" : Math.floor(sec / 60) + ":" + String(Math.round(sec % 60)).padStart(2, "0");
+
+function run() {
+  const text = document.getElementById("txt").value;
+  // Gaplarga boʻlish (joylashuvi bilan)
+  const sents = [...text.matchAll(/[^.!?…\n]+[.!?…]*/g)].filter(m => words(m[0]).length);
+  const W = words(text), nW = W.length, nS = sents.length || 0, paras = text.split(/\n\s*\n/).filter(p => p.trim()).length;
+  const avg = nS ? nW / nS : 0, longW = W.filter(w => w.replace(/[ʻʼ'-]/g, "").length >= 12).length;
+  const maxS = sents.reduce((m, s) => Math.max(m, words(s[0]).length), 0);
+  // Soddalik: oʻrtacha gap 12 soʻzdan uzun boʻlsa va uzun soʻzlar koʻp boʻlsa — kamayadi
+  let simp = 100 - Math.max(0, avg - 12) * 4 - (nW ? longW / nW * 100 : 0) * 1.2 - sents.filter(s => words(s[0]).length > 25).length * 6;
+  simp = Math.round(Math.max(0, Math.min(100, simp)));
+
+  let html = "", pos = 0;
+  sents.forEach(s => {
+    const n = words(s[0]).length, c = n > 25 ? "#b02a1c" : n > 15 ? "#c26a00" : null;
+    html += esc(text.slice(pos, s.index)) + (c ? `<mark style="--mc:${c}" title="${n} soʻz">${esc(s[0])}</mark>` : esc(s[0]));
+    pos = s.index + s[0].length;
+  });
+  document.getElementById("out").innerHTML = html + esc(text.slice(pos));
+  const empty = !nW;
+  document.getElementById("tRead").textContent = empty ? "0" : fmt(nW / READ * 60);
+  document.getElementById("tSay").textContent = empty ? "0" : fmt(nW / SAY * 60);
+  document.getElementById("avg").textContent = avg ? avg.toFixed(1).replace(".", ",") : "0";
+  const sc = document.getElementById("simp"); sc.textContent = empty ? "—" : simp;
+  sc.style.color = empty ? "" : simp >= 70 ? "#2e7d4f" : simp >= 45 ? "#c26a00" : "#b02a1c";
+
+  const P = [
+    ["Telegram post", nW >= 20 && nW <= 150 && avg <= 15, "20–150 soʻz, qisqa gaplar"],
+    ["Rasmli post izohi", nW >= 10 && nW <= 80, "10–80 soʻz"],
+    ["Radio, podkast", nW >= 30 && avg <= 12 && maxS <= 20, "gap ≤ 12 soʻz"],
+    ["Gazeta maqolasi", nW >= 300 && nW <= 1500 && avg <= 20, "300–1500 soʻz"],
+    ["Xabar (yangilik)", nW >= 40 && nW <= 120 && avg <= 18, "40–120 soʻz"]
+  ];
+  document.getElementById("plat").innerHTML = P.map(([t, ok, h]) => `<li class="${empty ? "" : ok ? "ok" : "no"}">${empty ? "<span></span>" : icon(ok ? "check" : "cross")}<b>${t}</b><small>${h}</small></li>`).join("");
+  document.getElementById("cnt").textContent = empty ? "" : `${nW} soʻz · ${nS} gap · ${paras} abzas · eng uzun gap: ${maxS} soʻz`;
+}
+
+const EX = [
+  "Ertalab telefonni ochganingizda koʻrgan birinchi xabarni kim tanlaydi? Siz emas — algoritm. Uni esa biz, dasturchilar yozamiz. Demak, ekran ortidagi haqiqat uchun javobgarlik ham bizning zimmamizda. Nega shunday ekanini — yangi maqolamda oʻqing.",
+  "Hurmatli tinglovchi, bir daqiqaga oʻylab koʻring. Bugun ertalab qaysi yangilikni birinchi eshitdingiz? Uni sizga kim tanlab berdi? Koʻpincha — kompyuter dasturi. Algoritm. Algoritmni esa odamlar yozadi. Ha, oddiy odamlar — kecha talaba boʻlgan yigit-qizlar. Shuning uchun men aytaman: dasturchi ham jurnalist kabi masʼuliyatli. Chunki u ham haqiqatni yetkazadi yoki uni yashiradi.",
+  "Axborot-kommunikatsiya texnologiyalarining jadal rivojlanishi munosabati bilan ommaviy axborot vositalari faoliyatida tub oʻzgarishlar sodir boʻlayotganligi, shuningdek, raqamli platformalar orqali tarqatilayotgan axborotning ishonchliligini taʼminlash masalasi dolzarb ahamiyat kasb etayotganligi sababli mazkur yoʻnalishda kompleks chora-tadbirlarni amalga oshirish zarurati yuzaga kelmoqda."
+];
+document.querySelectorAll("[data-ex]").forEach(b => b.onclick = () => { document.getElementById("txt").value = EX[+b.dataset.ex]; run(); });
+document.getElementById("clr").onclick = () => { document.getElementById("txt").value = ""; run(); };
+document.getElementById("txt").addEventListener("input", run);
+document.getElementById("txt").value = EX[0]; run();
+</script>
+</body>
+</html>

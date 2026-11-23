@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<title>Matn tozalagich</title>
+<script src="../../../oyinlar/assets/boot.js"></script>
+<script>document.documentElement.setAttribute("data-fan", "akademik");</script>
+<link rel="stylesheet" href="../../../oyinlar/assets/theme.css">
+<link rel="stylesheet" href="loyiha.css">
+<style>
+  .pg { font-family: var(--display); font-size: clamp(30px, 5vw, 48px); margin: 4px 0 18px; }
+  .out { font-size: 18px; line-height: 1.75; white-space: pre-wrap; word-wrap: break-word; min-height: 80px; }
+  .clean { font-family: var(--display); font-size: 20px; line-height: 1.6; white-space: pre-wrap; min-height: 80px; }
+  mark { color: inherit; padding: 1px 2px; border-bottom: 3px solid var(--mc); background: color-mix(in srgb, var(--mc) 16%, transparent); }
+  mark.cut { text-decoration: line-through; text-decoration-color: var(--mc); }
+  .nums { display: flex; gap: 26px; flex-wrap: wrap; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line-strong); }
+  .nums div b { display: block; font-family: var(--display); font-size: 34px; line-height: 1; }
+  .nums div small { color: var(--muted); font-size: 13px; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13.5px; color: var(--muted); margin-top: 12px; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 6px; background: var(--mc); }
+  .fixes { list-style: none; margin: 14px 0 0; padding: 0; font-size: 15px; }
+  .fixes li { padding: 6px 0; border-top: 1px solid var(--line); }
+  .fixes s { color: var(--muted); }
+  .fixes b { color: var(--accent); }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../../../index.html" title="Bosh sahifa"><img src="../../../favicon.svg" alt="Bosh sahifa" width="34" height="34"></a>
+  <a class="ib" href="../index.html" id="back"><span class="lbl">Mustaqil ish</span></a>
+  <div class="ttl"><b>Matn tozalagich</b><span>Akademik yozuv</span></div>
+  <div class="acts"><a class="ib" href="oqish.html" id="next"><span class="lbl">Oʻqish vaqti</span></a><button class="ib" id="thm" type="button"></button></div>
+</header>
+
+<main class="wrap">
+  <h1 class="pg">Matn tozalagich</h1>
+
+  <div class="grid2">
+    <div class="box">
+      <span class="lbl">Toza variant</span>
+      <div class="clean" id="clean"></div>
+      <div class="row"><button class="btn primary" id="copy" type="button"></button></div>
+      <div class="nums">
+        <div><b id="nFix">0</b><small>tuzatish</small></div>
+        <div><b id="nW">0 → 0</b><small>soʻz</small></div>
+      </div>
+    </div>
+    <div class="box">
+      <span class="lbl">Belgilangan</span>
+      <div class="out" id="out"></div>
+      <div class="legend" id="legend"></div>
+      <ul class="fixes" id="fixes"></ul>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:18px">
+    <textarea id="txt" rows="5" placeholder="Matnni kiriting"></textarea>
+    <div class="row">
+      <button class="chip" type="button" data-ex="0">Rasmiy uslubda</button>
+      <button class="chip" type="button" data-ex="1">Talaba essesi</button>
+      <button class="chip" type="button" id="clr">Tozalash</button>
+    </div>
+  </div>
+
+  <div class="foot"><span>Muxamadov Muhammadali</span><span id="nav"></span></div>
+</main>
+
+<script src="../../../oyinlar/savollar/akademik.js"></script>
+<script src="../../../oyinlar/assets/core.js"></script>
+<script src="nav.js"></script>
+<script>
+const { icon, esc } = G;
+G.themeButton(document.getElementById("thm"));
+document.getElementById("back").insertAdjacentHTML("afterbegin", icon("back"));
+document.getElementById("next").insertAdjacentHTML("beforeend", icon("arrow"));
+
+// [topiladigan ibora, tavsiya ("" — olib tashlash)]
+const T = [
+  { k: "qolip", t: "Rasmiy qolip", c: "#1f3a5f", r: [
+    ["mazkur", "bu"], ["ushbu", "bu"], ["tegishli choralar koʻrilishi lozim", "nima qilish kerakligini oʻylashimiz kerak"], ["amalga oshirilmoqda", "qilinmoqda"],
+    ["amalga oshirildi", "qilindi"], ["olib borilmoqda", "qilinmoqda"], ["tashkil etildi", "ochildi"], ["yuzasidan", "haqida"], ["munosabati bilan", "sababli"],
+    ["katta ahamiyat kasb etadi", "muhim"], ["muhim ahamiyatga ega", "muhim"], ["mavjud", "bor"], ["hisoblanadi", ""] ] },
+  { k: "kirish", t: "Boʻsh kirish", c: "#b02a1c", r: [
+    ["maʼlumki,", ""], ["hammamizga maʼlumki,", ""], ["sir emaski,", ""], ["taʼkidlash joizki,", ""], ["shuni aytish kerakki,", ""],
+    ["aytib oʻtish kerakki,", ""], ["alohida taʼkidlash lozimki,", ""], ["hozirgi kunda", "bugun"], ["bugungi kunda", "bugun"], ["hozirgi zamonda", "bugun"] ] },
+  { k: "ortiq", t: "Ortiqcha soʻz", c: "#8a6a2a", r: [
+    ["juda ham", "juda"], ["eng asosiy", "asosiy"], ["oʻz navbatida,", ""], ["haqiqatan ham", "rostdan"], ["umuman olganda,", ""], ["xulosa qilib aytganda,", ""] ] }
+];
+const norm = s => s.toLowerCase().replace(/[ʻʼ‘’`'´]/g, "'");
+const rx = s => norm(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+T.forEach(g => g.re = new RegExp("(?<![a-z'])(" + g.r.map(([a]) => rx(a)).sort((a, b) => b.length - a.length).join("|") + ")(?![a-z'])", "g"));
+const STOP = new Set(["uchun", "bilan", "lekin", "ammo", "chunki", "boʻlib", "ularning", "bizning", "qanday", "shuning", "keyin", "oldin", "hamda", "orqali"]);
+
+function find(text) {
+  const n = norm(text), hits = [];
+  T.forEach(g => { g.re.lastIndex = 0; let m; while ((m = g.re.exec(n))) { const rep = g.r.find(([a]) => norm(a) === m[0])[1]; hits.push({ s: m.index, e: m.index + m[0].length, g, rep }); } });
+  // Takroriy soʻzlar: 3 va undan koʻp marta, 5+ harf
+  const words = [...n.matchAll(/[a-z']{5,}/g)], cnt = {};
+  words.forEach(w => { if (!STOP.has(w[0])) cnt[w[0]] = (cnt[w[0]] || 0) + 1; });
+  const rep = { k: "takror", t: "Takror", c: "#6b3fa0" };
+  words.forEach(w => { if (cnt[w[0]] >= 3) hits.push({ s: w.index, e: w.index + w[0].length, g: rep, rep: null }); });
+  hits.sort((a, b) => a.s - b.s || b.e - a.e);
+  const out = []; let end = -1; hits.forEach(h => { if (h.s >= end) { out.push(h); end = h.e; } });
+  return out;
+}
+// Katta harfni saqlash va gap boshini tiklash
+const keepCase = (src, rep) => rep && src[0] !== src[0].toLowerCase() ? rep[0].toUpperCase() + rep.slice(1) : rep;
+function tidy(s) {
+  return s.replace(/^[ \t]+/gm, "").replace(/[ \t]{2,}/g, " ").replace(/ +([,.!?;:])/g, "$1").replace(/(^|[.!?]\s+)([a-zʻ])/g, (m, a, b) => a + b.toUpperCase()).trim();
+}
+const wc = s => (s.match(/[\p{L}ʻʼ'-]+/gu) || []).length;
+
+function run() {
+  const text = document.getElementById("txt").value, hits = find(text);
+  let marked = "", clean = "", pos = 0;
+  hits.forEach(h => {
+    const src = text.slice(h.s, h.e);
+    marked += esc(text.slice(pos, h.s)) + `<mark class="${h.rep === "" ? "cut" : ""}" style="--mc:${h.g.c}" title="${h.g.t}${h.rep !== null ? " → " + (h.rep || "olib tashlang") : ""}">${esc(src)}</mark>`;
+    clean += text.slice(pos, h.s) + (h.rep === null ? src : keepCase(src, h.rep));
+    pos = h.e;
+  });
+  marked += esc(text.slice(pos)); clean = tidy(clean + text.slice(pos));
+  document.getElementById("out").innerHTML = marked;
+  document.getElementById("clean").textContent = clean;
+  const fixes = hits.filter(h => h.rep !== null);
+  document.getElementById("nFix").textContent = fixes.length;
+  document.getElementById("nW").textContent = `${wc(text)} → ${wc(clean)}`;
+  const seen = new Set();
+  document.getElementById("fixes").innerHTML = hits.filter(h => { const k = norm(text.slice(h.s, h.e)); if (seen.has(k)) return false; seen.add(k); return true; })
+    .map(h => `<li><s>${esc(text.slice(h.s, h.e))}</s> → <b>${h.rep === null ? "sinonim" : h.rep || "olib tashlang"}</b></li>`).join("");
+}
+document.getElementById("legend").innerHTML = [...T, { t: "Takror", c: "#6b3fa0" }].map(g => `<span style="--mc:${g.c}">${g.t}</span>`).join("");
+
+const EX = [
+  "Maʼlumki, hozirgi kunda axborot texnologiyalari sohasi katta ahamiyat kasb etadi. Mazkur yoʻnalishda universitetimizda yangi IT-markaz tashkil etildi. Ushbu markazda talabalar uchun kurslar olib borilmoqda. Taʼkidlash joizki, bu masala yuzasidan tegishli choralar koʻrilishi lozim.",
+  "Bugungi kunda ijtimoiy tarmoqlar juda ham muhim ahamiyatga ega. Ijtimoiy tarmoqlar yoshlarning hayotini oʻzgartirdi. Haqiqatan ham, ijtimoiy tarmoqlar orqali yangiliklar tez tarqaladi. Xulosa qilib aytganda, eng asosiy narsa — axborotni tekshirish."
+];
+document.querySelectorAll("[data-ex]").forEach(b => b.onclick = () => { document.getElementById("txt").value = EX[+b.dataset.ex]; run(); });
+document.getElementById("clr").onclick = () => { document.getElementById("txt").value = ""; run(); };
+document.getElementById("txt").addEventListener("input", run);
+document.getElementById("copy").innerHTML = icon("doc") + " Nusxa";
+document.getElementById("copy").onclick = async e => {
+  const t = document.getElementById("clean").textContent;
+  try { await navigator.clipboard.writeText(t); } catch (err) {}
+  e.currentTarget.innerHTML = icon("check") + " Olindi";
+  setTimeout(() => document.getElementById("copy").innerHTML = icon("doc") + " Nusxa", 1600);
+};
+document.getElementById("txt").value = EX[0]; run();
+</script>
+</body>
+</html>
