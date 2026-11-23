@@ -75,7 +75,7 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 3. **Emoji ishlatilmaydi.** Faqat oʻzimiz chizgan SVG ikonlar (`core.js` → `P` obyekti, `G.icon(name)`).
 4. Dizayn “AI qilgandek” neon/gradient boʻlmasin — dizayner ishlagandek, toza, tipografik. **Har bir fanning dizayni alohida**:
    - akademik — gazeta/tahririyat uslubi (Playfair Display + IBM Plex, qogʻoz rangi, qizil urgʻu, chiziqlar, oʻtkir burchaklar);
-   - tarix — tarixiy “Buxoro gʻishti va Samarqand koshinlari” uslubi: Alegreya + Alegreya Sans; lojuvard koʻk, gʻisht, feruza, qum ranglari; fonda gʻisht teruvi teksturasi va pastda Registon siluyeti (chiziqli illyustratsiya), koshin ramkali panellar, romb naqshli hoshiya. Tasvirlar `tools/tarix_art.py` bilan yasalib, theme.css ga `/*ART:...*/` orasiga yoziladi. Avvalgi 3 varianti (feruza/oltin; DM Serif koʻk; Swiss plakat) yoqmagan.
+   - tarix — **“MUZEY ZALI”** (foydalanuvchi 25+ variantdan shuni tanlagan): toʻq zal (kunduzgi — yorugʻ galereya), oʻyinlar oq **eksponat yorliqlari** (“Eksponat · 01”, katta xira raqam), mis/oltin urgʻu (#c9a45c), ranglar toʻq va sokin. Shrift: **Cinzel + Raleway**. Animatsiya: **“Chizgi” (A4)** — ingichka ramka chiziladi, keyin ichi sokin paydo boʻladi; sakrash/zarrachalar/konfetti YOʻQ. Fonda doimiy harakat (.amb): sekin tebranuvchi projektor nurlari, chang, oʻzi chizilib-oʻchadigan naqsh chiziqlari. Rad etilganlar: feruza/oltin; DM Serif koʻk; Swiss plakat; gʻisht+Registon; docs/dizayn-*.html, proto-*.html dagi variantlar. tools/tarix_art.py endi ishlatilmaydi.
 5. **Kunduzgi va tungi rejim** har sahifada boʻlishi shart.
 6. Oʻyinlar **internetsiz, oddiy HTML** sifatida ochilishi kerak (`file://`). `fetch` ishlatmang — maʼlumot `<script src>` orqali.
 7. Tarix savollari: **oson**, yillar kam; taxminan **50% zakovat uslubidagi mantiqiy savollar** (tarixga bogʻliq, lekin qiziqarli — dasturlash, fan va h.k.).
@@ -85,7 +85,7 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 
 ## Harakat tizimi (animatsiyalar)
 
-- theme.css oxirida “HARAKAT TIZIMI” boʻlimi, core.js da `enter()` (ekran almashganda elementlar navbat bilan chiqadi, MutationObserver #app/#page), `burst()` (zarrachalar), `stamp()` (javobga muhr: tarixda dumaloq muhr, akademikda toʻrtburchak), `hit()`, `countUp()`, ballar +/− suzib chiqadi, taymer oxirgi 5 s yurak urishi, gʻolibda koshin rombchalari / gazeta harflari yogʻadi, nom harflab chiqadi, kartochkalar sichqonchaga ergashib egiladi, sahifalar orasida View Transitions.
+- theme.css oxirida “HARAKAT TIZIMI — Chizgi” boʻlimi; core.js da `enter()` (ekran almashganda ramka chiziladi → ichi paydo boʻladi, MutationObserver #app/#page), `ambient()` (fondagi doimiy harakat, faqat tarix), `countUp()`. Hover/fokusda tugma, javob, kartochka atrofida ramka chiziladi; toʻgʻri javob — oltin, xato — qizil ramka; ball oʻzgarsa jamoa ramkasi chiziladi; taymer chizigʻi boʻylab yorugʻlik yuguradi. `burst/stamp/hit/confetti` — oʻchirilgan (foydalanuvchiga “wow” effektlar yoqmagan).
 - `prefers-reduced-motion` da hammasi oʻchadi.
 
 ## Ishonchlilik (oldin “baʼzan ishlamay qolardi”)

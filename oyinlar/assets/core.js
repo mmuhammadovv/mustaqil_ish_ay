@@ -241,7 +241,7 @@
     let done = false, aborted = false;
     const opts = shuffle([item.j, ...item.x]);
     el.classList.add("ask-host");
-    el.innerHTML = `<div class="q-text">${words(item.s)}</div><div class="tm"></div>
+    el.innerHTML = `<div class="q-text">${item.s}</div><div class="tm"></div>
       <div class="opts">${opts.map((o, i) => `<button type="button" class="opt" data-k="${i}"><span class="k">${"ABCD"[i]}</span><span>${o}</span></button>`).join("")}</div>
       <div class="after"></div>
       <div class="hint">Javobni tanlang: sichqoncha yoki A, B, C, D tugmalari</div>`;
@@ -253,8 +253,6 @@
       if (k >= 0 && !ok) btns[k].classList.add("wrong");
       btns[right].classList.add("right");
       ok ? sound.ok() : sound.bad();
-      stamp(el, ok ? "Toʻgʻri" : k < 0 ? "Vaqt" : "Xato", ok);
-      if (ok) burst(btns[right], 26); else hit(el.closest(".mcard, .panel") || el);
       $(".after", el).innerHTML = `<div class="verdict ${ok ? "ok" : "bad"}">${icon(ok ? "check" : "cross")} ${ok ? "Toʻgʻri" : k < 0 ? "Vaqt tugadi" : "Notoʻgʻri"}</div>${item.izoh ? `<div class="izoh">${item.izoh}</div>` : ""}`;
       setTimeout(() => { if (!aborted && el.isConnected && onResult) { if (current === api) current = null; onResult(ok); } }, item.izoh ? 2300 : 1500);
     };
@@ -277,7 +275,7 @@
 
   /* ---------- Konfetti (rang-barang emas — mavzu ranglarida) ---------- */
   function confetti() {
-    if (RM) return;
+    return; // “Chizgi” uslubida konfetti yoʻq
     const cs = getComputedStyle(html), cols = ["--t0", "--t1", "--t2", "--t3"].map(v => cs.getPropertyValue(v).trim());
     const ak = fan === "akademik", L = "ABDEFGHIJKLMNOPQRSTUVXYZ";
     const r = document.createElement("div"); r.className = "rain";
@@ -294,12 +292,12 @@
     const top = s.filter(t => t.score === s[0].score);
     const c = modal(`<div class="win">
       <div class="kicker">${icon("crown")} Oʻyin yakuni</div>
-      <h2>${letters(top.map(t => t.name).join(" va "))}</h2>
+      <h2>${top.map(t => esc(t.name)).join(" va ")}</h2>
       <div class="sub">${top.length > 1 ? "Durang natija" : "Gʻolib jamoa"}</div>
       <table class="standings">${s.map((t, k) => `<tr style="--ri:${k}"><td>${String(k + 1).padStart(2, "0")}</td><td><span class="sw" style="--c:${tc(t)}"></span>${esc(t.name)}</td><td><span class="cu" data-v="${t.score}">0</span> <small style="font-size:12px;color:var(--muted)">${unit}</small></td></tr>`).join("")}</table>
       <div class="row-btns"><button class="btn primary" id="again" type="button">${icon("reset")} Yana oʻynash</button><a class="btn" href="${menu}">Menyuga</a></div></div>`);
     $("#again", c).onclick = () => { modal.close(); onAgain(); };
-    sound.win(); confetti(); burst(c.querySelector("h2"), 40);
+    sound.win(); enter(c);
     $$(".cu", c).forEach((n, k) => setTimeout(() => countUp(n, 0, +n.dataset.v, 1100), RM ? 0 : 800 + k * 110));
   }
   function toast(msg, ms = 1900) { const t = document.createElement("div"); t.className = "toast"; t.innerHTML = msg; document.body.appendChild(t); setTimeout(() => t.remove(), ms); }
@@ -310,14 +308,14 @@
   function words(t) { return /</.test(t) ? t : String(t).split(/(\s+)/).map((w, i) => /^\s+$/.test(w) ? w : `<span class="w" style="--wi:${i >> 1}">${w}</span>`).join(""); }
   function letters(t) { let k = 0; return [...String(t)].map(ch => ch === " " ? " " : `<span class="l" style="--li:${k++}">${esc(ch)}</span>`).join(""); }
   function stamp(host, txt, ok) {
-    if (RM || !host) return;
+    return; // muhr effekti oʻchirilgan
     const old = $(".stamp", host); old && old.remove();
     host.insertAdjacentHTML("beforeend", `<div class="stamp ${ok ? "ok" : "bad"}">${txt}</div>`);
   }
-  function hit(el) { if (!el || RM) return; el.classList.remove("m-hit"); void el.offsetWidth; el.classList.add("m-hit"); }
+  function hit(el) { return; if (!el || RM) return; el.classList.remove("m-hit"); void el.offsetWidth; el.classList.add("m-hit"); }
   // Element markazidan zarrachalar sochiladi
   function burst(el, n = 24) {
-    if (!el || RM) return;
+    return; // zarrachalar oʻchirilgan
     const r = el.getBoundingClientRect(), cs = getComputedStyle(html), cols = ["--t0", "--t1", "--t2", "--t3"].map(v => cs.getPropertyValue(v).trim());
     const b = document.createElement("div"); b.className = "burst"; b.style.left = r.left + r.width / 2 + "px"; b.style.top = r.top + r.height / 2 + "px";
     b.innerHTML = Array.from({ length: n }, () => { const a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 160;
@@ -325,7 +323,7 @@
     document.body.appendChild(b); setTimeout(() => b.remove(), 1100);
   }
   // Ekran almashganda elementlar navbat bilan chiqadi (bir ekranning ichidagi kichik yangilanishlarda — yoʻq)
-  const ENTER = ".panel, .box, .opt, .team, .game, .lane, .ev, .setup, .sec-h, .board > *, .q-text";
+  const ENTER = ".panel, .box, .opt, .team, .game, .lane, .ev, .setup, .scores";
   function enter(root) {
     if (RM || !root) return;
     let k = 0; const seen = new Set();
@@ -338,21 +336,21 @@
   const sig = root => { const k = root.querySelector(".meta, .q, h1, h2, .kicker, .sec-h"); return (k ? k.textContent.replace(/\d+/g, "") : "") + "|" + [...root.children].map(c => c.className).join(","); };
   function watch(root) { if (!root) return; let last = ""; new MutationObserver(() => { const k = sig(root); if (k !== last) { last = k; enter(root); } }).observe(root, { childList: true }); }
   watch($("#app")); watch($("#page"));
-  // Kartochkalar sichqonchaga ergashib egiladi
-  if (!RM && matchMedia("(hover: hover)").matches) {
-    document.addEventListener("pointermove", e => {
-      const g = e.target.closest && e.target.closest(".game");
-      $$(".game.tilt").forEach(x => { if (x !== g) { x.classList.remove("tilt"); x.style.removeProperty("--rx"); x.style.removeProperty("--ry"); } });
-      if (!g) return;
-      const r = g.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-      g.classList.add("tilt"); g.style.setProperty("--ry", (px - .5) * 12 + "deg"); g.style.setProperty("--rx", (.5 - py) * 10 + "deg");
-      g.style.setProperty("--mx", px * 100 + "%"); g.style.setProperty("--my", py * 100 + "%");
-    }, { passive: true });
+  // Fondagi doimiy harakat: nurlar, chang, oʻzi chiziladigan naqsh (kamroq harakat soʻralsa — yoʻq)
+  function ambient() {
+    if (RM || document.querySelector(".amb")) return;
+    const orn = cls => `<svg class="orn ${cls}" viewBox="0 0 200 200" aria-hidden="true">
+      <path pathLength="1" d="M100 10l26 64 64 26-64 26-26 64-26-64-64-26 64-26z"/>
+      <path pathLength="1" d="M100 40l60 60-60 60-60-60z"/>
+      <circle pathLength="1" cx="100" cy="100" r="86"/>
+      <circle pathLength="1" cx="100" cy="100" r="30"/>
+      <path pathLength="1" d="M14 100h172M100 14v172"/></svg>`;
+    const a = document.createElement("div"); a.className = "amb"; a.setAttribute("aria-hidden", "true");
+    a.innerHTML = `<i class="beam"></i><i class="beam"></i><i class="beam"></i>${orn("a")}${orn("b")}
+      <div class="dust">${Array.from({ length: 34 }, () => `<i style="left:${Math.random() * 100}%;top:${45 + Math.random() * 60}%;--s:${1 + Math.random() * 2.2}px;--d:${14 + Math.random() * 16}s;--de:${-Math.random() * 30}s;--dx:${(Math.random() - .5) * 120}px;--o:${.25 + Math.random() * .45}"></i>`).join("")}</div>`;
+    document.body.prepend(a);
   }
-  // Fan sahifasi sarlavhasi harflab chiqadi
-  const splitTitle = () => { const h = $(".mast h1"); if (h && !h.dataset.split && !RM) { h.dataset.split = 1; h.innerHTML = h.textContent.split(" ").map(w => `<span style="white-space:nowrap">${letters(w)}</span>`).join(" "); } };
-  if ($("#page")) new MutationObserver(splitTitle).observe($("#page"), { childList: true });
-
+  ambient();
   window.G = { swapped, $, $$, esc, shuffle, store, fan, data, icon, sound, header, setup, tc, scores, bump, modal, timer, ask, all, confetti, winner, toast, themeButton,
     burst, stamp, hit, countUp, enter, words, letters, mavzu, topics, extra, saveKey: g => "oyin2-" + g + "-" + dkey };
 })();

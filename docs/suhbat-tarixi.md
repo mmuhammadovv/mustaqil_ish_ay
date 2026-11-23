@@ -117,3 +117,6 @@ Foydalanuvchi talablari:
 - Foydalanuvchi bergan maʼruzalar asosida 11-mavzu (xalqaro reytinglar) va 12-mavzu (Yangi Oʻzbekiston islohotlari) qoʻshildi: har biri 50 test + afsona, konvert, voqealar, soʻzlar, taxmin, viselitsa.
 - Tarix sahifasi: avval mavzular (alohida tugmalar), mavzu ichida 14 oʻyin.
 - Yangi oʻyin: Viselitsa (barcha 4 mavzu uchun).
+
+## 26. Tarix dizayni — Muzey zali
+- Koʻp variantlardan keyin foydalanuvchi “Muzey zali”ni tanladi: shrift Cinzel + Raleway, animatsiya “Chizgi” (A4). Animatsiya hamma elementlarda va fonda doimiy (nurlar, chang, naqsh). Avvalgi “wow” effektlar olib tashlandi.
