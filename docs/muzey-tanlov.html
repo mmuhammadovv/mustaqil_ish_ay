@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muzey zali — shrift va animatsiya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Raleway:wght@400;500;600&family=Marcellus&family=Mulish:wght@400;600&family=Prata&family=Montserrat:wght@400;500;600&family=Libre+Caslon+Display&family=Libre+Franklin:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;600&family=Spectral:wght@500;600&family=Work+Sans:wght@400;500;600&family=Forum&family=Nunito+Sans:wght@400;600&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #d9d4ca; color: #222; font-family: system-ui, sans-serif; }
+  .intro { max-width: 1180px; margin: 0 auto; padding: 26px 16px 6px; }
+  .intro h1 { margin: 0 0 6px; font-size: 26px; }
+  .intro p { margin: 0; color: #444; }
+  h2.part { max-width: 1180px; margin: 34px auto 4px; padding: 0 16px; font-size: 22px; }
+  .v { max-width: 1180px; margin: 18px auto; padding: 0 16px; }
+  .tag { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .tag b { display: inline-grid; place-items: center; min-width: 38px; height: 38px; padding: 0 8px; background: #222; color: #fff; border-radius: 99px; font-size: 17px; }
+  .tag span { font-size: 19px; font-weight: 700; }
+  .tag small { color: #555; }
+  .tag button { margin-left: auto; padding: 8px 14px; border: 0; background: #222; color: #fff; border-radius: 99px; cursor: pointer; font-size: 14px; }
+
+  /* ===== Muzey zali (B) — asosiy koʻrinish ===== */
+  .mock { --d: "Bodoni Moda"; --b: sans-serif; position: relative; overflow: hidden; border-radius: 6px; background: radial-gradient(ellipse at 50% 0, #2b2824 0, #121110 62%); color: #efe9de; font-family: var(--b); box-shadow: 0 24px 60px -26px rgba(0,0,0,.6); }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 12px 22px; border-bottom: 1px solid #3a352e; }
+  .bar .lg { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #c9a45c; color: #c9a45c; display: grid; place-items: center; }
+  .bar .nm { flex: 1; font-weight: 600; }
+  .bar .bt { padding: 5px 12px; font-size: 13px; border: 1px solid #5a5246; color: #cfc6b6; }
+  .hero { text-align: center; padding: 34px 20px 26px; }
+  .hero .ov { font-size: 13px; letter-spacing: .4em; text-transform: uppercase; color: #c9a45c; }
+  .hero h3 { margin: 12px 0 0; font-family: var(--d); font-weight: 500; font-size: clamp(36px, 6vw, 70px); line-height: 1.02; }
+  .hero p { color: #9d9486; margin: 12px 0 0; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; }
+  .body { display: grid; grid-template-columns: 1.25fr 1fr; gap: 22px; padding: 6px 24px 28px; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .cd { position: relative; min-height: 120px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; background: #f2ede3; color: #151311; border-radius: 1px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.9); }
+  .cd .no { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: #6f6758; border-bottom: 1px solid #151311; padding-bottom: 6px; }
+  .cd h4 { margin: 0; font-family: var(--d); font-size: 25px; font-weight: 500; position: relative; z-index: 1; }
+  .cd::after { content: attr(data-n); position: absolute; right: 14px; bottom: 4px; font-family: var(--d); font-size: 44px; color: #d8d0c0; }
+  .q { padding: 20px; border: 1px solid #3a352e; background: rgba(255,255,255,.03); }
+  .q .m { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #9d9486; }
+  .q .qt { font-family: var(--d); font-size: 23px; margin: 8px 0 12px; line-height: 1.25; }
+  .o { display: flex; gap: 10px; align-items: center; padding: 9px 12px; margin-top: 7px; font-size: 15px; border: 1px solid #3a352e; }
+  .o i { font-style: normal; width: 26px; height: 26px; display: grid; place-items: center; font-size: 13px; border: 1px solid #c9a45c; color: #c9a45c; flex: none; }
+  .o.ok { border-color: #c9a45c; background: rgba(201,164,92,.14); }
+  @media (max-width: 820px) { .body { grid-template-columns: 1fr; } }
+
+  /* ===== Animatsiya variantlari (tugma bosilganda qayta ijro etiladi) ===== */
+  /* A1 — Yoritish: zal qorongʻi, eksponatlar birin-ketin yoritiladi */
+  .a1.play .hero, .a1.play .cd, .a1.play .q { animation: lightOn 1.2s ease both; }
+  .a1.play .hero { animation-delay: .1s; } .a1.play .q { animation-delay: 1.3s; }
+  .a1.play .cd { animation-delay: calc(.5s + var(--i) * .22s); }
+  .a1.play .cd::before { content: ""; position: absolute; left: 50%; top: -140px; width: 220px; height: 260px; margin-left: -110px; background: radial-gradient(ellipse at 50% 0, rgba(255,238,200,.4), transparent 65%); pointer-events: none; animation: cone 1.6s ease both; animation-delay: calc(.5s + var(--i) * .22s); }
+  @keyframes lightOn { 0% { filter: brightness(.08); } 35% { filter: brightness(.5); } 45% { filter: brightness(.2); } 100% { filter: brightness(1); } }
+  @keyframes cone { 0% { opacity: 0; } 40% { opacity: 1; } 100% { opacity: .55; } }
+  /* A2 — Parda: toʻq qizil parda yuqoriga koʻtariladi */
+  .a2 .curtain { position: absolute; inset: 0; z-index: 5; pointer-events: none; background: repeating-linear-gradient(90deg, #4a1218 0 34px, #5e1a21 34px 52px, #3c0e13 52px 70px); transform: translateY(-101%); }
+  .a2.play .curtain { animation: curtain 1.8s cubic-bezier(.7, 0, .2, 1) both; }
+  @keyframes curtain { 0% { transform: translateY(0); } 25% { transform: translateY(0); } 100% { transform: translateY(-101%); } }
+  .a2.play .cd { animation: settle .8s ease both; animation-delay: calc(1.2s + var(--i) * .1s); }
+  @keyframes settle { from { opacity: 0; } }
+  /* A3 — Sokin: faqat yumshoq paydo boʻlish, hech qanday siljish yoʻq */
+  .a3.play .hero, .a3.play .cd, .a3.play .q { animation: fadeOnly .9s ease both; }
+  .a3.play .cd { animation-delay: calc(.25s + var(--i) * .12s); } .a3.play .q { animation-delay: .7s; }
+  @keyframes fadeOnly { from { opacity: 0; } }
+  /* A4 — Chizgi: ramkalar oʻzi chiziladi, keyin ichi toʻladi */
+  .a4 .cd, .a4 .q { --p: 100%; }
+  .a4.play .cd, .a4.play .q { animation: fillIn .7s ease both; animation-delay: calc(.9s + var(--i, 4) * .12s); }
+  .a4.play .cd .frame, .a4.play .q .frame { animation: drawBox 1s ease both; animation-delay: calc(var(--i, 4) * .12s); }
+  .frame { position: absolute; inset: -1px; pointer-events: none; z-index: 2; }
+  .frame rect { fill: none; stroke: #c9a45c; stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .a4.play .frame rect { animation: dash 1s ease both; animation-delay: calc(var(--i, 4) * .12s); }
+  @keyframes dash { from { stroke-dashoffset: 1; } }
+  @keyframes fillIn { from { background: transparent; color: transparent; box-shadow: none; } }
+  .a4.play .cd > *, .a4.play .q > :not(.frame) { animation: fadeOnly .6s ease both; animation-delay: calc(1.2s + var(--i, 4) * .12s); }
+  .a4.play .cd::after { animation: fadeOnly .6s ease both; animation-delay: 1.3s; }
+</style>
+</head>
+<body>
+<div class="intro">
+  <h1>“Muzey zali” — shrift va animatsiyani tanlang</h1>
+  <p>Dizayn bir xil (sizga yoqqan B varianti). 1-qismda — 7 xil shrift, 2-qismda — 4 xil animatsiya. Har qismdan bittadan raqam tanlang, masalan: “Shrift 3, animatsiya A1”.</p>
+</div>
+
+<h2 class="part">1-qism. Shriftlar</h2>
+<div id="fonts"></div>
+<h2 class="part">2-qism. Animatsiyalar — “Qayta koʻrish” tugmasini bosing</h2>
+<div id="anims"></div>
+
+<script>
+const F = [
+  ["Cinzel", "Raleway", "Rim yozuvlari uslubi — muzey peshtoqlaridagi bosh harflar"],
+  ["Marcellus", "Mulish", "Klassik, ochiq, oʻqilishi oson"],
+  ["Prata", "Montserrat", "Nafis, kontrastli, zamonaviy muzey"],
+  ["Libre Caslon Display", "Libre Franklin", "Kitob va arxiv ruhidagi klassik serif"],
+  ["Fraunces", "Manrope", "Yumshoq, iliq, biroz “eski kitob” tusi"],
+  ["Spectral", "Work Sans", "Sokin, akademik, ortiqcha bezaksiz"],
+  ["Forum", "Nunito Sans", "Qadimiy yozuvlarga yaqin, yengil"]
+];
+const G4 = ["Tavakkal", "Sirli konvert", "Labirint", "Juftini top"];
+const frame = `<svg class="frame" width="100%" height="100%" preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1"/></svg>`;
+const mock = (d, b, cls = "", fr = false) => `
+  <div class="mock ${cls}" style="--d:'${d}';--b:'${b}'">
+    ${cls === "a2" ? `<div class="curtain"></div>` : ""}
+    <div class="bar"><span class="lg"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l6 9-6 10-6-10z"/><path d="M12 12v10"/></svg></span><span class="nm">Oʻzbekistonning eng yangi tarixi</span><span class="bt">Mavzular</span><span class="bt">Tungi</span></div>
+    <div class="hero"><div class="ov">Interaktiv oʻyinlar · 12-mavzu</div><h3>Oʻzbekistonning eng yangi tarixi</h3><p>Yangi Oʻzbekistonda amalga oshirilgan islohotlar</p></div>
+    <div class="body">
+      <div class="cards">${G4.map((g, i) => `<div class="cd" style="--i:${i}" data-n="0${i + 1}">${fr ? frame : ""}<span class="no">Eksponat · 0${i + 1}</span><h4>${g}</h4></div>`).join("")}</div>
+      <div class="q">${fr ? frame : ""}<div class="m">Yangi Konstitutsiya · 300 ball</div><div class="qt">Konstitutsiyaviy referendum qachon boʻlib oʻtdi?</div>
+        <div class="o"><i>A</i>1992-yil 8-dekabrda</div><div class="o ok"><i>B</i>2023-yil 30-aprelda</div><div class="o"><i>C</i>2016-yil 4-dekabrda</div><div class="o"><i>D</i>2021-yil 24-oktabrda</div></div>
+    </div>
+  </div>`;
+document.getElementById("fonts").innerHTML = F.map(([d, b, t], i) => `<section class="v"><div class="tag"><b>${i + 1}</b><span>${d} + ${b}</span><small>${t}</small></div>${mock(d, b)}</section>`).join("");
+const A = [
+  ["A1", "Yoritish", "Zal qorongʻi — eksponatlar birin-ketin yoritiladi, ustidan nur tushadi."],
+  ["A2", "Parda", "Toʻq qizil parda sekin koʻtariladi, ortidan zal ochiladi."],
+  ["A3", "Sokin", "Faqat yumshoq paydo boʻlish. Hech narsa siljimaydi, sakramaydi."],
+  ["A4", "Chizgi", "Avval oltin ramkalar oʻzi chiziladi, keyin ichi toʻladi."]
+];
+document.getElementById("anims").innerHTML = A.map(([k, n, t], i) => `<section class="v"><div class="tag"><b>${k}</b><span>${n}</span><small>${t}</small><button type="button" data-a="${i}">Qayta koʻrish</button></div>${mock("Prata", "Montserrat", "a" + (i + 1), i === 3)}</section>`).join("");
+const play = el => { el.classList.remove("play"); void el.offsetWidth; el.classList.add("play"); };
+document.querySelectorAll("[data-a]").forEach(b => b.onclick = () => play(b.closest(".v").querySelector(".mock")));
+// Animatsiya bloki ekranga kirganda oʻzi bir marta ijro etiladi
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { play(e.target); io.unobserve(e.target); } }), { threshold: .4 });
+document.querySelectorAll("#anims .mock").forEach(m => io.observe(m));
+</script>
+</body>
+</html>
