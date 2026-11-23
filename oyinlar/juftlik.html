@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Juftini top</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .grid { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: clamp(8px, 1.2vw, 14px); perspective: 1600px; }
+  .card { position: relative; aspect-ratio: 16 / 10; border: 0; padding: 0; background: none; cursor: pointer; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.3, 1.4, .5, 1); }
+  .card.up, .card.done { transform: rotateY(180deg); }
+  .card .f, .card .b { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--r-lg); border: 1px solid var(--line-strong); display: grid; place-items: center; }
+  .card .f { background: var(--accent); color: var(--accent-ink); overflow: hidden; }
+  .card .f::before { content: ""; position: absolute; inset: 10px; border: 1px solid color-mix(in srgb, var(--accent-ink) 40%, transparent); border-radius: var(--r); }
+  [data-fan="tarix"] .card .f { background: var(--accent) var(--band, none); }
+  .card .f svg { width: 34%; height: auto; opacity: .85; }
+  .card .b { transform: rotateY(180deg); background: var(--surface); padding: 10px; text-align: center; font-weight: 600; font-size: clamp(12px, 1.25vw, 16px); line-height: 1.25; color: var(--ink); }
+  .card .b.term { font-family: var(--display); font-weight: 800; font-size: clamp(15px, 1.7vw, 22px); }
+  .card.done .b { border: 3px solid var(--c); background: color-mix(in srgb, var(--c) 14%, var(--surface)); }
+  .card.done { animation: matched .7s cubic-bezier(.34, 1.56, .64, 1); }
+  .card.miss .b { border-color: var(--bad); animation: shakeX .5s; }
+  .card:hover:not(.up):not(.done) { transform: translateY(-4px) rotateX(6deg); }
+  .card:disabled { cursor: default; }
+  @keyframes matched { 0% { transform: rotateY(180deg) scale(1); } 40% { transform: rotateY(180deg) scale(1.08); } 100% { transform: rotateY(180deg) scale(1); } }
+  .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  @media (max-width: 700px) { .grid { --cols: 3 !important; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="savollar/tarix10.js"></script>
+<script src="savollar/tarix11.js"></script>
+<script src="savollar/tarix12.js"></script>
+<script src="savollar/tarix-qoshimcha.js"></script>
+<script src="savollar/tarix10-qoshimcha.js"></script>
+<script src="savollar/tarix11-qoshimcha.js"></script>
+<script src="savollar/tarix12-qoshimcha.js"></script>
+<script src="assets/core.js"></script>
+<script>
+// Bu oʻyin faqat tarix fani uchun
+if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
+const { $, $$, esc, store, icon, sound } = G;
+const SK = G.saveKey("juftlik"), TIME = 30, PTS = 100;
+// Juftlik: nom (konvert javobi) ↔ uning eng aniq taʼrifi (oxirgi ishora)
+const P = (G.extra.konvertlar || []).map(e => ({ a: e.j, b: e.i[e.i.length - 1] }));
+let S = store.get(SK), open = [], busy = false, tmr = null;
+G.header("Juftini top", reset);
+
+function setup() {
+  let n = 8;
+  G.setup($("#app"), {
+    kicker: "Xotira",
+    title: "Juftini top",
+    extra: `<span class="l">Juftliklar soni</span>
+      <div class="seg" id="pn">${[6, 8, 10].map(x => `<button type="button" data-p="${x}">${x}</button>`).join("")}</div>`,
+    bind(el) {
+      const sync = () => $$("#pn button", el).forEach(x => x.classList.toggle("on", +x.dataset.p === n));
+      $$("#pn button", el).forEach(b => b.onclick = () => { n = +b.dataset.p; sync(); });
+      sync();
+    },
+    rules: [
+      "Stolda yopiq kartochkalar: yarmida — nom, yarmida — uning taʼrifi.",
+      "Navbatdagi jamoa ikkita kartochkani ochadi.",
+      `Nom va taʼrif mos kelsa — juftlik jamoaniki, <b>+${PTS} ball</b> va jamoa yana ochadi. Mos kelmasa — kartochkalar yopiladi, navbat oʻtadi.`,
+      "Ochilgan kartochkalarni eslab qoling — ular keyin kerak boʻladi.",
+      `Har yurish uchun ${TIME} soniya. Barcha juftliklar topilgach, eng koʻp ball toʻplagan jamoa gʻolib.`
+    ],
+    onStart(teams) {
+      const pick = G.shuffle(P.map((_, i) => i)).slice(0, Math.min(n, P.length));
+      const cards = G.shuffle(pick.flatMap(p => [{ p, t: 0 }, { p, t: 1 }]));
+      S = { teams, cards, won: {}, turn: 0 }; save(); render();
+    }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { if (tmr) tmr.stop(); open = []; busy = false; store.del(SK); S = null; G.modal.close(); setup(); }
+
+function render() {
+  G.swapped();
+  if (tmr) tmr.stop();
+  const total = S.cards.length / 2, found = Object.keys(S.won).length;
+  if (found >= total) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
+  const t = S.teams[S.turn], cols = S.cards.length <= 12 ? 4 : S.cards.length <= 16 ? 4 : 5; // 12 → 4×3, 16 → 4×4, 20 → 5×4
+  $("#app").innerHTML = `
+    <div class="panel" style="padding:clamp(16px,2.4vw,26px)">
+      <div class="bar" style="--c:${G.tc(t)}">
+        <div class="turn"><span class="what">Navbat:</span><span class="who">${esc(t.name)}</span></div>
+        <span class="meta"><span>Topildi: ${found} / ${total}</span></span>
+      </div>
+      <div id="tm"></div>
+      <div class="grid" style="--cols:${cols}">${S.cards.map((c, i) => {
+        const w = S.won[c.p], pr = P[c.p];
+        return `<button class="card ${w !== undefined ? "done" : ""}" type="button" data-i="${i}" ${w !== undefined ? `disabled style="--c:${G.tc(S.teams[w])}"` : ""}>
+          <span class="f">${icon("star")}</span>
+          <span class="b ${c.t === 0 ? "term" : ""}">${esc(c.t === 0 ? pr.a : pr.b)}</span></button>`;
+      }).join("")}</div>
+    </div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { active: S.turn, onAdjust: (i, d) => { S.teams[i].score += d; save(); render(); } });
+  $$(".card[data-i]").forEach(b => b.onclick = () => flip(+b.dataset.i));
+  open = []; busy = false;
+  tmr = G.timer($("#tm"), TIME, () => { G.toast("Vaqt tugadi — navbat oʻtdi"); pass(); });
+}
+
+function flip(i) {
+  if (busy || open.includes(i) || S.won[S.cards[i].p] !== undefined) return;
+  const el = $(`.card[data-i="${i}"]`); el.classList.add("up"); sound.tick && sound.tick();
+  open.push(i);
+  if (open.length < 2) return;
+  busy = true; tmr.stop();
+  const [a, b] = open.map(k => S.cards[k]);
+  if (a.p === b.p) {
+    setTimeout(() => {
+      S.won[a.p] = S.turn; S.teams[S.turn].score += PTS; sound.ok();
+      open.forEach(k => { const c = $(`.card[data-i="${k}"]`); c.classList.add("done"); c.style.setProperty("--c", G.tc(S.teams[S.turn])); G.burst(c, 18); });
+      save(); setTimeout(render, 900);
+    }, 650);
+  } else {
+    setTimeout(() => {
+      sound.bad(); open.forEach(k => $(`.card[data-i="${k}"]`).classList.add("miss"));
+      setTimeout(() => { open.forEach(k => { const c = $(`.card[data-i="${k}"]`); c.classList.remove("up", "miss"); }); setTimeout(pass, 650); }, 1300);
+    }, 600);
+  }
+}
+function pass() { S.turn = (S.turn + 1) % S.teams.length; save(); render(); }
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
+</script>
+</body>
+</html>

@@ -51,6 +51,7 @@ oyinlar/
   harf.html       11 FAQAT TARIX — Harflab topish: savol + yopiq kataklar, harf aytish (100×katak), butun soʻz +500 (boshlovchi yozadi, sayt tekshiradi)
   karvon.html     12 FAQAT TARIX — Ipak yoʻli karvoni: kubik, 31 katak (savol/omad/toʻsiq), Konstantinopolga birinchi yetgan yutadi
   taxmin.html     13 FAQAT TARIX — Taxmin: javob son; son oʻqida koʻrsatiladi; eng yaqin +300, aniq +500
+  juftlik.html    15 FAQAT TARIX — Juftini top: 3D aylanadigan kartochkalar (xotira oʻyini); juftlik = konvert javobi ↔ oxirgi ishora; mos kelsa +100 va yana ochadi
   viselitsa.html  14 FAQAT TARIX — Viselitsa: har jamoa navbat bilan OʻZ soʻzini topadi; 7 xato = dor rasmi toʻliq (SVG); topsa +100 + 50×qolgan imkoniyat; vaqt tugasa — xato; klaviatura harflari ham ishlaydi
   savollar/tarix-qoshimcha.js  afsona, konvertlar, voqealar, sozlar, taxminlar, ipakYoli (faqat tarix)
 jonli-oyinlar/                     Sinfda oʻtkaziladigan oʻyinlar uchun chop etiladigan A4 varaqlar (chop.css)
@@ -81,6 +82,11 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 8. **Javob vaqti har bir oʻyinda kamida 30 soniya.**
 9. **Oʻyin tavsiflari (opisanie) yoʻq** — fan sahifasidagi kartochkalarda faqat raqam, ikonka, nom; sozlash ekranida tavsif jumlasi yoʻq (faqat qoidalar). Foydalanuvchi: “AI qilgani bilinib turibdi”.
 10. Mustaqil ish: 30 bet (foydalanuvchi talabi), titulda vazirlik nomi boʻlmasin, oxirida nazorat roʻyxati boʻlmasin; betlarda boʻsh joy qolmasin (boʻlimlar uzluksiz oqadi), avval nazariya, keyin tahlil, keyin maqola.
+
+## Harakat tizimi (animatsiyalar)
+
+- theme.css oxirida “HARAKAT TIZIMI” boʻlimi, core.js da `enter()` (ekran almashganda elementlar navbat bilan chiqadi, MutationObserver #app/#page), `burst()` (zarrachalar), `stamp()` (javobga muhr: tarixda dumaloq muhr, akademikda toʻrtburchak), `hit()`, `countUp()`, ballar +/− suzib chiqadi, taymer oxirgi 5 s yurak urishi, gʻolibda koshin rombchalari / gazeta harflari yogʻadi, nom harflab chiqadi, kartochkalar sichqonchaga ergashib egiladi, sahifalar orasida View Transitions.
+- `prefers-reduced-motion` da hammasi oʻchadi.
 
 ## Ishonchlilik (oldin “baʼzan ishlamay qolardi”)
 

@@ -245,3 +245,113 @@ canvas.confetti { position: fixed; inset: 0; pointer-events: none; z-index: 30; 
   .team .adj { opacity: 1; }
   .setup { padding: 20px; }
 }
+
+/* =========================================================
+   HARAKAT TIZIMI (animatsiyalar) — core.js bilan ishlaydi
+   Kamroq harakat soʻralgan qurilmalarda oʻchadi.
+   ========================================================= */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vtOut .32s cubic-bezier(.4, 0, 1, 1) both; }
+::view-transition-new(root) { animation: vtIn .5s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes vtOut { to { opacity: 0; transform: scale(.98); filter: blur(4px); } }
+@keyframes vtIn { from { opacity: 0; transform: translateY(24px) scale(1.01); filter: blur(6px); } }
+
+/* Ekranga kirish: elementlar navbat bilan “koʻtarilib” chiqadi */
+.m-in { animation: mIn .7s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(var(--mi, 0) * 45ms); }
+@keyframes mIn { from { opacity: 0; transform: translateY(26px) scale(.96) rotateX(14deg); filter: blur(6px); } }
+#app, #page, .mcard { perspective: 1400px; }
+
+/* Savol oynasi: 3D ochilish */
+.modal.open { animation: mFade .35s ease both; }
+.modal.open .mcard { animation: mFlip .7s cubic-bezier(.16, 1, .3, 1) both; transform-origin: 50% 0; }
+@keyframes mFade { from { opacity: 0; backdrop-filter: blur(0); } }
+@keyframes mFlip { from { opacity: 0; transform: perspective(1200px) rotateX(-28deg) translateY(-30px) scale(.94); } }
+
+/* Savol matni soʻzma-soʻz chiqadi */
+.q-text .w { display: inline-block; animation: wIn .55s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(120ms + var(--wi) * 38ms); }
+@keyframes wIn { from { opacity: 0; transform: translateY(.6em) rotate(2deg); filter: blur(3px); } }
+
+/* Javob: toʻgʻri — yorugʻlik oqimi, xato — silkinish */
+.opt { position: relative; overflow: hidden; }
+.opt.right { animation: rightPop .6s cubic-bezier(.34, 1.56, .64, 1); }
+.opt.right::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 30%, color-mix(in srgb, var(--surface) 70%, transparent) 50%, transparent 70%); transform: translateX(-100%); animation: sweep .9s .1s ease forwards; pointer-events: none; }
+@keyframes rightPop { 40% { transform: scale(1.045); } }
+@keyframes sweep { to { transform: translateX(100%); } }
+.opt.wrong { animation: shakeX .5s cubic-bezier(.36, .07, .19, .97); }
+@keyframes shakeX { 15%, 85% { transform: translateX(-2px); } 30%, 70% { transform: translateX(6px); } 45%, 55% { transform: translateX(-9px); } }
+
+/* Muhr (tarix) / tahrir belgisi (akademik) */
+.ask-host { position: relative; }
+.stamp { position: absolute; right: clamp(8px, 3vw, 30px); bottom: 6px; z-index: 3; pointer-events: none; display: grid; place-items: center; width: 132px; height: 132px; border-radius: 50%;
+  border: 4px double currentColor; color: var(--good); font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: .08em; text-transform: uppercase;
+  transform: rotate(-14deg); animation: stampIn .55s cubic-bezier(.5, 1.8, .5, .8) both; mix-blend-mode: multiply; }
+.stamp::before { content: ""; position: absolute; inset: 9px; border-radius: 50%; border: 1.5px solid currentColor; }
+.stamp.bad { color: var(--bad); }
+[data-theme="dark"] .stamp { mix-blend-mode: normal; }
+[data-fan="akademik"] .stamp { border-radius: 2px; width: auto; height: auto; padding: 8px 16px; border-width: 3px; border-style: solid; }
+[data-fan="akademik"] .stamp::before { display: none; }
+@keyframes stampIn { 0% { opacity: 0; transform: rotate(-14deg) scale(3.2); } 60% { opacity: 1; transform: rotate(-14deg) scale(.92); } 100% { transform: rotate(-14deg) scale(1); } }
+.m-hit { animation: hit .42s cubic-bezier(.36, .07, .19, .97); }
+@keyframes hit { 20% { transform: translate(-3px, 2px) rotate(-.3deg); } 40% { transform: translate(3px, -2px) rotate(.3deg); } 60% { transform: translate(-2px, 1px); } 80% { transform: translate(1px, 0); } }
+
+/* Zarrachalar portlashi (rombchalar / qogʻoz parchalari) */
+.burst { position: fixed; left: 0; top: 0; width: 0; height: 0; z-index: 45; pointer-events: none; }
+.burst i { position: absolute; left: 0; top: 0; width: var(--s); height: var(--s); background: var(--c); transform: rotate(45deg); animation: fly .95s cubic-bezier(.12, .7, .3, 1) forwards; }
+[data-fan="akademik"] .burst i { width: calc(var(--s) * .5); height: calc(var(--s) * 1.4); transform: none; }
+@keyframes fly { to { transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(.2); opacity: 0; } }
+
+/* Ballar: suzib chiqadigan +/− va porlash */
+.team { transition: background .3s, box-shadow .4s; }
+.team.gain { box-shadow: 0 0 0 2px var(--good), 0 12px 30px -12px var(--good); }
+.team.loss { box-shadow: 0 0 0 2px var(--bad); }
+.delta { position: absolute; right: 14px; top: 6px; font-family: var(--num); font-weight: 700; font-size: 22px; color: var(--good); pointer-events: none; animation: deltaUp 1.4s cubic-bezier(.16, 1, .3, 1) forwards; }
+.delta.neg { color: var(--bad); }
+@keyframes deltaUp { 0% { opacity: 0; transform: translateY(14px) scale(.6); } 20% { opacity: 1; transform: translateY(0) scale(1.15); } 100% { opacity: 0; transform: translateY(-34px) scale(1); } }
+
+/* Taymer: oxirgi soniyalar — yurak urishi */
+.timer .bar i { transition: background .3s; }
+.timer.warn .bar i { background: var(--warn); }
+.timer.urgent .bar i { background: var(--bad); }
+.timer.urgent .tn { animation: beat .5s ease infinite; color: var(--bad); }
+.timer.urgent { animation: urgentShake .5s ease infinite; }
+@keyframes beat { 30% { transform: scale(1.35); } }
+@keyframes urgentShake { 25% { transform: translateX(-1px); } 75% { transform: translateX(1px); } }
+
+/* Gʻolib: nurlar, harflab chiqadigan nom, navbatli jadval */
+.win { position: relative; }
+.win::before { content: ""; position: absolute; left: 50%; top: 70px; width: 820px; height: 820px; margin: -410px 0 0 -410px; z-index: -1; pointer-events: none; opacity: .14;
+  background: repeating-conic-gradient(from 0deg, var(--accent) 0deg 6deg, transparent 6deg 18deg); -webkit-mask: radial-gradient(circle, #000 0, transparent 62%); mask: radial-gradient(circle, #000 0, transparent 62%); animation: spin 40s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.win .kicker svg { animation: crown 1s .2s cubic-bezier(.34, 1.56, .64, 1) both; }
+@keyframes crown { from { opacity: 0; transform: translateY(-30px) rotate(-30deg) scale(.4); } }
+.win h2 .l { display: inline-block; animation: letter .8s cubic-bezier(.34, 1.56, .64, 1) both; animation-delay: calc(250ms + var(--li) * 45ms); }
+@keyframes letter { from { opacity: 0; transform: translateY(.8em) scale(.3) rotate(-12deg); } }
+.standings tr { animation: rowIn .6s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(700ms + var(--ri) * 110ms); }
+@keyframes rowIn { from { opacity: 0; transform: translateX(-40px); } }
+.rain { position: fixed; inset: 0; z-index: 35; pointer-events: none; overflow: hidden; perspective: 600px; }
+.rain i { position: absolute; top: -40px; left: var(--x); width: var(--s); height: var(--s); background: var(--c); animation: fall var(--d) cubic-bezier(.3, .1, .6, 1) var(--de) forwards; }
+.rain i::after { content: ""; position: absolute; inset: 28%; border: 1.5px solid color-mix(in srgb, #fff 70%, transparent); }
+[data-fan="akademik"] .rain i { background: var(--surface); border: 1px solid var(--line-strong); width: calc(var(--s) * 1.6); height: calc(var(--s) * 1.1); display: grid; place-items: center; font: 800 calc(var(--s) * .7) var(--display); color: var(--ink); }
+[data-fan="akademik"] .rain i::after { display: none; }
+@keyframes fall { 0% { transform: translateY(0) rotateX(0) rotateY(0) rotate(45deg); opacity: 1; } 100% { transform: translateY(110vh) rotateX(var(--rx)) rotateY(var(--ry)) rotate(calc(45deg + var(--rz))); opacity: .9; } }
+
+/* Kartochkalar: sichqonchaga ergashadigan 3D egilish va yaltirash */
+.game.tilt { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-4px); transition: transform .12s ease-out, box-shadow .2s; will-change: transform; }
+.game { position: relative; }
+.game::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .25s; border-radius: inherit;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, #fff 35%, transparent), transparent 55%); }
+.game.tilt::after { opacity: 1; }
+[data-theme="dark"] .game::after { background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, #fff 10%, transparent), transparent 55%); }
+
+/* Fan sahifasi sarlavhasi: harflab paydo boʻlish, siluyet pastdan chiziladi */
+.mast h1 .l { display: inline-block; animation: letter .9s cubic-bezier(.34, 1.3, .64, 1) both; animation-delay: calc(var(--li) * 35ms); }
+[data-fan="tarix"] .mast .art { animation: draw 1.8s .3s cubic-bezier(.16, 1, .3, 1) both; }
+@keyframes draw { from { clip-path: inset(0 50% 0 50%); opacity: 0; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+[data-fan="akademik"] .mast { animation: rule 1s cubic-bezier(.16, 1, .3, 1) both; }
+@keyframes rule { from { border-bottom-color: transparent; } }
+.btn:active:not(:disabled) { transform: translateY(1px) scale(.97); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
+  .rain, .burst { display: none; }
+}

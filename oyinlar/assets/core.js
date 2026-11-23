@@ -178,6 +178,20 @@
         ${onAdjust ? `<div class="adj"><button type="button" data-d="-50">−50</button><button type="button" data-d="50">+50</button></div>` : ""}
       </div>`).join("");
     if (onAdjust) $$(".adj button", el).forEach(b => b.onclick = () => onAdjust(+b.closest(".team").dataset.i, +b.dataset.d));
+    teams.forEach((t, i) => {
+      const key = i + ":" + t.name, old = lastScore[key]; lastScore[key] = t.score;
+      if (old === undefined || old === t.score || t.score === 0 || RM) return;
+      const box = $$(".team", el)[i], num = $(".s", box), d = t.score - old;
+      countUp(num, old, t.score);
+      box.classList.add(d > 0 ? "gain" : "loss"); setTimeout(() => box.classList.remove("gain", "loss"), 1200);
+      box.insertAdjacentHTML("beforeend", `<span class="delta ${d < 0 ? "neg" : ""}">${d > 0 ? "+" : "−"}${Math.abs(d)}</span>`);
+      setTimeout(() => { const x = $(".delta", box); x && x.remove(); }, 1500);
+    });
+  }
+  const lastScore = {};
+  function countUp(node, a, b, ms = 700) {
+    const t0 = performance.now();
+    (function f(now) { const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3); node.textContent = Math.round(a + (b - a) * e); if (k < 1 && node.isConnected) requestAnimationFrame(f); })(t0);
   }
   function bump(el, i) { if (!el) return; const t = $$(".team", el)[i]; if (t) { t.classList.remove("bump"); void t.offsetWidth; t.classList.add("bump"); } }
 
@@ -197,25 +211,25 @@
     swapped(); dropAsk();
     if (!modalEl) { modalEl = document.createElement("div"); modalEl.className = "modal"; modalEl.innerHTML = `<div class="mcard"></div>`; document.body.appendChild(modalEl); }
     modalEl.classList.add("open");
-    const c = $(".mcard", modalEl); c.innerHTML = inner; c.scrollTop = 0; return c;
+    const c = $(".mcard", modalEl); c.innerHTML = inner; c.scrollTop = 0; enter(c); return c;
   }
   modal.close = () => { swapped(); dropAsk(); modalEl && modalEl.classList.remove("open"); };
 
   /* ---------- Taymer ---------- */
   function timer(el, sec, onEnd) {
     el.innerHTML = `<div class="timer"><div class="bar"><i></i></div><span class="tn">${sec}</span><button class="tp" type="button" title="Pauza">${icon("pause")}</button></div>`;
-    const bar = $(".bar i", el), num = $(".tn", el), tp = $(".tp", el);
+    const bar = $(".bar i", el), num = $(".tn", el), tp = $(".tp", el), box = $(".timer", el);
     let total = sec, left = sec, last = 0, id = null, shown = sec;
     const tick = () => {
       if (!el.isConnected) return stop();
       const now = Date.now(); left -= (now - last) / 1000; last = now;
       if (left <= 0) { left = 0; stop(); sound.end(); onEnd && onEnd(); }
       const w = Math.ceil(left);
-      if (w !== shown) { shown = w; num.textContent = w; num.classList.toggle("low", w <= 5); if (w <= 5 && w > 0) sound.tick(); }
+      if (w !== shown) { shown = w; num.textContent = w; num.classList.toggle("low", w <= 5); if (w <= 5 && w > 0) sound.tick(); box.classList.toggle("warn", w <= 10 && w > 5); box.classList.toggle("urgent", w <= 5 && w > 0); }
       bar.style.transform = `scaleX(${left / total})`;
     };
     const start = () => { if (id || left <= 0) return; last = Date.now(); id = setInterval(tick, 100); tp.innerHTML = icon("pause"); };
-    const stop = () => { clearInterval(id); id = null; tp.innerHTML = icon("play"); };
+    const stop = () => { clearInterval(id); id = null; tp.innerHTML = icon("play"); box.classList.remove("urgent"); };
     tp.onclick = () => id ? stop() : start();
     start();
     return { stop, start, add(s) { left += s; total = Math.max(total, left); tick(); } };
@@ -226,7 +240,8 @@
     dropAsk();
     let done = false, aborted = false;
     const opts = shuffle([item.j, ...item.x]);
-    el.innerHTML = `<div class="q-text">${item.s}</div><div class="tm"></div>
+    el.classList.add("ask-host");
+    el.innerHTML = `<div class="q-text">${words(item.s)}</div><div class="tm"></div>
       <div class="opts">${opts.map((o, i) => `<button type="button" class="opt" data-k="${i}"><span class="k">${"ABCD"[i]}</span><span>${o}</span></button>`).join("")}</div>
       <div class="after"></div>
       <div class="hint">Javobni tanlang: sichqoncha yoki A, B, C, D tugmalari</div>`;
@@ -238,6 +253,8 @@
       if (k >= 0 && !ok) btns[k].classList.add("wrong");
       btns[right].classList.add("right");
       ok ? sound.ok() : sound.bad();
+      stamp(el, ok ? "Toʻgʻri" : k < 0 ? "Vaqt" : "Xato", ok);
+      if (ok) burst(btns[right], 26); else hit(el.closest(".mcard, .panel") || el);
       $(".after", el).innerHTML = `<div class="verdict ${ok ? "ok" : "bad"}">${icon(ok ? "check" : "cross")} ${ok ? "Toʻgʻri" : k < 0 ? "Vaqt tugadi" : "Notoʻgʻri"}</div>${item.izoh ? `<div class="izoh">${item.izoh}</div>` : ""}`;
       setTimeout(() => { if (!aborted && el.isConnected && onResult) { if (current === api) current = null; onResult(ok); } }, item.izoh ? 2300 : 1500);
     };
@@ -260,11 +277,15 @@
 
   /* ---------- Konfetti (rang-barang emas — mavzu ranglarida) ---------- */
   function confetti() {
-    const c = document.createElement("canvas"); c.className = "confetti"; document.body.appendChild(c);
-    const x = c.getContext("2d"), W = c.width = innerWidth, H = c.height = innerHeight;
-    const cs = getComputedStyle(html), cols = ["--t0", "--t1", "--t2", "--t3", "--ink"].map(v => cs.getPropertyValue(v).trim());
-    const ps = Array.from({ length: 120 }, () => ({ x: Math.random() * W, y: -20 - Math.random() * H * .5, vx: (Math.random() - .5) * 2, vy: 2 + Math.random() * 3, r: Math.random() * 6, vr: (Math.random() - .5) * .2, c: cols[Math.floor(Math.random() * cols.length)], w: 4 + Math.random() * 6 }));
-    let f = 0; (function loop() { x.clearRect(0, 0, W, H); ps.forEach(p => { p.x += p.vx; p.y += p.vy; p.r += p.vr; x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c; x.fillRect(-p.w / 2, -2, p.w, 4); x.restore(); }); if (++f < 240) requestAnimationFrame(loop); else c.remove(); })();
+    if (RM) return;
+    const cs = getComputedStyle(html), cols = ["--t0", "--t1", "--t2", "--t3"].map(v => cs.getPropertyValue(v).trim());
+    const ak = fan === "akademik", L = "ABDEFGHIJKLMNOPQRSTUVXYZ";
+    const r = document.createElement("div"); r.className = "rain";
+    r.innerHTML = Array.from({ length: 90 }, () => {
+      const v = `--x:${Math.random() * 100}%;--s:${10 + Math.random() * 16}px;--c:${cols[Math.floor(Math.random() * 4)]};--d:${2.6 + Math.random() * 2.4}s;--de:${Math.random() * 1.6}s;--rx:${(Math.random() - .5) * 1440}deg;--ry:${(Math.random() - .5) * 1440}deg;--rz:${(Math.random() - .5) * 720}deg`;
+      return `<i style="${v}">${ak ? L[Math.floor(Math.random() * L.length)] : ""}</i>`;
+    }).join("");
+    document.body.appendChild(r); setTimeout(() => r.remove(), 6500);
   }
 
   /* ---------- Gʻolib ---------- */
@@ -273,15 +294,65 @@
     const top = s.filter(t => t.score === s[0].score);
     const c = modal(`<div class="win">
       <div class="kicker">${icon("crown")} Oʻyin yakuni</div>
-      <h2>${top.map(t => esc(t.name)).join(" va ")}</h2>
+      <h2>${letters(top.map(t => t.name).join(" va "))}</h2>
       <div class="sub">${top.length > 1 ? "Durang natija" : "Gʻolib jamoa"}</div>
-      <table class="standings">${s.map((t, k) => `<tr><td>${String(k + 1).padStart(2, "0")}</td><td><span class="sw" style="--c:${tc(t)}"></span>${esc(t.name)}</td><td>${t.score} <small style="font-size:12px;color:var(--muted)">${unit}</small></td></tr>`).join("")}</table>
+      <table class="standings">${s.map((t, k) => `<tr style="--ri:${k}"><td>${String(k + 1).padStart(2, "0")}</td><td><span class="sw" style="--c:${tc(t)}"></span>${esc(t.name)}</td><td><span class="cu" data-v="${t.score}">0</span> <small style="font-size:12px;color:var(--muted)">${unit}</small></td></tr>`).join("")}</table>
       <div class="row-btns"><button class="btn primary" id="again" type="button">${icon("reset")} Yana oʻynash</button><a class="btn" href="${menu}">Menyuga</a></div></div>`);
     $("#again", c).onclick = () => { modal.close(); onAgain(); };
-    sound.win(); confetti();
+    sound.win(); confetti(); burst(c.querySelector("h2"), 40);
+    $$(".cu", c).forEach((n, k) => setTimeout(() => countUp(n, 0, +n.dataset.v, 1100), RM ? 0 : 800 + k * 110));
   }
   function toast(msg, ms = 1900) { const t = document.createElement("div"); t.className = "toast"; t.innerHTML = msg; document.body.appendChild(t); setTimeout(() => t.remove(), ms); }
 
+  /* ---------- Harakat (animatsiyalar) ---------- */
+  const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Savol matnini soʻzlarga boʻlish (HTML boʻlsa — tegilmaydi)
+  function words(t) { return /</.test(t) ? t : String(t).split(/(\s+)/).map((w, i) => /^\s+$/.test(w) ? w : `<span class="w" style="--wi:${i >> 1}">${w}</span>`).join(""); }
+  function letters(t) { let k = 0; return [...String(t)].map(ch => ch === " " ? " " : `<span class="l" style="--li:${k++}">${esc(ch)}</span>`).join(""); }
+  function stamp(host, txt, ok) {
+    if (RM || !host) return;
+    const old = $(".stamp", host); old && old.remove();
+    host.insertAdjacentHTML("beforeend", `<div class="stamp ${ok ? "ok" : "bad"}">${txt}</div>`);
+  }
+  function hit(el) { if (!el || RM) return; el.classList.remove("m-hit"); void el.offsetWidth; el.classList.add("m-hit"); }
+  // Element markazidan zarrachalar sochiladi
+  function burst(el, n = 24) {
+    if (!el || RM) return;
+    const r = el.getBoundingClientRect(), cs = getComputedStyle(html), cols = ["--t0", "--t1", "--t2", "--t3"].map(v => cs.getPropertyValue(v).trim());
+    const b = document.createElement("div"); b.className = "burst"; b.style.left = r.left + r.width / 2 + "px"; b.style.top = r.top + r.height / 2 + "px";
+    b.innerHTML = Array.from({ length: n }, () => { const a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 160;
+      return `<i style="--s:${6 + Math.random() * 9}px;--c:${cols[Math.floor(Math.random() * 4)]};--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d - 40}px;--r:${(Math.random() - .5) * 540}deg"></i>`; }).join("");
+    document.body.appendChild(b); setTimeout(() => b.remove(), 1100);
+  }
+  // Ekran almashganda elementlar navbat bilan chiqadi (bir ekranning ichidagi kichik yangilanishlarda — yoʻq)
+  const ENTER = ".panel, .box, .opt, .team, .game, .lane, .ev, .setup, .sec-h, .board > *, .q-text";
+  function enter(root) {
+    if (RM || !root) return;
+    let k = 0; const seen = new Set();
+    [...root.children, ...root.querySelectorAll(ENTER)].forEach(el => {
+      if (seen.has(el) || k > 30 || el.closest(".m-in") && el.closest(".m-in") !== el) return; seen.add(el);
+      el.style.setProperty("--mi", k++); el.classList.add("m-in");
+      el.addEventListener("animationend", function f(e) { if (e.target === el) { el.classList.remove("m-in"); el.removeEventListener("animationend", f); } });
+    });
+  }
+  const sig = root => { const k = root.querySelector(".meta, .q, h1, h2, .kicker, .sec-h"); return (k ? k.textContent.replace(/\d+/g, "") : "") + "|" + [...root.children].map(c => c.className).join(","); };
+  function watch(root) { if (!root) return; let last = ""; new MutationObserver(() => { const k = sig(root); if (k !== last) { last = k; enter(root); } }).observe(root, { childList: true }); }
+  watch($("#app")); watch($("#page"));
+  // Kartochkalar sichqonchaga ergashib egiladi
+  if (!RM && matchMedia("(hover: hover)").matches) {
+    document.addEventListener("pointermove", e => {
+      const g = e.target.closest && e.target.closest(".game");
+      $$(".game.tilt").forEach(x => { if (x !== g) { x.classList.remove("tilt"); x.style.removeProperty("--rx"); x.style.removeProperty("--ry"); } });
+      if (!g) return;
+      const r = g.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      g.classList.add("tilt"); g.style.setProperty("--ry", (px - .5) * 12 + "deg"); g.style.setProperty("--rx", (.5 - py) * 10 + "deg");
+      g.style.setProperty("--mx", px * 100 + "%"); g.style.setProperty("--my", py * 100 + "%");
+    }, { passive: true });
+  }
+  // Fan sahifasi sarlavhasi harflab chiqadi
+  const splitTitle = () => { const h = $(".mast h1"); if (h && !h.dataset.split && !RM) { h.dataset.split = 1; h.innerHTML = h.textContent.split(" ").map(w => `<span style="white-space:nowrap">${letters(w)}</span>`).join(" "); } };
+  if ($("#page")) new MutationObserver(splitTitle).observe($("#page"), { childList: true });
+
   window.G = { swapped, $, $$, esc, shuffle, store, fan, data, icon, sound, header, setup, tc, scores, bump, modal, timer, ask, all, confetti, winner, toast, themeButton,
-    mavzu, topics, extra, saveKey: g => "oyin2-" + g + "-" + dkey };
+    burst, stamp, hit, countUp, enter, words, letters, mavzu, topics, extra, saveKey: g => "oyin2-" + g + "-" + dkey };
 })();
