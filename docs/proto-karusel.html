@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tarix — karusel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+  :root { --bg: #101012; --ink: #ddd5c4; --mute: #7e7a72; --gold: #b39a64; --stone: #1b1a1c; --edge: #2c2a2c; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--ink); font-family: "Alegreya Sans", sans-serif; }
+  body::before { content: ""; position: fixed; inset: 0; background: radial-gradient(ellipse 70% 55% at 50% 62%, #1d1b1c 0, transparent 70%); }
+  .dust i { position: fixed; width: 2px; height: 2px; border-radius: 50%; background: #b39a64; opacity: 0; animation: dust var(--d) linear infinite; animation-delay: var(--de); }
+  @keyframes dust { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: .35; } 100% { transform: translateY(-260px) translateX(30px); opacity: 0; } }
+  header { position: fixed; left: 0; right: 0; top: 0; z-index: 5; display: flex; align-items: flex-start; justify-content: space-between; padding: 30px 40px; }
+  .ttl .ov { font-size: 12px; letter-spacing: .32em; text-transform: uppercase; color: var(--gold); }
+  .ttl h1 { margin: 10px 0 0; font: 600 clamp(28px, 3.4vw, 46px)/1 "Cormorant Garamond", serif; }
+  .topics { display: flex; gap: 6px; }
+  .topics button { font: 500 13px "Alegreya Sans", sans-serif; color: var(--mute); background: transparent; border: 1px solid var(--edge); padding: 8px 13px; cursor: pointer; transition: .2s; }
+  .topics button.on, .topics button:hover { color: var(--ink); border-color: var(--gold); }
+  .stage { position: fixed; inset: 0; perspective: 1500px; perspective-origin: 50% 40%; cursor: grab; touch-action: none; }
+  .stage.drag { cursor: grabbing; }
+  .ring { position: absolute; left: 50%; top: 52%; width: 0; height: 0; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.2,.8,.2,1); }
+  .ring.free { transition: none; }
+  .slab { position: absolute; left: -110px; top: -170px; width: 220px; height: 330px; transform-style: preserve-3d; cursor: pointer; }
+  .slab .face { position: absolute; inset: 0; background: linear-gradient(180deg, #232124, #18171a 70%); border: 1px solid var(--edge); border-radius: 110px 110px 4px 4px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 0 18px 30px; text-align: center; box-shadow: inset 0 1px 0 rgba(255,255,255,.04); transition: border-color .5s, box-shadow .5s, filter .5s; filter: brightness(.55); }
+  .slab .face::before { content: ""; position: absolute; inset: 12px 12px auto; height: 58%; border-radius: 98px 98px 0 0; border: 1px solid rgba(179,154,100,.25); }
+  .slab .face svg { width: 62px; height: 62px; color: var(--gold); position: absolute; top: 74px; stroke-width: 1.2; }
+  .slab .n { font: 500 12px "Alegreya Sans", sans-serif; letter-spacing: .3em; color: var(--mute); }
+  .slab h3 { margin: 6px 0 0; font: 600 25px/1.05 "Cormorant Garamond", serif; color: var(--ink); }
+  .slab .refl { position: absolute; left: 0; right: 0; top: 100%; height: 100%; transform: scaleY(-1); opacity: .12; background: inherit; -webkit-mask: linear-gradient(transparent 55%, #000); mask: linear-gradient(transparent 55%, #000); pointer-events: none; }
+  .slab.front .face { filter: none; border-color: rgba(179,154,100,.75); box-shadow: 0 0 0 1px rgba(179,154,100,.2), 0 40px 80px -30px rgba(0,0,0,.9), 0 0 60px -20px rgba(179,154,100,.35); }
+  .slab.front .face svg { animation: lift 3s ease-in-out infinite; }
+  @keyframes lift { 50% { transform: translateY(-6px); } }
+  .floor { position: fixed; left: 50%; top: calc(52% + 170px); width: 1400px; height: 600px; margin-left: -700px; transform: rotateX(80deg); transform-origin: top; background: radial-gradient(ellipse at 50% 10%, rgba(179,154,100,.12), transparent 60%); pointer-events: none; }
+  .info { position: fixed; left: 0; right: 0; bottom: 34px; z-index: 5; text-align: center; }
+  .info .gn { font: 600 clamp(36px, 5vw, 64px)/1 "Cormorant Garamond", serif; transition: opacity .3s, transform .4s; }
+  .info .gn.sw { opacity: 0; transform: translateY(10px); }
+  .info .sub { color: var(--mute); margin: 8px 0 16px; font-size: 15px; }
+  .info a { display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; color: #101012; background: var(--gold); text-decoration: none; font-weight: 700; letter-spacing: .06em; transition: gap .2s, background .2s; }
+  .info a:hover { gap: 16px; background: #cdb27a; }
+  .info a svg { width: 18px; height: 18px; }
+  .arrows { position: fixed; top: 50%; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 30px; z-index: 5; pointer-events: none; }
+  .arrows button { pointer-events: auto; width: 54px; height: 54px; border-radius: 50%; border: 1px solid var(--edge); background: rgba(16,16,18,.7); color: var(--ink); cursor: pointer; display: grid; place-items: center; transition: border-color .2s; }
+  .arrows button:hover { border-color: var(--gold); }
+  .arrows svg { width: 22px; height: 22px; }
+  .dots { margin-top: 18px; display: flex; gap: 6px; justify-content: center; }
+  .dots i { width: 6px; height: 6px; transform: rotate(45deg); background: var(--edge); transition: background .3s; }
+  .dots i.on { background: var(--gold); }
+  @media (max-width: 720px) { header { flex-direction: column; gap: 14px; padding: 18px; } .slab { transform: scale(.8); } .arrows { padding: 0 8px; } }
+</style>
+</head>
+<body>
+<div class="dust" id="dust"></div>
+<header>
+  <div class="ttl"><div class="ov">Interaktiv oʻyinlar</div><h1>Oʻzbekistonning eng yangi tarixi</h1></div>
+  <div class="topics" id="topics"></div>
+</header>
+<div class="floor"></div>
+<div class="stage" id="stage"><div class="ring" id="ring"></div></div>
+<div class="arrows"><button type="button" id="prev" aria-label="Oldingi"></button><button type="button" id="next" aria-label="Keyingi"></button></div>
+<div class="info"><div class="gn" id="gn"></div><div class="sub" id="sub"></div><a id="go" href="#"></a><div class="dots" id="dots"></div></div>
+
+<script src="../oyinlar/assets/core.js"></script>
+<script>
+const { icon } = G;
+const GM = [["tavakkal", "wheel", "Tavakkal"], ["hududlar", "hex", "Hududlar"], ["svetofor", "light", "Svetofor"], ["zinapoya", "ladder", "Zinapoya"], ["arqon", "rope", "Arqon tortish"],
+  ["konvert", "envelope", "Sirli konvert"], ["afsona", "scroll", "Haqiqat yoki afsona"], ["minora", "tower", "Minora qurish"], ["oldin", "updown", "Oldinmi, keyinmi?"], ["labirint", "maze", "Labirint"],
+  ["harf", "letters", "Harflab topish"], ["karvon", "camel", "Ipak yoʻli karvoni"], ["taxmin", "gauge", "Taxmin"], ["viselitsa", "gallows", "Viselitsa"], ["juftlik", "cards", "Juftini top"]];
+const TOP = [["bmt", "BMT"], ["10", "10-mavzu"], ["11", "11-mavzu"], ["12", "12-mavzu"]];
+let topic = "12", cur = 0, rot = 0;
+const N = GM.length, step = 360 / N, R = 620;
+const ring = document.getElementById("ring");
+ring.innerHTML = GM.map((g, i) => `<div class="slab" data-i="${i}" style="transform: rotateY(${i * step}deg) translateZ(${R}px)"><div class="face">${icon(g[1], "")}<span class="n">${String(i + 1).padStart(2, "0")}</span><h3>${g[2]}</h3></div></div>`).join("");
+document.getElementById("dots").innerHTML = GM.map(() => "<i></i>").join("");
+document.getElementById("prev").innerHTML = icon("back", ""); document.getElementById("next").innerHTML = icon("arrow", "");
+document.getElementById("dust").innerHTML = Array.from({ length: 40 }, () => `<i style="left:${Math.random() * 100}%;top:${40 + Math.random() * 60}%;--d:${8 + Math.random() * 10}s;--de:${-Math.random() * 18}s"></i>`).join("");
+document.getElementById("topics").innerHTML = TOP.map(([k, n]) => `<button type="button" data-k="${k}" class="${k === topic ? "on" : ""}">${n}</button>`).join("");
+
+let target = 0;
+function go(d) {
+  target -= d * step; cur = ((cur + d) % N + N) % N;
+  ring.classList.remove("free"); ring.style.transform = `translateZ(${-R}px) rotateY(${target}deg)`; refresh();
+}
+function refresh() {
+  document.querySelectorAll(".slab").forEach(s => s.classList.toggle("front", +s.dataset.i === cur));
+  document.querySelectorAll(".dots i").forEach((d, k) => d.classList.toggle("on", k === cur));
+  const gn = document.getElementById("gn"); gn.classList.add("sw");
+  setTimeout(() => { gn.textContent = GM[cur][2]; gn.classList.remove("sw"); }, 180);
+  document.getElementById("sub").textContent = `${String(cur + 1).padStart(2, "0")} / ${N} · ${TOP.find(t => t[0] === topic)[1]}`;
+  const a = document.getElementById("go"); a.href = `../oyinlar/${GM[cur][0]}.html?fan=tarix&mavzu=${topic}`; a.innerHTML = `Oʻynash ${icon("arrow", "")}`;
+}
+ring.style.transform = `translateZ(${-R}px) rotateY(0deg)`; refresh();
+document.getElementById("prev").onclick = () => go(-1);
+document.getElementById("next").onclick = () => go(1);
+document.querySelectorAll(".slab").forEach(s => s.onclick = () => { const i = +s.dataset.i; if (i === cur) return location.href = document.getElementById("go").href; let d = i - cur; if (d > N / 2) d -= N; if (d < -N / 2) d += N; go(d); });
+addEventListener("keydown", e => { if (e.key === "ArrowRight") go(1); if (e.key === "ArrowLeft") go(-1); if (e.key === "Enter") location.href = document.getElementById("go").href; });
+let wheelLock = 0;
+addEventListener("wheel", e => { if (Date.now() - wheelLock < 450) return; wheelLock = Date.now(); go(e.deltaY > 0 || e.deltaX > 0 ? 1 : -1); }, { passive: true });
+// Sudrab aylantirish
+const st = document.getElementById("stage"); let dx = null, base = 0;
+st.addEventListener("pointerdown", e => { if (e.target.closest(".slab")) return; dx = e.clientX; base = target; ring.classList.add("free"); st.classList.add("drag"); });
+addEventListener("pointermove", e => { if (dx === null) return; ring.style.transform = `translateZ(${-R}px) rotateY(${base + (e.clientX - dx) * .25}deg)`; });
+addEventListener("pointerup", e => { if (dx === null) return; const moved = Math.round(((e.clientX - dx) * .25) / step); dx = null; st.classList.remove("drag"); ring.classList.remove("free"); target = base; go(-moved || 0); });
+document.querySelectorAll("#topics button").forEach(b => b.onclick = () => { topic = b.dataset.k; document.querySelectorAll("#topics button").forEach(x => x.classList.toggle("on", x === b)); refresh(); });
+</script>
+</body>
+</html>

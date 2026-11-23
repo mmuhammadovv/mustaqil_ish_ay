@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tarix — xarita</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+  :root { --bg: #0e1316; --ink: #d9d2c3; --mute: #7d8a8c; --line: #1f2a2f; --gold: #b39a64; --gold2: #8a7647; --water: #2e4650; --land: #131b1f; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: "Alegreya Sans", sans-serif; overflow: hidden; }
+  #map { position: fixed; inset: 0; cursor: grab; touch-action: none; }
+  #map.drag { cursor: grabbing; }
+  #map svg { width: 100%; height: 100%; display: block; }
+  .contour { fill: none; stroke: #1c262b; stroke-width: 1; }
+  .river { fill: none; stroke: var(--water); stroke-width: 2.2; stroke-linecap: round; }
+  .river.flow { stroke: #4c6f7c; stroke-width: 2.2; stroke-dasharray: 2 14; animation: flow 3s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -32; } }
+  .sea { fill: #172429; stroke: var(--water); stroke-width: 1.2; }
+  .route { fill: none; stroke: var(--gold2); stroke-width: 1.4; stroke-dasharray: 5 6; opacity: .75; }
+  .route.draw { stroke-dasharray: 2200; stroke-dashoffset: 2200; animation: draw 4s 0.4s cubic-bezier(.6,0,.3,1) forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .lbl-geo { fill: #3e4d52; font: italic 600 15px "Cormorant Garamond", serif; letter-spacing: .25em; }
+  .city { cursor: pointer; }
+  .city .halo { fill: var(--gold); opacity: .12; transform-box: fill-box; transform-origin: center; animation: halo 3.2s ease-out infinite; animation-delay: var(--d); }
+  @keyframes halo { 0% { transform: scale(.4); opacity: .35; } 100% { transform: scale(2.4); opacity: 0; } }
+  .city .dot { fill: var(--bg); stroke: var(--gold); stroke-width: 1.6; transition: r .25s; }
+  .city .core { fill: var(--gold); }
+  .city text { fill: var(--ink); font: 600 13px "Alegreya Sans", sans-serif; letter-spacing: .06em; paint-order: stroke; stroke: var(--bg); stroke-width: 4px; transition: fill .2s; }
+  .city .gm { fill: var(--mute); font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
+  .city:hover text, .city.on text { fill: #f1e6c8; }
+  .city:hover .dot, .city.on .dot { r: 9; fill: var(--gold); }
+  .city.on .gm { fill: var(--gold); }
+
+  .hud { position: fixed; z-index: 5; pointer-events: none; }
+  .hud > * { pointer-events: auto; }
+  .title { left: 36px; top: 30px; max-width: 520px; }
+  .title .ov { font-size: 12px; letter-spacing: .32em; text-transform: uppercase; color: var(--gold); }
+  .title h1 { margin: 10px 0 8px; font: 600 clamp(34px, 4.2vw, 58px)/1 "Cormorant Garamond", serif; letter-spacing: -.005em; }
+  .title p { margin: 0; color: var(--mute); font-size: 16px; }
+  .topics { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 18px; }
+  .topics button { font: 500 13px "Alegreya Sans", sans-serif; color: var(--mute); background: rgba(14,19,22,.7); border: 1px solid var(--line); padding: 7px 12px; cursor: pointer; transition: color .2s, border-color .2s; }
+  .topics button.on, .topics button:hover { color: var(--ink); border-color: var(--gold2); }
+  .card { right: 36px; bottom: 36px; width: 340px; padding: 24px; background: rgba(14,19,22,.88); border: 1px solid #26323a; backdrop-filter: blur(8px); transform: translateY(20px); opacity: 0; transition: transform .45s cubic-bezier(.16,1,.3,1), opacity .35s; }
+  .card.show { transform: none; opacity: 1; }
+  .card .cn { font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+  .card h2 { margin: 8px 0 4px; font: 600 38px/1 "Cormorant Garamond", serif; }
+  .card .ic { float: right; width: 54px; height: 54px; color: var(--gold); margin: -4px -4px 0 12px; }
+  .card p { margin: 10px 0 18px; color: var(--mute); font-size: 15px; line-height: 1.45; clear: both; }
+  .card a { display: inline-flex; align-items: center; gap: 10px; padding: 11px 18px; color: var(--bg); background: var(--gold); text-decoration: none; font-weight: 700; letter-spacing: .06em; transition: background .2s, gap .2s; }
+  .card a:hover { background: #cdb27a; gap: 16px; }
+  .card a svg { width: 18px; height: 18px; }
+  .legend { left: 36px; bottom: 30px; color: var(--mute); font-size: 13px; display: flex; gap: 18px; align-items: center; }
+  .legend i { display: inline-block; width: 26px; border-top: 1.4px dashed var(--gold2); vertical-align: middle; margin-right: 6px; }
+  .compass { right: 36px; top: 30px; width: 86px; opacity: .55; }
+  .compass svg { animation: cmp 80s linear infinite; }
+  @keyframes cmp { to { transform: rotate(360deg); } }
+  .vig { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(5,8,10,.85)); z-index: 2; }
+  @media (max-width: 720px) { .title { left: 18px; top: 18px; right: 18px; } .card { left: 12px; right: 12px; bottom: 12px; width: auto; } .legend, .compass { display: none; } }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="vig"></div>
+<div class="hud title">
+  <div class="ov">Interaktiv oʻyinlar</div>
+  <h1>Oʻzbekistonning<br>eng yangi tarixi</h1>
+  <p>Shaharni tanlang — har bir shaharda bitta oʻyin.</p>
+  <div class="topics" id="topics"></div>
+</div>
+<div class="hud compass"><svg viewBox="0 0 100 100" fill="none" stroke="#b39a64" stroke-width="1"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="36" stroke-dasharray="1 4"/><path d="M50 6l5 39-5 5-5-5zM50 94l5-39-5-5-5 5zM6 50l39-5 5 5-5 5zM94 50l-39-5-5 5 5 5z" fill="#b39a64" fill-opacity=".25"/><text x="50" y="20" font-size="9" text-anchor="middle" fill="#b39a64" stroke="none">N</text></svg></div>
+<div class="hud card" id="card"></div>
+<div class="hud legend"><span><i></i>Karvon yoʻli</span><span>Sichqoncha bilan suring, gʻildirak bilan yaqinlashtiring</span></div>
+
+<script src="../oyinlar/assets/core.js"></script>
+<script>
+const { icon } = G;
+// Shaharlar (taxminiy geografik koordinatalar) va ulardagi oʻyinlar
+const C = [
+  ["Moʻynoq", 43.77, 59.02, "afsona", "scroll", "Haqiqat yoki afsona"],
+  ["Nukus", 42.46, 59.60, "taxmin", "gauge", "Taxmin"],
+  ["Xiva", 41.38, 60.36, "harf", "letters", "Harflab topish"],
+  ["Buxoro", 39.77, 64.42, "konvert", "envelope", "Sirli konvert"],
+  ["Navoiy", 40.10, 65.37, "minora", "tower", "Minora qurish"],
+  ["Qarshi", 38.86, 65.79, "hududlar", "hex", "Hududlar"],
+  ["Shahrisabz", 39.06, 66.83, "tavakkal", "wheel", "Tavakkal"],
+  ["Termiz", 37.22, 67.28, "karvon", "camel", "Ipak yoʻli karvoni"],
+  ["Samarqand", 39.65, 66.96, "labirint", "maze", "Labirint"],
+  ["Jizzax", 40.12, 67.84, "zinapoya", "ladder", "Zinapoya"],
+  ["Guliston", 40.49, 68.78, "arqon", "rope", "Arqon tortish"],
+  ["Toshkent", 41.30, 69.25, "svetofor", "light", "Svetofor"],
+  ["Qoʻqon", 40.53, 70.94, "oldin", "updown", "Oldinmi, keyinmi?"],
+  ["Namangan", 41.00, 71.67, "viselitsa", "gallows", "Viselitsa"],
+  ["Andijon", 40.78, 72.34, "juftlik", "cards", "Juftini top"]
+];
+const TOP = [["bmt", "BMT"], ["10", "10-mavzu"], ["11", "11-mavzu"], ["12", "12-mavzu"]];
+let topic = "12";
+const W = 1400, H = 900;
+const P = (lat, lon) => [(lon - 57.2) * 86, (45.6 - lat) * 104];
+const path = pts => "M" + pts.map(([a, b]) => P(a, b).map(v => v.toFixed(1)).join(" ")).join("L");
+const smooth = pts => { const p = pts.map(([a, b]) => P(a, b)); let d = `M${p[0][0]} ${p[0][1]}`; for (let i = 1; i < p.length; i++) { const [x0, y0] = p[i - 1], [x1, y1] = p[i]; d += ` Q${x0} ${y0} ${(x0 + x1) / 2} ${(y0 + y1) / 2}`; } const l = p[p.length - 1]; return d + ` T${l[0]} ${l[1]}`; };
+
+// Relyef: tasodifiy togʻ choʻqqilari atrofida konsentrik chiziqlar (sharqda — togʻlar)
+let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+const peaks = [[39.2, 69.5, 9], [40.9, 70.2, 8], [38.6, 68.2, 7], [41.8, 72.5, 10], [39.6, 71.8, 9], [40.2, 66.0, 4], [38.2, 67.0, 5]];
+const contours = peaks.flatMap(([la, lo, n]) => { const [cx, cy] = P(la, lo); return Array.from({ length: n }, (_, k) => {
+  const r = 14 + k * 17, pts = Array.from({ length: 36 }, (_, j) => { const a = j / 36 * Math.PI * 2, rr = r * (0.82 + rnd() * .36); return [cx + Math.cos(a) * rr * 1.5, cy + Math.sin(a) * rr]; });
+  return `<path class="contour" d="M${pts.map(p => p.map(v => v.toFixed(1)).join(" ")).join("L")}Z" opacity="${1 - k / (n + 2)}"/>`; }); }).join("");
+const amu = smooth([[37.2, 67.6], [37.5, 66.3], [38.2, 65.0], [39.0, 63.7], [39.9, 62.6], [40.8, 61.6], [41.5, 60.8], [42.2, 60.0], [42.9, 59.5], [43.8, 59.3]]);
+const sir = smooth([[40.9, 72.6], [40.7, 71.6], [40.5, 70.6], [40.3, 69.7], [40.7, 68.9], [41.4, 68.4], [42.4, 67.6], [43.4, 66.4], [44.4, 64.8], [45.2, 62.8]]);
+const zar = smooth([[39.5, 68.4], [39.6, 67.4], [39.7, 66.5], [39.9, 65.6], [39.8, 64.8]]);
+const aral = path([[46.4, 60.0], [46.0, 61.3], [45.2, 61.6], [44.6, 61.0], [44.0, 60.2], [44.2, 59.3], [45.0, 58.8], [45.8, 59.1]]) + "Z";
+const routeOrder = ["Moʻynoq", "Nukus", "Xiva", "Buxoro", "Navoiy", "Samarqand", "Shahrisabz", "Qarshi", "Termiz", "Samarqand", "Jizzax", "Guliston", "Toshkent", "Qoʻqon", "Namangan", "Andijon"];
+const route = smooth(routeOrder.map(n => { const c = C.find(x => x[0] === n); return [c[1], c[2]]; }));
+
+document.getElementById("map").innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice"><g id="vp">
+  <rect x="-2000" y="-2000" width="6000" height="6000" fill="#0e1316"/>
+  <g>${contours}</g>
+  <path class="sea" d="${aral}"/><text class="lbl-geo" x="${P(45.4, 60.1)[0]}" y="${P(45.4, 60.1)[1]}" text-anchor="middle">OROL</text>
+  <path class="river" d="${amu}"/><path class="river flow" d="${amu}"/>
+  <path class="river" d="${sir}"/><path class="river flow" d="${sir}"/>
+  <path class="river" d="${zar}" stroke-width="1.4"/>
+  <text class="lbl-geo" x="${P(40.6, 62.4)[0]}" y="${P(40.6, 62.4)[1]}" transform="rotate(-38 ${P(40.6, 62.4).join(" ")})">AMUDARYO</text>
+  <text class="lbl-geo" x="${P(43.2, 66.9)[0]}" y="${P(43.2, 66.9)[1]}" transform="rotate(-32 ${P(43.2, 66.9).join(" ")})">SIRDARYO</text>
+  <text class="lbl-geo" x="${P(42.0, 63.6)[0]}" y="${P(42.0, 63.6)[1]}" font-size="22" letter-spacing=".6em">QIZILQUM</text>
+  <path class="route draw" d="${route}"/>
+  ${C.map((c, i) => { const [x, y] = P(c[1], c[2]); return `<g class="city" data-i="${i}" transform="translate(${x} ${y})" style="--d:${(i * .37) % 3}s">
+    <circle class="halo" r="12"/><circle class="dot" r="6"/><circle class="core" r="2.2"/>
+    <text x="12" y="-4">${c[0]}</text><text class="gm" x="12" y="11">${c[5]}</text></g>`; }).join("")}
+</g></svg>`;
+
+// Suriladigan va yaqinlashadigan xarita
+const vp = document.getElementById("vp"), map = document.getElementById("map");
+let tx = 330, ty = 40, k = .8, drag = null;
+const apply = () => vp.setAttribute("transform", `translate(${tx} ${ty}) scale(${k})`);
+apply();
+map.addEventListener("pointerdown", e => { if (e.target.closest(".city")) return; drag = [e.clientX, e.clientY, tx, ty]; map.classList.add("drag"); map.setPointerCapture(e.pointerId); });
+map.addEventListener("pointermove", e => { if (!drag) return; const s = W / map.clientWidth; tx = drag[2] + (e.clientX - drag[0]) * s; ty = drag[3] + (e.clientY - drag[1]) * s; apply(); });
+map.addEventListener("pointerup", () => { drag = null; map.classList.remove("drag"); });
+map.addEventListener("wheel", e => { e.preventDefault(); const nk = Math.min(2.6, Math.max(.7, k * (e.deltaY < 0 ? 1.12 : .89))); tx += (W / 2 - tx) * (1 - nk / k) * .6; ty += (H / 2 - ty) * (1 - nk / k) * .6; k = nk; apply(); }, { passive: false });
+
+const card = document.getElementById("card");
+function show(i) {
+  const c = C[i];
+  document.querySelectorAll(".city").forEach(g => g.classList.toggle("on", +g.dataset.i === i));
+  card.classList.remove("show"); void card.offsetWidth;
+  card.innerHTML = `<div class="ic">${icon(c[4], "")}</div><div class="cn">${c[0]}</div><h2>${c[5]}</h2>
+    <p>${TOP.find(t => t[0] === topic)[1]} savollari bilan.</p>
+    <a href="../oyinlar/${c[3]}.html?fan=tarix&mavzu=${topic}">Oʻynash ${icon("arrow", "")}</a>`;
+  card.classList.add("show");
+}
+document.querySelectorAll(".city").forEach(g => { g.addEventListener("mouseenter", () => show(+g.dataset.i)); g.addEventListener("click", () => show(+g.dataset.i)); });
+document.getElementById("topics").innerHTML = TOP.map(([k2, n]) => `<button type="button" data-k="${k2}" class="${k2 === topic ? "on" : ""}">${n}</button>`).join("");
+document.querySelectorAll("#topics button").forEach(b => b.onclick = () => { topic = b.dataset.k; document.querySelectorAll("#topics button").forEach(x => x.classList.toggle("on", x === b)); const on = document.querySelector(".city.on"); if (on) show(+on.dataset.i); });
+setTimeout(() => show(8), 1200);
+</script>
+</body>
+</html>
