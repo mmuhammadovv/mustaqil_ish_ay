@@ -336,21 +336,43 @@
   const sig = root => { const k = root.querySelector(".meta, .q, h1, h2, .kicker, .sec-h"); return (k ? k.textContent.replace(/\d+/g, "") : "") + "|" + [...root.children].map(c => c.className).join(","); };
   function watch(root) { if (!root) return; let last = ""; new MutationObserver(() => { const k = sig(root); if (k !== last) { last = k; enter(root); } }).observe(root, { childList: true }); }
   watch($("#app")); watch($("#page"));
-  // Fondagi doimiy harakat: nurlar, chang, oʻzi chiziladigan naqsh (kamroq harakat soʻralsa — yoʻq)
-  function ambient() {
-    if (RM || document.querySelector(".amb")) return;
-    const orn = cls => `<svg class="orn ${cls}" viewBox="0 0 200 200" aria-hidden="true">
-      <path pathLength="1" d="M100 10l26 64 64 26-64 26-26 64-26-64-64-26 64-26z"/>
-      <path pathLength="1" d="M100 40l60 60-60 60-60-60z"/>
-      <circle pathLength="1" cx="100" cy="100" r="86"/>
-      <circle pathLength="1" cx="100" cy="100" r="30"/>
-      <path pathLength="1" d="M14 100h172M100 14v172"/></svg>`;
-    const a = document.createElement("div"); a.className = "amb"; a.setAttribute("aria-hidden", "true");
-    a.innerHTML = `<i class="beam"></i><i class="beam"></i><i class="beam"></i>${orn("a")}${orn("b")}
-      <div class="dust">${Array.from({ length: 34 }, () => `<i style="left:${Math.random() * 100}%;top:${45 + Math.random() * 60}%;--s:${1 + Math.random() * 2.2}px;--d:${14 + Math.random() * 16}s;--de:${-Math.random() * 30}s;--dx:${(Math.random() - .5) * 120}px;--o:${.25 + Math.random() * .45}"></i>`).join("")}</div>`;
-    document.body.prepend(a);
+  // Tarix: fonda tungi Registon va sahifaga mos jonli buyumlar (foydalanuvchi bergan miniatyura rasmlari)
+  const ASSET = ((document.currentScript && document.currentScript.src) || "").replace(/core\.js.*$/, "") || "assets/";
+  const page = (location.pathname.split("/").pop() || "").replace(".html", "");
+  const DECOR = {
+    // fan.html — bosh sahna
+    fan: [["konvert", 56, 31, 8, "tFloat 6s ease-in-out infinite"], ["fonus", 38, 30, 3, "tSwing 5s ease-in-out infinite", 1], ["qumsoat", 19, 64, 4.6, "tBob 4s ease-in-out infinite"], ["minora", 80, 46, 2.8, "none"], ["karvon", 0, 74, 13, "tBob .9s ease-in-out infinite", 0, 1]],
+    tavakkal: [["gildirak", 80, 18, 20, "tSpin 70s linear infinite"], ["fonus", 6, 26, 3, "tSwing 5s ease-in-out infinite", 1]],
+    hududlar: [["xarita", 2, 58, 22, "tFloat 9s ease-in-out infinite"], ["minora", 88, 40, 3, "none"]],
+    svetofor: [["fonus", 7, 26, 3.4, "tSwing 5s ease-in-out infinite", 1], ["fonus", 89, 24, 3.4, "tSwing 6s ease-in-out infinite", 1]],
+    zinapoya: [["zinapoya", 76, 50, 22, "tBob 7s ease-in-out infinite"], ["fonus", 8, 26, 3, "tSwing 5s ease-in-out infinite", 1]],
+    arqon: [["karvon", 0, 76, 13, "tBob .9s ease-in-out infinite", 0, 1], ["fonus", 89, 24, 3, "tSwing 5s ease-in-out infinite", 1]],
+    konvert: [["konvert", 80, 24, 12, "tFloat 6s ease-in-out infinite"], ["fonus", 7, 26, 3, "tSwing 5s ease-in-out infinite", 1]],
+    afsona: [["xarita", 78, 60, 18, "tFloat 9s ease-in-out infinite"], ["konvert", 4, 30, 9, "tFloat 6s ease-in-out infinite"]],
+    minora: [["minora", 6, 34, 3.6, "none"], ["minora", 88, 40, 3, "none"]],
+    oldin: [["qumsoat", 84, 46, 6, "tBob 4s ease-in-out infinite"], ["fonus", 7, 26, 3, "tSwing 5s ease-in-out infinite", 1]],
+    labirint: [["xarita", 78, 62, 18, "tFloat 9s ease-in-out infinite"], ["fonus", 7, 26, 3, "tSwing 5s ease-in-out infinite", 1]],
+    harf: [["konvert", 80, 26, 11, "tFloat 6s ease-in-out infinite"], ["qumsoat", 5, 56, 4.6, "tBob 4s ease-in-out infinite"]],
+    karvon: [["karvon", 0, 76, 14, "tBob .9s ease-in-out infinite", 0, 1], ["xarita", 80, 22, 15, "tFloat 9s ease-in-out infinite"]],
+    taxmin: [["qumsoat", 84, 44, 6, "tBob 4s ease-in-out infinite"], ["gildirak", 2, 60, 12, "tSpin 90s linear infinite"]],
+    viselitsa: [["fonus", 8, 26, 3.4, "tSwing 5s ease-in-out infinite", 1], ["minora", 88, 40, 3, "none"]],
+    juftlik: [["konvert", 82, 24, 10, "tFloat 6s ease-in-out infinite"], ["gildirak", 2, 62, 12, "tSpin 90s linear infinite"]]
+  };
+  function scene() {
+    if (fan !== "tarix" || document.querySelector(".tsc")) return;
+    const isFan = !!$("#page"), list = DECOR[isFan ? "fan" : page] || DECOR.svetofor;
+    const sc = document.createElement("div"); sc.className = "tsc" + (isFan ? "" : " ingame"); sc.setAttribute("aria-hidden", "true");
+    sc.style.setProperty("--reg", `url(${ASSET}rasm/registon.webp)`);
+    sc.innerHTML = `<div class="sc"><div class="ly" data-k="10"><div class="bg"></div>
+        <div class="st">${Array.from({ length: 70 }, () => `<i style="left:${Math.random() * 100}%;top:${Math.random() * 38}%;--d:${2 + Math.random() * 4}s;--de:${Math.random() * 5}s"></i>`).join("")}</div><i class="shoot"></i>
+        ${[[50, 46, 9], [25.5, 40, 8], [76, 40, 8], [37, 52, 5], [63, 52, 5]].map(([x, y, w], k) => `<i class="gl" style="left:${x - w / 2}%;top:${y - w}%;width:${w}%;height:${w * 1.8}%;--de:${.8 + k * .3}s"></i>`).join("")}</div>
+      <div class="ly" data-k="24">${list.map(([img, x, y, w, an, hang, walk], k) => `<div class="ob ${walk ? "walk" : ""}" style="${walk ? "" : `left:${x}%;`}top:${y}%;width:${w}%;--de:${2.2 + k * .3}s;--an:${an};${hang ? "--to:50% -40vh;" : ""}${isFan ? "" : "--op:.92;"}">
+        <div class="in">${hang ? '<span class="chain"></span><span class="fl"></span>' : ""}<img src="${ASSET}rasm/${img}.webp" alt=""></div></div>`).join("")}</div>
+      <div class="shade"></div></div>`;
+    document.body.prepend(sc);
+    if (!RM && matchMedia("(hover: hover)").matches) addEventListener("pointermove", e => { const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5; sc.querySelectorAll(".ly").forEach(l => l.style.transform = `translate(${-x * l.dataset.k}px, ${-y * l.dataset.k * .6}px)`); }, { passive: true });
   }
-  ambient();
+  scene();
   window.G = { swapped, $, $$, esc, shuffle, store, fan, data, icon, sound, header, setup, tc, scores, bump, modal, timer, ask, all, confetti, winner, toast, themeButton,
     burst, stamp, hit, countUp, enter, words, letters, mavzu, topics, extra, saveKey: g => "oyin2-" + g + "-" + dkey };
 })();

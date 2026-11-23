@@ -123,3 +123,6 @@ Foydalanuvchi talablari:
 
 ## 27. Illyustratsiyali sahna
 - Foydalanuvchi 6 ta miniatyura uslubidagi rasm berdi (Registon, karvon, minora, qum soati, konvert, fonus). Tarix fan sahifasi: rasm sahna (harakatli bezaklar) + oʻyin/mavzularga kirish bezakli lavhalar orqali.
+
+## 28. Oʻyinlar ichi ham illyustratsiyali
+- Yana 3 ta rasm (gʻildirak, zinapoya, xarita). Barcha 15 oʻyin sahifasi fonida Registon va oʻyinga mos bezaklar; panel, tugma va javoblar lojuvard-oltin lavha uslubida.

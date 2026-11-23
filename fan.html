@@ -88,35 +88,6 @@
   /* =========================================================
      TARIX: tungi Registon sahnasi (foydalanuvchi illyustratsiyalari) + oʻyinlarga kirish — bezakli lavhalar
      ========================================================= */
-  [data-fan="tarix"] body { background: #050a1c; }
-  .tsc { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
-  .tsc .sc { position: absolute; left: 50%; top: 50%; width: max(100vw, 177.7vh); height: max(56.28vw, 100vh); transform: translate(-50%, -50%); }
-  .tsc .ly { position: absolute; inset: 0; transition: transform .6s cubic-bezier(.2,.7,.3,1); }
-  .tsc .bg { position: absolute; inset: 0; background: url(oyinlar/assets/rasm/registon.webp) center / 100% 100% no-repeat; animation: tDawn 2.6s ease both, tBreathe 40s ease-in-out 2.6s infinite alternate; }
-  .tsc .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,10,28,.15) 0, rgba(5,10,28,0) 30%, rgba(5,10,28,.55) 70%, rgba(5,10,28,.85) 100%); }
-  [data-theme="light"] .tsc .bg { filter: brightness(1.18) saturate(.92); }
-  [data-theme="light"] .tsc .shade { background: linear-gradient(180deg, rgba(246,234,208,0) 0, rgba(246,234,208,0) 35%, rgba(246,234,208,.45) 75%, rgba(246,234,208,.8) 100%); }
-  @keyframes tDawn { from { filter: brightness(.15) saturate(.6); } }
-  @keyframes tBreathe { to { transform: scale(1.035); } }
-  .tsc .st i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff6d8; box-shadow: 0 0 6px 2px rgba(255,236,170,.7); opacity: 0; animation: tTw var(--d) ease-in-out var(--de) infinite; }
-  @keyframes tTw { 50% { opacity: .95; transform: scale(1.4); } }
-  .tsc .gl { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(255,196,96,.55), rgba(255,170,60,.18) 45%, transparent 70%); mix-blend-mode: screen; opacity: 0; animation: tLit 2s ease var(--de) forwards, tFlick 3.4s ease-in-out calc(var(--de) + 2s) infinite; }
-  @keyframes tLit { to { opacity: .8; } }
-  @keyframes tFlick { 0%, 100% { opacity: .8; } 45% { opacity: .55; } 60% { opacity: .9; } }
-  .tsc .shoot { position: absolute; top: 8%; left: 34%; width: 160px; height: 2px; background: linear-gradient(90deg, transparent, #fff3c8); opacity: 0; animation: tShoot 11s ease-in 4s infinite; }
-  @keyframes tShoot { 0% { opacity: 0; transform: translate(0,0) rotate(-18deg); } 3% { opacity: 1; } 8% { opacity: 0; transform: translate(380px, 120px) rotate(-18deg); } 100% { opacity: 0; } }
-  .tsc .ob { position: absolute; opacity: 0; animation: tIn 1.4s ease var(--de) forwards; }
-  .tsc .ob img { display: block; width: 100%; height: auto; filter: drop-shadow(0 12px 18px rgba(0,0,0,.55)); }
-  .tsc .ob .in { animation: var(--an); transform-origin: var(--to, 50% 50%); }
-  @keyframes tIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes tFloat { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-14px) rotate(2deg); } }
-  @keyframes tSwing { 0%, 100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
-  @keyframes tBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-  .tsc .chain { position: absolute; left: 50%; bottom: 100%; width: 2px; height: 60vh; margin-left: -1px; background: linear-gradient(#b8893a, #8a6424); }
-  .tsc .fl { position: absolute; left: 50%; top: 58%; width: 260%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255,190,90,.35), transparent 60%); mix-blend-mode: screen; animation: tFlick 2.6s ease-in-out infinite; }
-  .tsc .walk { left: 0; opacity: 1; animation: tWalk 50s linear infinite; }
-  @keyframes tWalk { from { transform: translateX(-20vw); } to { transform: translateX(120vw); } }
-
   /* Sahna ustidagi matn va lavhalar */
   [data-fan="tarix"] .top { background: transparent; border-bottom: 0; backdrop-filter: none; }
   [data-fan="tarix"] .top .ttl b { color: #fbefd2; }
@@ -252,23 +223,6 @@ document.getElementById("page").innerHTML = `
   <footer>Topshiruvchi: Muxamadov Muhammadali</footer>`;
 // ===== Tarix: sahna + lavhalar (oddiy sahifa oʻrniga) =====
 if (!ak) {
-  document.querySelectorAll(".amb").forEach(x => x.remove());
-  const OB = [
-    { i: "konvert", x: 56, y: 31, w: 8, an: "tFloat 6s ease-in-out infinite", de: 2.4 },
-    { i: "fonus", x: 38, y: 30, w: 3, an: "tSwing 5s ease-in-out infinite", to: "50% -40vh", de: 2.6, chain: 1, light: 1 },
-    { i: "qumsoat", x: 19, y: 64, w: 4.6, an: "tBob 4s ease-in-out infinite", de: 2.8 },
-    { i: "minora", x: 80, y: 46, w: 2.8, an: "none", de: 3 },
-    { i: "karvon", y: 74, w: 13, an: "tBob .9s ease-in-out infinite", de: 3.2, walk: 1 }
-  ];
-  const sc = document.createElement("div"); sc.className = "tsc"; sc.setAttribute("aria-hidden", "true");
-  sc.innerHTML = `<div class="sc"><div class="ly" data-k="10"><div class="bg"></div>
-      <div class="st">${Array.from({ length: 70 }, () => `<i style="left:${Math.random() * 100}%;top:${Math.random() * 38}%;--d:${2 + Math.random() * 4}s;--de:${Math.random() * 5}s"></i>`).join("")}</div><i class="shoot"></i>
-      ${[[50, 46, 9], [25.5, 40, 8], [76, 40, 8], [37, 52, 5], [63, 52, 5]].map(([x, y, w], k) => `<i class="gl" style="left:${x - w / 2}%;top:${y - w}%;width:${w}%;height:${w * 1.8}%;--de:${.8 + k * .3}s"></i>`).join("")}</div>
-    <div class="ly" data-k="24">${OB.map(o => `<div class="ob ${o.walk ? "walk" : ""}" style="${o.walk ? "" : `left:${o.x}%;`}top:${o.y}%;width:${o.w}%;--de:${o.de}s;--an:${o.an};${o.to ? `--to:${o.to};` : ""}"><div class="in">${o.chain ? '<span class="chain"></span>' : ""}${o.light ? '<span class="fl"></span>' : ""}<img src="oyinlar/assets/rasm/${o.i}.webp" alt=""></div></div>`).join("")}</div>
-    <div class="shade"></div></div>`;
-  document.body.prepend(sc);
-  addEventListener("pointermove", e => { const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5; sc.querySelectorAll(".ly").forEach(l => l.style.transform = `translate(${-x * l.dataset.k}px, ${-y * l.dataset.k * .6}px)`); });
-
   const plq = (href, small, name, sub, k, extra = "") => `<a class="plq" href="${href}" style="--de:${1.6 + k * .09}s"${extra}><small>${small}</small><b>${name}</b><span>${sub}</span></a>`;
   const games = GAMES.filter(g => !g.only || g.only === fan);
   document.getElementById("page").innerHTML = landing ? `
