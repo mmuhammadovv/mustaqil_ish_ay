@@ -170,6 +170,21 @@ QOSHIMCHA.tarix = {
     { tur: "x" }, { n: "Marv", tur: "s" }, { tur: "b", m: "Daryo toshdi — aylanib oʻtasiz", d: -3 }, { tur: "s" },
     { n: "Bagʻdod", tur: "x" }, { tur: "s" }, { tur: "f", m: "Savdogarlar hamroh boʻldi", d: 2 }, { tur: "s" },
     { n: "Damashq", tur: "s" }, { tur: "x" }, { n: "Konstantinopol", tur: "end" }
-  ]
+  ],
 
+  // "Viselitsa" oʻyini uchun soʻzlar
+  viselitsa: [
+    { s: "Tinchlik va xavfsizlikni saqlovchi xalqaro tashkilot (qisqartma)", j: "BMT" },
+    { s: "BMT qarorgohi joylashgan shahar", j: "NYUYORK" },
+    { s: "BMTning taʼlim, fan va madaniyat tashkiloti", j: "YUNESKO" },
+    { s: "Qarorni toʻxtatish huquqi", j: "VETO" },
+    { s: "Davlatning toʻliq mustaqilligi", j: "SUVERENITET" },
+    { s: "Qurib borayotgan dengiz", j: "OROL" },
+    { s: "Samarqanddagi uch madrasali maydon", j: "REGISTON" },
+    { s: "Bayramlarning eng qadimiysi, “yangi kun”", j: "NAVROʻZ" },
+    { s: "Algoritm soʻzi kimning nomidan kelib chiqqan", j: "XORAZMIY" },
+    { s: "Oʻzbekiston BMTga aʼzo boʻlgan oy", j: "MART" },
+    { s: "Davlat ramzi — tantanali qoʻshiq", j: "MADHIYA" },
+    { s: "Ikki davlat oʻrtasidagi rasmiy kelishuv", j: "SHARTNOMA" }
+  ]
 };

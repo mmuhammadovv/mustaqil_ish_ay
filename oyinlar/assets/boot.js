@@ -3,8 +3,8 @@
   var q = new URLSearchParams(location.search), f = q.get("fan"), m = q.get("mavzu"), t, h = document.documentElement;
   try { f = f || localStorage.getItem("fan"); } catch (e) {}
   if (f !== "tarix") f = "akademik";
-  // Tarix fanining mavzulari: "bmt" (BMTga aʼzolik) va "10" (10-mavzu. Oʻzbekiston va jahon hamjamiyati)
-  var MV = { tarix: ["bmt", "10"] }[f];
+  // Tarix fanining mavzulari: bmt, 10, 11, 12 (core.js → MAVZULAR bilan bir xil boʻlsin)
+  var MV = { tarix: ["bmt", "10", "11", "12"] }[f];
   if (MV) {
     try { m = m || localStorage.getItem("mavzu-" + f); } catch (e) {}
     if (MV.indexOf(m) < 0) m = MV[0];

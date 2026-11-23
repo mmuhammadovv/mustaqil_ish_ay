@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>Viselitsa</title>
+<script src="assets/boot.js"></script>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  .board { padding: clamp(18px, 3vw, 30px); display: grid; grid-template-columns: minmax(200px, 280px) 1fr; gap: clamp(18px, 3vw, 36px); align-items: start; }
+  .gal { width: 100%; height: auto; display: block; }
+  .gal .p { stroke: var(--ink); stroke-width: 5; stroke-linecap: round; fill: none; opacity: 0; transition: opacity .35s; }
+  .gal .p.on { opacity: 1; }
+  .gal .p.man { stroke: var(--accent); }
+  .gal .p.on.last { stroke: var(--bad, #b02a1c); }
+  .lives { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
+  .lives i { width: 14px; height: 14px; transform: rotate(45deg); border: 2px solid var(--line-strong); }
+  .lives i.on { background: var(--accent); border-color: var(--accent); }
+  .q { font-family: var(--display); font-weight: 700; font-size: clamp(20px, 2.6vw, 30px); line-height: 1.25; margin: 6px 0 18px; }
+  .word { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .tile { min-width: clamp(38px, 4.6vw, 54px); height: clamp(50px, 6vw, 68px); padding: 0 4px; display: grid; place-items: center; border-bottom: 4px solid var(--line-strong); font-family: var(--display); font-weight: 800; font-size: clamp(22px, 3vw, 34px); }
+  .tile.miss { color: var(--accent); }
+  .abc { display: flex; flex-wrap: wrap; gap: 6px; }
+  .abc button { min-width: 46px; height: 44px; padding: 0 8px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--surface); color: var(--ink); font-family: var(--display); font-weight: 700; font-size: 19px; }
+  .abc button:hover:not(:disabled) { background: var(--accent-soft); }
+  .abc button.yes { background: var(--good); color: #fff; border-color: var(--good); }
+  .abc button.no { background: var(--surface-2); color: var(--muted); text-decoration: line-through; }
+  .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+  @media (max-width: 760px) { .board { grid-template-columns: 1fr; } .gal { max-width: 220px; margin: 0 auto; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script src="savollar/akademik.js"></script>
+<script src="savollar/tarix.js"></script>
+<script src="savollar/tarix10.js"></script>
+<script src="savollar/tarix11.js"></script>
+<script src="savollar/tarix12.js"></script>
+<script src="savollar/tarix-qoshimcha.js"></script>
+<script src="savollar/tarix10-qoshimcha.js"></script>
+<script src="savollar/tarix11-qoshimcha.js"></script>
+<script src="savollar/tarix12-qoshimcha.js"></script>
+<script src="assets/core.js"></script>
+<script>
+// Bu oʻyin faqat tarix fani uchun
+if (G.fan !== "tarix") location.replace(location.pathname + "?fan=tarix");
+const { $, $$, esc, store, icon, sound } = G;
+const SK = G.saveKey("viselitsa"), TIME = 30, LIVES = 7, WIN = 100, PER_LIFE = 50;
+const W = G.extra.viselitsa || G.extra.sozlar || [];
+const ABC = ["A", "B", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "X", "Y", "Z", "Oʻ", "Gʻ", "SH", "CH", "NG"];
+const DI = ["Oʻ", "Gʻ", "SH", "CH", "NG"];
+const show = a => a === "SH" ? "Sh" : a === "CH" ? "Ch" : a === "NG" ? "Ng" : a;
+let S = store.get(SK), cur = { t: null };
+G.header("Viselitsa", reset);
+
+function tokens(w) { const out = []; for (let i = 0; i < w.length;) { const d = DI.find(x => w.startsWith(x, i)); if (d) { out.push(d); i += d.length; } else { out.push(w[i]); i++; } } return out; }
+
+// Dor rasmi: 7 qism — har xato bitta qism
+const PARTS = [
+  '<path d="M20 230h140"/>', '<path d="M50 230V20"/>', '<path d="M50 20h100M50 60l40-40"/>', '<path d="M150 20v30"/>',
+  '<circle class="man" cx="150" cy="68" r="18"/>', '<path class="man" d="M150 86v62"/>', '<path class="man" d="M150 100l-24 26M150 100l24 26M150 148l-20 36M150 148l20 36"/>'
+];
+const gallows = miss => `<svg class="gal" viewBox="0 0 200 240" aria-hidden="true">${PARTS.map((p, i) => p.replace(/<(\w+) (class="man" )?/, (m, tag, man) => `<${tag} class="p ${man ? "man" : ""} ${i < miss ? "on" : ""} ${i === miss - 1 ? "last" : ""}" `)).join("")}</svg>`;
+
+function setup() {
+  let k = 2;
+  G.setup($("#app"), {
+    kicker: "Soʻz",
+    title: "Viselitsa",
+    extra: `<span class="l">Har jamoaga soʻzlar</span>
+      <div class="seg" id="kn">${[1, 2, 3].map(x => `<button type="button" data-k="${x}">${x}</button>`).join("")}</div>`,
+    bind(el) {
+      const sync = () => $$("#kn button", el).forEach(x => x.classList.toggle("on", +x.dataset.k === k));
+      $$("#kn button", el).forEach(b => b.onclick = () => { k = +b.dataset.k; sync(); });
+      sync();
+    },
+    rules: [
+      "Har jamoa navbat bilan <b>oʻz soʻzini</b> topadi. Ekranda faqat ishora va yopiq harflar koʻrinadi.",
+      "Jamoa harf aytadi, boshlovchi uni ekranda bosadi. Harf boʻlsa — ochiladi, boʻlmasa — dorga bitta chiziq qoʻshiladi.",
+      `<b>${LIVES} ta xato</b> — rasm toʻliq chiziladi va soʻz yutqaziladi.`,
+      `Soʻz topilsa: <b>+${WIN}</b> va har bir qolgan imkoniyat uchun <b>+${PER_LIFE}</b>.`,
+      `Har harf uchun ${TIME} soniya. Vaqt tugasa — xato hisoblanadi. Oʻ, Gʻ, Sh, Ch, Ng — bitta harf.`
+    ],
+    onStart(teams) {
+      const n = Math.min(W.length, teams.length * k) - Math.min(W.length, teams.length * k) % teams.length;
+      S = { teams, order: G.shuffle(W.map((_, i) => i)).slice(0, n), idx: 0, tried: [], miss: 0 };
+      save(); render();
+    }
+  });
+}
+function save() { store.set(SK, S); }
+function reset() { if (cur.t) cur.t.stop(); store.del(SK); S = null; G.modal.close(); setup(); }
+
+function render() {
+  G.swapped();
+  if (cur.t) cur.t.stop();
+  if (S.idx >= S.order.length) { $("#app").innerHTML = ""; return G.winner(S.teams, reset); }
+  const w = W[S.order[S.idx]], tk = tokens(w.j), turn = S.idx % S.teams.length, t = S.teams[turn];
+  const solved = tk.every(x => S.tried.includes(x)), lost = S.miss >= LIVES, done = solved || lost;
+  $("#app").innerHTML = `
+    <div class="panel board">
+      <div>${gallows(S.miss)}<div class="lives">${Array.from({ length: LIVES }, (_, i) => `<i class="${i < LIVES - S.miss ? "on" : ""}"></i>`).join("")}</div></div>
+      <div>
+        <div class="meta"><span>Soʻz ${S.idx + 1} / ${S.order.length}</span><span class="acc">${tk.length} ta harf</span></div>
+        <div class="q">${esc(w.s)}</div>
+        <div class="word">${tk.map(x => `<div class="tile ${lost && !S.tried.includes(x) ? "miss" : ""}">${S.tried.includes(x) || done ? esc(show(x)) : ""}</div>`).join("")}</div>
+        ${done ? "" : `<div class="abc">${ABC.map(a => { const tr = S.tried.includes(a); return `<button type="button" data-a="${a}" ${tr ? "disabled" : ""} class="${tr ? (tk.includes(a) ? "yes" : "no") : ""}">${show(a)}</button>`; }).join("")}</div>`}
+        <div id="tm" style="margin-top:16px"></div>
+        <div class="bar" style="--c:${G.tc(t)}">
+          <div class="turn"><span class="what">${done ? (solved ? "Topdi:" : "Topa olmadi:") : "Navbat:"}</span><span class="who">${esc(t.name)}</span></div>
+          ${done ? `<button class="btn primary lg" id="next" type="button">${S.idx + 1 >= S.order.length ? "Natijalar" : "Keyingi soʻz"} ${icon("arrow")}</button>` : ""}
+        </div>
+      </div>
+    </div>
+    <div class="scores" id="sc"></div>`;
+  G.scores($("#sc"), S.teams, { active: turn, onAdjust: (i, d) => { S.teams[i].score += d; save(); render(); } });
+  if (done) { $("#next").onclick = next; return; }
+  $$(".abc button[data-a]").forEach(b => b.onclick = () => letter(b.dataset.a));
+  cur.t = G.timer($("#tm"), TIME, () => { G.toast("Vaqt tugadi — xato"); wrong(); });
+}
+
+function letter(a) {
+  if (S.tried.includes(a)) return;
+  const w = W[S.order[S.idx]], tk = tokens(w.j);
+  S.tried.push(a);
+  if (!tk.includes(a)) return wrong();
+  sound.ok();
+  if (tk.every(x => S.tried.includes(x))) {
+    const t = S.teams[S.idx % S.teams.length], pts = WIN + (LIVES - S.miss) * PER_LIFE;
+    t.score += pts; sound.bonus(); G.toast(`${esc(t.name)}: soʻz topildi, +${pts}`);
+  }
+  save(); render();
+}
+function wrong() {
+  S.miss++; sound.bad();
+  if (S.miss >= LIVES) G.toast("Rasm toʻliq chizildi — soʻz yutqazildi");
+  save(); render();
+}
+function next() { S.idx++; S.tried = []; S.miss = 0; save(); render(); }
+
+// Klaviatura: boshlovchi harfni klaviaturadan ham bosishi mumkin (lotin harflari)
+document.addEventListener("keydown", e => {
+  if (!S || !S.teams || e.repeat || G.$(".modal.open") || e.target.closest("input")) return;
+  const k = (e.code || "").startsWith("Key") ? e.code.slice(3) : "";
+  const b = k && $(`.abc button[data-a="${k}"]`);
+  if (b && !b.disabled) { e.preventDefault(); letter(k); }
+});
+
+// Ishga tushirish — barcha funksiya va oʻzgaruvchilar eʼlon qilingandan keyin
+S && S.teams ? render() : setup();
+</script>
+</body>
+</html>

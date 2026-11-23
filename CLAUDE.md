@@ -16,9 +16,13 @@ Bu fayl Claude Code uchun. Terminalda `claude` ishga tushirilganda u avtomatik o
 - Tarix fani mavzularga boʻlingan, har mavzuning oʻz savollari bor. Roʻyxat: `core.js` → `MAVZULAR` va `boot.js` → `MV` (ikkalasini birga oʻzgartiring).
   - `bmt` — “BMTga aʼzo boʻlish va jahon hamjamiyatidagi oʻrni”: `savollar/tarix.js`, `tarix-qoshimcha.js` (kalit `tarix`).
   - `10` — “10-mavzu. Oʻzbekiston va jahon hamjamiyati” (foydalanuvchi bergan maʼruza, 5 ta reja boʻyicha — bu BITTA mavzu): `savollar/tarix10.js`, `tarix10-qoshimcha.js` (kalit `tarix10`). `ipakYoli` asosiy mavzudan olinadi.
+  - `11` — “11-mavzu. Oʻzgarishlarning xalqaro reytinglar va indekslarda aks etishi”: `tarix11.js`, `tarix11-qoshimcha.js`.
+  - `12` — “12-mavzu. Yangi Oʻzbekistonda amalga oshirilgan islohotlar”: `tarix12.js`, `tarix12-qoshimcha.js`.
+  - Har mavzuning qoʻshimcha faylida `viselitsa` (Viselitsa oʻyini soʻzlari) bor. Soʻzlarda ʼ belgisi boʻlmasin (harf tugmasi yoʻq).
+- fan.html?fan=tarix (mavzu parametrisiz) — MAVZULAR sahifasi: har mavzu alohida tugma-kartochka (foydalanuvchi talabi: “perekluchatel emas, alohida knopkalar”) + jonli oʻyinlar. `&mavzu=<k>` bilan — shu mavzuning 14 oʻyini va “Mavzular” orqaga tugmasi.
 - URL: `?fan=tarix&mavzu=10` (localStorage `mavzu-tarix`). `G.data`, `G.extra` (QOSHIMCHA), `G.mavzu`, `G.topics`; saqlash kaliti `oyin2-<oʻyin>-<kalit>`.
 - Yangi mavzu: savollar fayllari + `MAVZULAR`/`MV` ga qoʻshish + har oʻyin sahifasiga `<script src>` + `fan.html` ga `<script src>`.
-- Jonli (chop etiladigan) oʻyinlar hozircha mavzuga boʻlinmagan.
+- Jonli (chop etiladigan) oʻyinlar mavzuga boʻlinmagan — faqat mavzular sahifasida koʻrinadi.
 
 ## Tuzilma
 
@@ -47,6 +51,7 @@ oyinlar/
   harf.html       11 FAQAT TARIX — Harflab topish: savol + yopiq kataklar, harf aytish (100×katak), butun soʻz +500 (boshlovchi yozadi, sayt tekshiradi)
   karvon.html     12 FAQAT TARIX — Ipak yoʻli karvoni: kubik, 31 katak (savol/omad/toʻsiq), Konstantinopolga birinchi yetgan yutadi
   taxmin.html     13 FAQAT TARIX — Taxmin: javob son; son oʻqida koʻrsatiladi; eng yaqin +300, aniq +500
+  viselitsa.html  14 FAQAT TARIX — Viselitsa: har jamoa navbat bilan OʻZ soʻzini topadi; 7 xato = dor rasmi toʻliq (SVG); topsa +100 + 50×qolgan imkoniyat; vaqt tugasa — xato; klaviatura harflari ham ishlaydi
   savollar/tarix-qoshimcha.js  afsona, konvertlar, voqealar, sozlar, taxminlar, ipakYoli (faqat tarix)
 jonli-oyinlar/                     Sinfda oʻtkaziladigan oʻyinlar uchun chop etiladigan A4 varaqlar (chop.css)
   kim-men.html        28 kartochka — ESLATMA STIKERI (76×76) uchun 72×56 mm (varaqda 8 ta) — stikerning tepasidagi yopishqoq qismi ochiq qolsin, bloknotdan uzish uchun; qirqib stikerning pastki qismiga yopishtiriladi + qoidalar + boshlovchi maslahatlari

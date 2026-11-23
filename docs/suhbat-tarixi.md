@@ -112,3 +112,8 @@ Foydalanuvchi talablari:
 
 ## 24. Yana 2 loyiha
 - Matn tozalagich (tozalagich.html) va Oʻqish vaqti va soddalik (oqish.html) qoʻshildi; mustaqil ish sahifasi va fan sahifasida tugmalar.
+
+## 25. 11 va 12-mavzular, Viselitsa
+- Foydalanuvchi bergan maʼruzalar asosida 11-mavzu (xalqaro reytinglar) va 12-mavzu (Yangi Oʻzbekiston islohotlari) qoʻshildi: har biri 50 test + afsona, konvert, voqealar, soʻzlar, taxmin, viselitsa.
+- Tarix sahifasi: avval mavzular (alohida tugmalar), mavzu ichida 14 oʻyin.
+- Yangi oʻyin: Viselitsa (barcha 4 mavzu uchun).

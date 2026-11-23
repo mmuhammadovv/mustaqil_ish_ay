@@ -13,7 +13,7 @@
   const html = document.documentElement;
   const fan = html.dataset.fan || "akademik";
   // Mavzular: har bir mavzuning oʻz savollar bazasi bor (FANLAR[kalit], QOSHIMCHA[kalit])
-  const MAVZULAR = { tarix: [{ k: "bmt", key: "tarix", q: "BMTga aʼzolik" }, { k: "10", key: "tarix10", q: "10-mavzu" }] };
+  const MAVZULAR = { tarix: [{ k: "bmt", key: "tarix", q: "BMTga aʼzolik" }, { k: "10", key: "tarix10", q: "10-mavzu" }, { k: "11", key: "tarix11", q: "11-mavzu" }, { k: "12", key: "tarix12", q: "12-mavzu" }] };
   const topics = (MAVZULAR[fan] || [{ k: "", key: fan }]).map(x => Object.assign({ data: (window.FANLAR || {})[x.key] }, x));
   const topic = topics.find(x => x.k === html.dataset.mavzu) || topics[0];
   const mavzu = topic.k, dkey = topic.key;
@@ -59,6 +59,7 @@
     maze: '<rect x="3" y="3" width="18" height="18" rx="1"/><path d="M7 3v8h4M15 21v-8h-4M3 15h4M21 9h-6v4"/>',
     letters: '<rect x="2.5" y="6" width="6" height="12" rx="1"/><rect x="9" y="6" width="6" height="12" rx="1"/><rect x="15.5" y="6" width="6" height="12" rx="1"/><path d="M4.5 14l1-5 1 5M4.8 12.5h1.4"/>',
     camel: '<path d="M3 20v-6c0-2 1-3 3-3 1 0 1.5-2 3-2s2 2 3 2 1.5-3 3-3 2 2 2 4v1l3-3v3c0 2-1 3-3 3v4M7 20v-4M16 20v-4"/>',
+    gallows: '<path d="M4 21h10M7 21V3h9v3"/><circle cx="16" cy="8.5" r="2.5"/><path d="M16 11v5M16 12.5l-2.5 2.5M16 12.5l2.5 2.5M16 16l-2 3M16 16l2 3"/>',
     gauge: '<path d="M3 17a9 9 0 0 1 18 0"/><path d="M12 17l4-6"/><circle cx="12" cy="17" r="1.4" fill="currentColor"/>',
     bingo: '<rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/>',
     spy: '<path d="M4 10h16M7 10l1.5-5h7L17 10"/><circle cx="8" cy="15" r="2.5"/><circle cx="16" cy="15" r="2.5"/><path d="M10.5 15h3"/>'

@@ -155,5 +155,21 @@ QOSHIMCHA.tarix10 = {
     { s: "ShHT davlatlari Yevrosiyo hududining taxminan necha foizini egallaydi?", j: 65 },
     { s: "YuNESKO 1996-yilda Amir Temurning necha yilligini nishonlagan?", j: 660 },
     { s: "1997-yilda Buxoro va Xivaning necha yilligi nishonlangan?", j: 2500 }
+  ],
+
+  // "Viselitsa" oʻyini uchun soʻzlar
+  viselitsa: [
+    { s: "Tashqi siyosatni muzokaralar orqali yuritish", j: "DIPLOMATIYA" },
+    { s: "Boshqa davlatdagi rasmiy vakolatxona", j: "ELCHIXONA" },
+    { s: "ShHT sammiti 2022-yilda oʻtgan shahar", j: "SAMARQAND" },
+    { s: "Mustaqil Davlatlar Hamdoʻstligi (qisqartma)", j: "MDH" },
+    { s: "Davlatlar rahbarlarining oliy darajadagi uchrashuvi", j: "SAMMIT" },
+    { s: "Tashkilotga aʼzo boʻlmay, ishini kuzatuvchi maqom", j: "KUZATUVCHI" },
+    { s: "Mudofaa sohasidagi asosiy qarashlar tizimi", j: "DOKTRINA" },
+    { s: "Davlatlar orasidagi eng yaqin munosabat: … munosabatlari", j: "ITTIFOQCHILIK" },
+    { s: "Orolboʻyi konferensiyasi oʻtgan shahar (2019)", j: "NUKUS" },
+    { s: "Turkiy kengash tuzilgan shahar", j: "NAXICHEVAN" },
+    { s: "ShHT bosh qarorgohi joylashgan shahar", j: "PEKIN" },
+    { s: "Sammit yakunidagi siyosiy bayonot", j: "DEKLARATSIYA" }
   ]
 };
