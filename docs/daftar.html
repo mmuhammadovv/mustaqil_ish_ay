@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="uz" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tarixchining daftari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Raleway:wght@400;500;600&display=swap">
+<style>
+  /* Daftar: qogʻoz, siyoh (qora-jigarrang), bitta qizil siyoh urgʻu */
+  :root { --desk: #3a2e24; --paper: #f4ecdc; --paper2: #ece2cd; --ink: #2a211b; --ink2: #6b5e52; --red: #b3392b; --blue: #2c4a7a; --rule: rgba(44,74,122,.13); --margin: rgba(179,57,43,.45); }
+  [data-theme="dark"] { --desk: #0d0b0a; --paper: #2a2520; --paper2: #231f1b; --ink: #ece2cd; --ink2: #a99c8a; --red: #e07a62; --blue: #8fb0e0; --rule: rgba(143,176,224,.10); --margin: rgba(224,122,98,.35); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: var(--desk) radial-gradient(ellipse at 30% 20%, rgba(255,220,160,.12), transparent 60%); color: var(--ink); font-family: "Raleway", sans-serif; overflow-x: hidden; }
+  .hand { font-family: "Caveat", cursive; }
+
+  /* Daftar varagʻi */
+  .book { position: relative; max-width: 1180px; margin: 28px auto 60px; perspective: 2400px; }
+  .sheet { position: relative; min-height: 760px; padding: 54px 70px 60px 110px; background: var(--paper);
+    background-image: linear-gradient(90deg, transparent 84px, var(--margin) 84px, var(--margin) 86px, transparent 86px), repeating-linear-gradient(transparent 0 33px, var(--rule) 33px 34px);
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,.6), inset 0 0 80px rgba(120,90,40,.12); border-radius: 3px 10px 10px 3px; transform-origin: left center; }
+  .sheet::before { content: ""; position: absolute; left: 22px; top: 40px; bottom: 40px; width: 18px;
+    background: radial-gradient(circle at 9px 9px, var(--desk) 6px, transparent 7px) 0 0 / 18px 48px repeat-y; }
+  .sheet.flip-out { animation: flipOut .55s cubic-bezier(.6,0,.4,1) forwards; }
+  .sheet.flip-in { animation: flipIn .65s cubic-bezier(.2,.6,.3,1) both; }
+  @keyframes flipOut { to { transform: rotateY(-100deg); opacity: .3; } }
+  @keyframes flipIn { from { transform: rotateY(70deg); opacity: .4; } }
+  .coffee { position: absolute; right: 60px; bottom: 50px; width: 150px; height: 150px; border-radius: 50%; border: 8px solid rgba(120,80,40,.10); filter: url(#rough2); pointer-events: none; }
+  .tape { position: absolute; width: 90px; height: 26px; background: rgba(230,215,170,.65); box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+
+  /* Qoʻlda chizilgan chiziqlar: SVG filtr “titraydi” (line boil) */
+  .boil { filter: url(#rough); }
+  .boil.live { animation: boil .45s steps(1) infinite; }
+  @keyframes boil { 0% { filter: url(#rough); } 33% { filter: url(#rough2); } 66% { filter: url(#rough3); } }
+  .draw path, .draw ellipse, .draw circle, .draw line, .draw rect, .draw polyline { stroke-dasharray: 1; stroke-dashoffset: 1; animation: pen 1.2s cubic-bezier(.5,0,.3,1) forwards; animation-delay: calc(var(--d, 0) * 1s + var(--k, 0) * .12s); }
+  @keyframes pen { to { stroke-dashoffset: 0; } }
+  .fadein { opacity: 0; animation: fade .6s ease forwards; animation-delay: calc(var(--d, 0) * 1s); }
+  @keyframes fade { to { opacity: 1; } }
+
+  /* Sarlavha */
+  .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+  .head .crumb { font-size: 26px; color: var(--ink2); }
+  .head .crumb a { color: var(--red); text-decoration: none; cursor: pointer; }
+  .tbtn { font: 700 24px "Caveat"; background: none; border: 0; color: var(--ink); cursor: pointer; position: relative; padding: 4px 14px; }
+  .tbtn svg { position: absolute; inset: -4px -6px; width: calc(100% + 12px); height: calc(100% + 8px); overflow: visible; }
+  h1.title { margin: 8px 0 0; font: 700 clamp(44px, 6.4vw, 86px)/1 "Caveat", cursive; }
+  h1.title svg { width: 100%; height: auto; overflow: visible; }
+  h1.title text { font-family: "Caveat", cursive; font-weight: 700; fill: transparent; stroke: var(--ink); stroke-width: 1.3; stroke-dasharray: 2400; stroke-dashoffset: 2400; animation: penT 3s cubic-bezier(.4,0,.3,1) forwards, inkfill 1s 2.2s forwards; }
+  @keyframes penT { to { stroke-dashoffset: 0; } }
+  @keyframes inkfill { to { fill: var(--ink); } }
+  .sub { font: 500 italic 21px "Cormorant Garamond", serif; color: var(--ink2); margin: 6px 0 0; }
+  .note { font-size: 25px; color: var(--red); transform: rotate(-3deg); display: inline-block; }
+
+  /* Mavzular — skotch bilan yopishtirilgan eskizlar */
+  .topics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px 28px; margin-top: 60px; }
+  .sk { position: relative; cursor: pointer; text-align: center; padding: 18px 12px 10px; transform: rotate(var(--r)); transition: transform .3s; }
+  .sk:hover { transform: rotate(0deg) translateY(-6px); }
+  .sk .tape { left: 50%; top: -12px; margin-left: -45px; transform: rotate(calc(var(--r) * -2)); }
+  .sk .frame { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .sk .pic { width: 100%; height: 230px; overflow: visible; }
+  .sk .pic * , .ico * { fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .sk .pic .acc { stroke: var(--red); }
+  .sk .k { font: 700 30px "Caveat"; color: var(--red); }
+  .sk .n { font: 500 22px/1.2 "Cormorant Garamond", serif; margin-top: 4px; }
+  .sk .k { font-size: 36px !important; }
+
+  /* Oʻyinlar — mundarija, qoʻlda chizilgan belgilar */
+  .toc { margin-top: 30px; columns: 2; column-gap: 60px; }
+  .gm { break-inside: avoid; display: flex; align-items: center; gap: 16px; padding: 9px 0; cursor: pointer; }
+  .gm .ico { width: 46px; height: 46px; flex: none; color: var(--ink); }
+  .gm .ico svg { width: 100%; height: 100%; }
+  .gm .ico svg * { stroke-width: 1.4; }
+  .gm .nm { font: 700 30px/1 "Caveat"; }
+  .gm .dots { flex: 1; border-bottom: 2px dotted var(--ink2); opacity: .4; transform: translateY(-6px); }
+  .gm .pg { font: 700 24px "Caveat"; color: var(--red); }
+  .gm:hover .nm { color: var(--red); }
+  .gm .ul { display: block; height: 8px; width: 0; transition: width .5s; }
+  .gm:hover .ul { width: 100%; }
+
+  /* Savol ekrani */
+  .qwrap { display: grid; grid-template-columns: 1fr 260px; gap: 40px; margin-top: 30px; }
+  .qt { font: 700 clamp(30px, 3.6vw, 44px)/1.15 "Caveat"; }
+  .opts { margin-top: 26px; display: grid; gap: 14px; }
+  .op { justify-self: start; position: relative; display: flex; gap: 14px; align-items: center; font: 500 22px "Cormorant Garamond", serif; padding: 10px 14px; cursor: pointer; background: none; border: 0; text-align: left; color: var(--ink); }
+  .op b { font: 700 26px "Caveat"; color: var(--ink2); width: 24px; }
+  .op svg.mark { position: absolute; left: -10px; top: -8px; width: calc(100% + 20px); height: calc(100% + 16px); overflow: visible; pointer-events: none; }
+  .op:hover b { color: var(--red); }
+  .wick { margin-top: 30px; height: 26px; }
+  .score { font: 700 26px "Caveat"; }
+  .team { margin-bottom: 26px; }
+  .team .tn { font: 700 28px "Caveat"; }
+  .tally { height: 44px; width: 100%; overflow: visible; }
+  .tally line { stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; }
+  .verdict { font: 700 34px "Caveat"; margin-top: 16px; min-height: 44px; }
+
+  .foot { position: absolute; left: 110px; right: 70px; bottom: 22px; display: flex; justify-content: space-between; font: 700 22px "Caveat"; color: var(--ink2); }
+  .pen { position: fixed; width: 34px; height: 34px; pointer-events: none; z-index: 50; transform: translate(-4px, -30px) rotate(0deg); transition: transform .08s; }
+  body.pc, body.pc * { cursor: none !important; }
+  @media (max-width: 860px) { .sheet { padding: 40px 18px 60px 54px; } .sheet::before { left: 8px; } .sheet { background-image: linear-gradient(90deg, transparent 44px, var(--margin) 44px, var(--margin) 46px, transparent 46px), repeating-linear-gradient(transparent 0 33px, var(--rule) 33px 34px); } .topics { grid-template-columns: 1fr 1fr; } .toc { columns: 1; } .qwrap { grid-template-columns: 1fr; } .foot { left: 54px; right: 18px; } }
+</style>
+</head>
+<body>
+<!-- Qoʻlda chizilgandek koʻrinish uchun uchta biroz farqli “titroq” filtr -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="2"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter>
+  <filter id="rough2"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter>
+  <filter id="rough3"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="13"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter>
+</svg>
+<div class="book"><div class="sheet" id="sheet"></div></div>
+<svg class="pen" id="pen" viewBox="0 0 34 34"><path d="M4 30l4-10L26 2l6 6-18 18z" fill="#2a211b"/><path d="M4 30l4-10 6 6z" fill="#c9a45c"/><path d="M4 30l2-5 3 3z" fill="#2a211b"/></svg>
+
+<script src="../oyinlar/assets/core.js"></script>
+<script>
+const { icon } = G;
+document.querySelectorAll(".amb").forEach(a => a.remove()); // umumiy fon bezagi bu sahifada kerak emas
+const $ = s => document.querySelector(s);
+let seed = 4; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+// Qoʻlda chizilgan toʻrtburchak: ikki marta, biroz qiyshiq, uchlari chiqib turadi
+const rough = (w, h, color = "var(--ink)", sw = 1.6) => {
+  const j = v => v + (rnd() - .5) * 5;
+  const one = () => `M${j(2)} ${j(3)} L${j(w - 2)} ${j(2)} L${j(w - 3)} ${j(h - 2)} L${j(3)} ${j(h - 3)} Z`;
+  return `<svg class="boil draw" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="overflow:visible"><path pathLength="1" d="${one()}" fill="none" stroke="${color}" stroke-width="${sw}" vector-effect="non-scaling-stroke"/><path pathLength="1" style="--k:3" d="${one()}" fill="none" stroke="${color}" stroke-width="${sw * .6}" opacity=".6" vector-effect="non-scaling-stroke"/></svg>`;
+};
+const circleMark = () => `<svg class="mark boil draw" viewBox="0 0 200 60" preserveAspectRatio="none"><path pathLength="1" d="M20 32 C 18 6, 180 2, 188 26 S 120 62, 40 52 S 10 20, 60 8" fill="none" stroke="var(--red)" stroke-width="2.4" vector-effect="non-scaling-stroke"/></svg>`;
+const crossMark = () => `<svg class="mark boil draw" viewBox="0 0 200 60" preserveAspectRatio="none"><path pathLength="1" d="M10 34 C 60 26, 120 40, 190 28" fill="none" stroke="var(--ink)" stroke-width="2.6" vector-effect="non-scaling-stroke"/><path pathLength="1" style="--k:3" d="M14 26 C 70 34, 130 22, 186 34" fill="none" stroke="var(--ink)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
+
+// Mavzular eskizlari (qalam chizgisi)
+const PIC = {
+  bmt: ["M100 20a55 55 0 1 1-.1 0z", "M100 20c-30 30-30 80 0 110M100 20c30 30 30 80 0 110", "M48 60h104M45 90h110", "<acc>M40 120c10 20 30 30 60 32M160 120c-10 20-30 30-60 32", "<acc>M52 124l-6 6M60 134l-7 5M148 124l6 6M140 134l7 5"],
+  10: ["M100 15v130", "M100 30l50 15-50 15", "M100 75l-48 14 48 14", "<acc>M60 145h80", "M90 15h20"],
+  11: ["M30 140h140", "M45 140V95h25v45M85 140V70h25v70M125 140V45h25v95", "<acc>M40 85l45-28 40 10 40-40", "<acc>M150 27h15v15"],
+  12: ["M30 40c25-10 50-10 70 6 20-16 45-16 70-6v100c-25-10-50-10-70 6-20-16-45-16-70-6z", "M100 46v100", "<acc>M50 70h30M50 85h30M50 100h24M120 70h30M120 85h30", "M135 15l-25 70"]
+};
+const pic = key => `<svg class="pic boil draw" viewBox="0 0 200 160">${PIC[key].map((d, k) => { const acc = d.startsWith("<acc>"); return `<path pathLength="1" style="--k:${k}" class="${acc ? "acc" : ""}" d="${acc ? d.slice(5) : d}"/>`; }).join("")}</svg>`;
+const TOP = [["bmt", "BMT", "BMTga aʼzolik va jahon hamjamiyatidagi oʻrni"], ["10", "10-mavzu", "Oʻzbekiston va jahon hamjamiyati"], ["11", "11-mavzu", "Xalqaro reytinglar va indekslar"], ["12", "12-mavzu", "Yangi Oʻzbekiston islohotlari"]];
+const GM = [["wheel", "Tavakkal"], ["hex", "Hududlar"], ["light", "Svetofor"], ["ladder", "Zinapoya"], ["rope", "Arqon tortish"], ["envelope", "Sirli konvert"], ["scroll", "Haqiqat yoki afsona"], ["tower", "Minora qurish"],
+  ["updown", "Oldinmi, keyinmi?"], ["maze", "Labirint"], ["letters", "Harflab topish"], ["camel", "Ipak yoʻli karvoni"], ["gauge", "Taxmin"], ["gallows", "Viselitsa"], ["cards", "Juftini top"]];
+const title = (txt, size = 86) => `<h1 class="title"><svg viewBox="0 0 1000 ${size * 1.25}"><text x="0" y="${size}" font-size="${size}">${txt}</text></svg></h1>`;
+const head = crumb => `<div class="head"><div class="crumb">${crumb}</div><div><button class="tbtn" id="thm" type="button">${rough(90, 40)}<span>Tungi</span></button></div></div>`;
+const foot = p => `<div class="foot"><span>Muxamadov Muhammadali</span><span>— ${p} —</span></div>`;
+
+const SCREENS = {
+  topics() {
+    return `${head(`<span class="hand">Daftar · Oʻzbekistonning eng yangi tarixi</span>`)}
+      ${title("Oʻzbekistonning eng yangi tarixi", 74)}
+      <p class="sub fadein" style="--d:2.2">Tarixchining daftari — mavzuni tanlang</p>
+      <div class="topics">${TOP.map(([k, l, n], i) => `<div class="sk" data-k="${k}" style="--r:${[-2.5, 1.8, -1.2, 2.4][i]}deg">
+        <span class="tape"></span>${pic(k).replace('class="pic', `style="--d:${.6 + i * .5}" class="pic`)}
+        <div class="k fadein" style="--d:${1.4 + i * .5}">${l}</div><div class="n fadein" style="--d:${1.5 + i * .5}">${n}</div></div>`).join("")}</div>
+      <div class="coffee"></div>${foot(1)}`;
+  },
+  games(k) {
+    const t = TOP.find(x => x[0] === k);
+    return `${head(`<a data-go="topics">‹ Mavzular</a> <span class="hand">· ${t[1]}</span>`)}
+      ${title(t[1] + ": oʻyinlar", 70)}<p class="sub fadein" style="--d:1.6">${t[2]}</p>
+      <div class="toc">${GM.map(([ic, n], i) => `<div class="gm fadein" data-g="${i}" style="--d:${.6 + i * .08}"><span class="ico boil draw" style="--d:${.4 + i * .08}">${icon(ic, "")}</span><span style="flex:1"><span class="nm">${n}</span><svg class="ul" viewBox="0 0 100 8" preserveAspectRatio="none"><path d="M0 5c30-4 60 4 100-2" stroke="var(--red)" stroke-width="2" fill="none" vector-effect="non-scaling-stroke"/></svg></span><span class="dots"></span><span class="pg">${(i + 1) * 3}</span></div>`).join("")}</div>
+      ${foot(2)}`;
+  },
+  question() {
+    return `${head(`<a data-go="games">‹ Oʻyinlar</a> <span class="hand">· Zinapoya · 2-pogʻona</span>`)}
+      <div class="qwrap"><div>
+        <div class="note">Savol 7 · 200 ball</div>
+        <div class="qt fadein" style="--d:.2">Konstitutsiyaviy referendum qachon boʻlib oʻtdi?</div>
+        <div class="wick" id="wick"></div>
+        <div class="opts">${["1992-yil 8-dekabrda", "2023-yil 30-aprelda", "2016-yil 4-dekabrda", "2021-yil 24-oktabrda"].map((o, i) => `<button class="op fadein" data-o="${i}" style="--d:${.5 + i * .15}" type="button"><b>${"ABCD"[i]})</b>${o}</button>`).join("")}</div>
+        <div class="verdict" id="verdict"></div>
+      </div><div>
+        ${["1-jamoa", "2-jamoa", "3-jamoa"].map((t, i) => `<div class="team"><div class="tn">${t}</div><svg class="tally" id="tl${i}" viewBox="0 0 220 44"></svg></div>`).join("")}
+      </div></div>${foot(7)}`;
+  }
+};
+// Choʻp belgilar bilan ball: har 100 ball — bitta chiziq, beshinchisi kesib oʻtadi
+function tally(svg, n, from = 0) {
+  let h = svg.innerHTML;
+  for (let i = from; i < n; i++) { const g = Math.floor(i / 5), p = i % 5, x = 8 + g * 46;
+    h += p < 4 ? `<line class="boil draw" pathLength="1" x1="${x + p * 9 + (rnd() * 2)}" y1="${6 + rnd() * 3}" x2="${x + p * 9 + (rnd() * 3 - 1)}" y2="${38 + rnd() * 3}"/>` : `<line class="boil draw" pathLength="1" x1="${x - 5}" y1="32" x2="${x + 34}" y2="12"/>`; }
+  svg.innerHTML = h;
+}
+// Sham pilik: vaqt oʻtgan sari qisqaradi
+function wick(el, sec) {
+  el.innerHTML = `<svg viewBox="0 0 600 26" style="width:100%;height:26px;overflow:visible"><path id="wk" d="M0 14 C 100 8, 200 20, 300 13 S 500 8, 600 14" stroke="var(--ink)" stroke-width="2" fill="none" stroke-dasharray="4 4" class="boil live"/><circle id="sp" r="5" fill="var(--red)" cx="600" cy="14"/></svg>`;
+  const wk = el.querySelector("#wk"), sp = el.querySelector("#sp"), L = wk.getTotalLength(); let t0 = performance.now();
+  (function f(now) { if (!el.isConnected) return; const k = Math.max(0, 1 - (now - t0) / (sec * 1000)), pt = wk.getPointAtLength(L * k); sp.setAttribute("cx", pt.x); sp.setAttribute("cy", pt.y + (Math.random() - .5) * 2); sp.setAttribute("r", 4 + Math.random() * 2.5); wk.style.strokeDasharray = `${L * k} ${L}`; if (k > 0) requestAnimationFrame(f); })(t0);
+}
+
+let cur = { s: "topics", k: "12" };
+function go(s, k) {
+  const sh = $("#sheet");
+  if (sh.innerHTML) { sh.classList.add("flip-out"); setTimeout(() => show(s, k), 500); } else show(s, k);
+}
+function show(s, k) {
+  cur = { s, k: k || cur.k }; const sh = $("#sheet");
+  sh.classList.remove("flip-out", "flip-in"); void sh.offsetWidth;
+  sh.innerHTML = SCREENS[s](cur.k); sh.classList.add("flip-in");
+  // chiziladigan barcha shakllarga uzunlik birligi (pathLength) beriladi
+  sh.querySelectorAll(".draw path, .draw circle, .draw line, .draw rect, .draw ellipse, .draw polyline").forEach(e => e.setAttribute("pathLength", 1));
+  // tugmalar ramkasi tebranib tursin (tirik chiziq)
+  sh.querySelectorAll(".tbtn .boil").forEach(x => x.classList.add("live"));
+  sh.querySelectorAll(".sk").forEach(x => { x.onclick = () => go("games", x.dataset.k); x.onmouseenter = () => x.querySelector(".pic").classList.add("live"); x.onmouseleave = () => x.querySelector(".pic").classList.remove("live"); });
+  sh.querySelectorAll("[data-go]").forEach(a => a.onclick = () => go(a.dataset.go));
+  sh.querySelectorAll(".gm").forEach(g => { g.onclick = () => go("question"); g.onmouseenter = () => g.querySelector(".ico").classList.add("live"); g.onmouseleave = () => g.querySelector(".ico").classList.remove("live"); });
+  const th = $("#thm"); if (th) th.onclick = () => { const d = document.documentElement; d.dataset.theme = d.dataset.theme === "dark" ? "light" : "dark"; th.querySelector("span").textContent = d.dataset.theme === "dark" ? "Kunduzgi" : "Tungi"; };
+  if (s === "question") {
+    wick($("#wick"), 30); [3, 1, 2].forEach((n, i) => tally($("#tl" + i), n));
+    sh.querySelectorAll(".op").forEach(b => b.onclick = () => {
+      if (sh.dataset.done) return; sh.dataset.done = 1;
+      const i = +b.dataset.o, ok = i === 1;
+      b.insertAdjacentHTML("beforeend", ok ? circleMark() : crossMark());
+      if (!ok) setTimeout(() => sh.querySelector('.op[data-o="1"]').insertAdjacentHTML("beforeend", circleMark()), 700);
+      $("#verdict").innerHTML = `<span class="fadein" style="color:${ok ? "var(--ink)" : "var(--red)"}">${ok ? "Toʻgʻri! +200" : "Xato — toʻgʻri javob doiraga olindi"}</span>`;
+      if (ok) tally($("#tl0"), 5, 3);
+    });
+  } else delete sh.dataset.done;
+}
+show("topics");
+
+// Kursor — qalam
+const pen = $("#pen");
+if (matchMedia("(hover: hover)").matches) {
+  document.body.classList.add("pc");
+  addEventListener("pointermove", e => { pen.style.left = e.clientX + "px"; pen.style.top = e.clientY + "px"; });
+  addEventListener("pointerdown", () => pen.style.transform = "translate(-4px,-26px) rotate(-8deg)");
+  addEventListener("pointerup", () => pen.style.transform = "translate(-4px,-30px)");
+} else pen.style.display = "none";
+</script>
+</body>
+</html>
