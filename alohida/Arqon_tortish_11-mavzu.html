@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="uz" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arqon tortish — 11-mavzu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@500;600;700;800&display=swap">
+<style>
+  :root {
+    --A: #2c5b8c; --A2: #1d3f66; --B: #c4512f; --B2: #8e3217;
+    --s1: #8fc9e0; --s2: #f8e7c4; --sun: #ffcf5a; --stars: 0; --rays: .35; --mt: #9bb4c4; --d1: #edc17e; --d2: #e0a965; --d3: #cf914d; --gr: #e9c891; --gr2: #d8ad6c;
+    --page: #f4ead8; --card: #fffdf8; --ink: #2a2118; --muted: #7c6a55; --line: #e6d7bd; --good: #3c8f5a; --bad: #c4402f; --shadow: 0 14px 34px rgba(90,60,20,.14);
+  }
+  [data-theme="dark"] {
+    --s1: #0d1736; --s2: #2c3562; --sun: #f4efd8; --stars: 1; --rays: 0; --mt: #2b3a5c; --d1: #6b5a4a; --d2: #5a4a3d; --d3: #4a3c32; --gr: #6e5b45; --gr2: #5b4a38;
+    --page: #151a2b; --card: #1f2539; --ink: #f2ead9; --muted: #a9a08e; --line: #343b55; --good: #6fcf8f; --bad: #ff7b66; --A: #5b8fd0; --B: #e2734f; --shadow: 0 14px 34px rgba(0,0,0,.4);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--page); color: var(--ink); font-family: "Manrope", "Segoe UI", system-ui, sans-serif; transition: background .5s, color .5s; }
+  header { display: flex; align-items: center; gap: 10px; max-width: 1240px; margin: 0 auto; padding: 16px 20px 10px; }
+  header .logo { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: var(--ink); }
+  header .t { line-height: 1.15; } header .t b { font: 800 20px "Unbounded", system-ui, sans-serif; display: block; } header .t small { color: var(--muted); font-weight: 700; font-size: 12px; }
+  header .sp { flex: 1; }
+  .hb { font: 700 13px "Manrope", sans-serif; color: var(--ink); background: var(--card); border: 2px solid var(--line); border-radius: 999px; padding: 8px 14px; cursor: pointer; transition: border-color .2s, transform .2s; }
+  .hb:hover { border-color: var(--ink); transform: translateY(-1px); }
+  main { max-width: 1240px; margin: 0 auto; padding: 0 20px 30px; }
+
+  /* ===== Rasm-sahna ===== */
+  .scene { position: relative; border-radius: 26px; overflow: hidden; box-shadow: var(--shadow); background: var(--s1); }
+  .scene svg { display: block; width: 100%; height: auto; }
+  .grp { transition: transform 1.2s cubic-bezier(.34, 1.45, .5, 1); }
+  .grp.tense { animation: tense .22s linear infinite; }
+  @keyframes tense { 50% { translate: 1.5px 0; } }
+  .team.heave .tor { animation: heave .9s ease; }
+  .team.stumble .tor { animation: stumble .9s ease; }
+  @keyframes heave { 35% { transform: rotate(-14deg); } }
+  @keyframes stumble { 35% { transform: rotate(16deg); } }
+  .dust circle { opacity: 0; }
+  .team.heave .dust circle { animation: dust 1s ease-out; }
+  @keyframes dust { 10% { opacity: .7; } 100% { opacity: 0; transform: translate(-26px, -16px) scale(2.2); } }
+  .cloud { animation: drift linear infinite; }
+  @keyframes drift { from { transform: translateX(-260px); } to { transform: translateX(1260px); } }
+  .rays { opacity: var(--rays); transition: opacity .6s; transform-origin: 830px 92px; animation: spin 60s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .bird { animation: fly 24s linear infinite; }
+  @keyframes fly { from { transform: translate(-80px, 0); } to { transform: translate(1100px, -40px); } }
+  .tw { animation: twk 3s ease-in-out infinite; } @keyframes twk { 50% { opacity: .25; } }
+  .stars { opacity: var(--stars); transition: opacity .6s; }
+  .flagc { animation: flg 1.6s ease-in-out infinite alternate; transform-origin: 500px 225px; }
+  @keyframes flg { to { transform: skewX(8deg); } }
+  .mk { transition: fill .5s; }
+
+  .sc { position: absolute; top: 14px; display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; border-radius: 16px; background: var(--card); box-shadow: 0 6px 16px rgba(0,0,0,.14); transition: transform .3s, box-shadow .3s; max-width: 42%; }
+  .sc.l { left: 14px; } .sc.r { right: 14px; flex-direction: row-reverse; padding: 8px 8px 8px 14px; text-align: right; }
+  .sc > span:last-child { min-width: 0; }
+  .sc .n { display: grid; place-items: center; min-width: 46px; height: 46px; border-radius: 12px; background: var(--c); color: #fff; font: 800 22px "Unbounded", sans-serif; }
+  .sc b { display: block; font: 800 15px "Manrope", sans-serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sc small { color: var(--muted); font-weight: 700; font-size: 12px; }
+  .sc.turn { transform: translateY(-2px); box-shadow: 0 0 0 3px var(--c), 0 10px 22px rgba(0,0,0,.2); }
+  .sc.turn small { color: var(--c); }
+  .pop { position: absolute; top: 40%; font: 800 clamp(18px, 3vw, 32px) "Unbounded", sans-serif; color: #fff; padding: 6px 16px; border-radius: 14px; background: var(--c); opacity: 0; pointer-events: none; }
+  .pop.go { animation: pop 1.5s ease forwards; }
+  @keyframes pop { 0% { opacity: 0; transform: translateY(12px) scale(.7); } 20% { opacity: 1; transform: none; } 75% { opacity: 1; } 100% { opacity: 0; transform: translateY(-18px); } }
+
+  /* ===== Kartochkalar ===== */
+  .card { background: var(--card); border-radius: 24px; box-shadow: var(--shadow); padding: 26px 30px; margin-top: 18px; }
+  .qhead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .chip { font: 800 12px "Manrope", sans-serif; letter-spacing: .04em; padding: 6px 12px; border-radius: 999px; background: var(--page); color: var(--muted); }
+  .chip.who { background: var(--c); color: #fff; }
+  .qhead .sp { flex: 1; }
+  .ring { position: relative; width: 62px; height: 62px; flex: none; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring em { position: absolute; inset: 0; display: grid; place-items: center; font: 800 18px "Unbounded", sans-serif; font-style: normal; }
+  .ring.low em { color: var(--bad); } .ring.low .rc { stroke: var(--bad); }
+  .qt { margin: 14px 0 20px; font: 700 clamp(19px, 2.2vw, 27px)/1.35 "Unbounded", sans-serif; letter-spacing: -.01em; }
+  .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .opt { display: flex; align-items: center; gap: 14px; padding: 14px 16px; text-align: left; font: 700 clamp(15px, 1.4vw, 17px)/1.35 "Manrope", sans-serif; color: var(--ink); background: var(--page); border: 2px solid transparent; border-radius: 16px; cursor: pointer; transition: transform .18s, border-color .2s, background .3s; }
+  .opt .k { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--card); color: var(--c); font: 800 15px "Unbounded", sans-serif; border: 2px solid var(--c); }
+  .opt:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--c); }
+  .opt:disabled { cursor: default; }
+  .opt.right { background: color-mix(in srgb, var(--good) 18%, var(--card)); border-color: var(--good); }
+  .opt.right .k { background: var(--good); border-color: var(--good); color: #fff; }
+  .opt.wrong { background: color-mix(in srgb, var(--bad) 15%, var(--card)); border-color: var(--bad); animation: shake .4s; }
+  .opt.wrong .k { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .opt.dim { opacity: .45; }
+  @keyframes shake { 25%, 75% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
+  .foot { display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap; margin-top: 18px; min-height: 50px; }
+  .verdict { font: 800 17px "Manrope", sans-serif; } .verdict.ok { color: var(--good); } .verdict.bad { color: var(--bad); }
+  .izoh { color: var(--muted); font-weight: 600; font-size: 14px; flex-basis: 100%; order: 3; }
+  .foot .sp { flex: 1; }
+  .btn { font: 700 15px "Unbounded", sans-serif; color: var(--card); background: var(--ink); border: 0; border-radius: 14px; padding: 15px 26px; cursor: pointer; transition: transform .18s, box-shadow .2s; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.2); }
+  .in { animation: in .55s cubic-bezier(.2, .8, .2, 1) both; }
+  @keyframes in { from { opacity: 0; transform: translateY(14px); } }
+
+  .setup { display: grid; grid-template-columns: 1.1fr 1fr; gap: 30px; }
+  .setup h1 { margin: 0 0 6px; font: 800 clamp(28px, 3.4vw, 42px)/1.05 "Unbounded", sans-serif; letter-spacing: -.02em; }
+  .setup .sub { color: var(--muted); font-weight: 700; margin: 0 0 18px; }
+  .rules { margin: 0; padding: 0; list-style: none; counter-reset: r; }
+  .rules li { counter-increment: r; display: flex; gap: 12px; padding: 9px 0; font-weight: 600; line-height: 1.4; border-top: 2px dashed var(--line); }
+  .rules li::before { content: counter(r); flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--page); font: 800 13px "Unbounded", sans-serif; }
+  .fld label { display: block; font-weight: 800; font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+  .fld + .fld { margin-top: 18px; }
+  .fld input { display: block; width: 100%; padding: 13px 14px 13px 16px; font: 700 16px "Manrope", sans-serif; color: var(--ink); background: var(--page); border: 2px solid transparent; border-left: 8px solid var(--c); border-radius: 12px; outline: none; }
+  .fld input:focus { border-color: var(--c); }
+  .fld input + input { margin-top: 10px; }
+  .seg { display: flex; gap: 8px; } .seg button { flex: 1; padding: 12px 0; font: 800 17px "Unbounded", sans-serif; color: var(--ink); background: var(--page); border: 2px solid transparent; border-radius: 12px; cursor: pointer; }
+  .seg button.on { background: var(--ink); color: var(--card); }
+  .win { text-align: center; }
+  .win .big { font: 800 clamp(30px, 5vw, 54px)/1.1 "Unbounded", sans-serif; color: var(--c); margin: 12px 0 6px; }
+  .win p { color: var(--muted); font-weight: 700; margin: 0 0 18px; }
+  .win .rows { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .win .rows div { padding: 12px 20px; border-radius: 14px; background: var(--page); font-weight: 800; border-left: 6px solid var(--c); }
+  @media (max-width: 760px) { .opts, .setup { grid-template-columns: 1fr; } .card { padding: 20px 16px; } .sc { top: 8px; padding: 5px 10px 5px 5px; gap: 7px; } .sc.r { padding: 5px 5px 5px 10px; } .sc .n { min-width: 34px; height: 34px; font-size: 16px; } .sc b { font-size: 12px; } .sc small { display: none; } .scene { border-radius: 18px; } .scene svg { height: 250px; } header { flex-wrap: wrap; } header .t small { display: none; } .hb { padding: 7px 10px; font-size: 12px; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><svg width="26" height="26" viewBox="0 0 26 26"><path d="M2 15 C 8 11, 18 19, 24 13" stroke="#e9c891" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M13 14 V5 l6 2.5 -6 2.5" fill="#c4512f"/></svg></div>
+  <div class="t"><b>Arqon tortish</b><small>11-mavzu · Oʻzbekistonning eng yangi tarixi</small></div>
+  <span class="sp"></span>
+  <button class="hb" id="snd" type="button">Ovoz: bor</button>
+  <button class="hb" id="thm" type="button">Tungi</button>
+  <button class="hb" id="rst" type="button">Yangi oʻyin</button>
+</header>
+<main><div class="scene" id="scene"></div><div id="app"></div></main>
+
+<script>
+// ===== Savollar: 11-mavzu. Oʻzgarishlarning xalqaro reytinglar va indekslarda aks etishi (fayl ichiga joylangan, internet shart emas) =====
+const DATA = {"mavzu":"11-mavzu. Oʻzgarishlarning xalqaro reytinglar va indekslarda aks etishi","kategoriyalar":[{"nomi":"Reytinglar nima uchun kerak","qisqa":"Reytinglar","savollar":[{"s":"Xalqaro reytinglar nimani baholashda qoʻllaniladi?","j":"Mamlakatlarning rivojlanish darajasi va islohotlar samaradorligini","x":["Faqat sport natijalarini","Faqat ob-havoni","Faqat aholi sonini"]},{"s":"Mamlakat xalqaro reytinglarda yuqori oʻrinlarni egallasa, bu nimadan dalolat beradi?","j":"Ochiqligi, shaffofligi va iqtisodiy salohiyatidan","x":["Aholisi koʻpligidan","Hududi kattaligidan","Dengizga chiqishidan"]},{"s":"Reytinglarga koʻproq kimlar eʼtibor qaratadi?","j":"Hamkorlik qilmoqchi boʻlgan davlatlar va investorlar","x":["Faqat maktab oʻquvchilari","Faqat sayyohlar","Hech kim"]},{"s":"Qaysi biri xalqaro reytinglarning KAMCHILIGI hisoblanadi?","j":"Baholash metodologiyasining yetarlicha shaffof emasligi","x":["Mamlakatlarni taqqoslash imkoniyati","Maʼlumotlarni tizimli toʻplash","Jamiyatda muhokamani ragʻbatlantirish"]},{"s":"Iqtisodiy erkinlik indeksida yuqori oʻrindagi mamlakatlarda odatda nima kuzatiladi?","j":"Kambagʻallik darajasi pasayadi","x":["Kambagʻallik oshadi","Taʼlim sifati pasayadi","Turmush darajasi tushadi"]}]},{"nomi":"Meʼyoriy-huquqiy hujjatlar","qisqa":"Hujjatlar","savollar":[{"s":"Qaysi yilgacha Oʻzbekistonda reytinglar bilan tizimli ishlar deyarli olib borilmagan?","j":"2017-yilgacha","x":["1991-yilgacha","2000-yilgacha","2024-yilgacha"]},{"s":"Xalqaro reytinglar bilan ishlash boʻyicha Respublika kengashi qaysi farmon asosida tuzilgan?","j":"2020-yil 2-iyundagi farmon","x":["1992-yil 2-martdagi farmon","2017-yil 7-fevraldagi farmon","2023-yil 30-apreldagi farmon"]},{"s":"Xalqaro reytinglar va indekslar bilan ishlash boshqarmasi qaysi vazirlik tarkibida tashkil etilgan?","j":"Adliya vazirligi","x":["Mudofaa vazirligi","Sogʻliqni saqlash vazirligi","Sport vazirligi"]},{"s":"“Investitsiyalar va investitsiya faoliyati toʻgʻrisida”gi qonun qachon qabul qilingan?","j":"2019-yil 25-dekabrda","x":["1996-yil 26-dekabrda","2012-yil 10-sentabrda","2024-yil 19-iyunda"]},{"s":"2024-yil 16-avgustda ustuvor reytinglar roʻyxatini qaysi organ tasdiqlagan?","j":"Oliy Majlis Senati","x":["Konstitutsiyaviy sud","Markaziy bank","Toshkent shahar hokimligi"]}]},{"nomi":"Indekslar va ularni tuzuvchilar","qisqa":"Tuzuvchilar","savollar":[{"s":"Korrupsiyani qabul qilish indeksini qaysi tashkilot eʼlon qiladi?","j":"Transparency International","x":["Jahon sogʻliqni saqlash tashkiloti","FIFA","YuNESKO"]},{"s":"Matbuot erkinligi indeksini qaysi tashkilot tuzadi?","j":"“Chegara bilmas muxbirlar”","x":["Jahon banki","BMT Xavfsizlik Kengashi","Xalqaro Olimpiya qoʻmitasi"]},{"s":"Inson taraqqiyoti indeksi hisobotini kim tayyorlaydi?","j":"BMT Taraqqiyot dasturi (BMTTD)","x":["NATO","MDH","ShHT"]},{"s":"Global innovatsiyalar indeksini qaysi tashkilot hisoblaydi?","j":"Jahon intellektual mulk tashkiloti (WIPO)","x":["Jahon savdo tashkiloti","Xalqaro Qizil Xoch","Interpol"]},{"s":"Iqtisodiy erkinlik indeksi qaysi tashkilot maʼlumotlariga asoslanadi?","j":"Heritage Foundation","x":["World Justice Project","Transparency International","YuNISEF"]}]},{"nomi":"Oʻzbekiston natijalari","qisqa":"Natijalar","savollar":[{"s":"2022-yilda Oʻzbekiston ustuvor 19 ta reytingdan nechtasida oʻrnini yaxshiladi?","j":"11 tasida","x":["2 tasida","19 tasida","Birortasida ham"]},{"s":"2024-yilda Oʻzbekiston elektron hukumat darajasi qaysi guruhga koʻtarildi?","j":"“Juda yuqori” guruhga","x":["“Past” guruhga","“Oʻrta” guruhga","Guruhsiz qoldi"]},{"s":"Inson taraqqiyoti indeksida Oʻzbekiston qaysi guruhga kiradi?","j":"Inson taraqqiyoti yuqori boʻlgan davlatlar","x":["Past davlatlar","Juda past davlatlar","Hech qaysi guruhga"]},{"s":"“Ayollar, biznes va qonun” indeksida (2023) Oʻzbekiston nechta pogʻonaga koʻtarildi?","j":"48 pogʻonaga","x":["1 pogʻonaga","5 pogʻonaga","100 pogʻonaga"]},{"s":"Sayohat uchun eng xavfsiz mamlakatlar reytingida Oʻzbekiston nechanchi oʻrinni egalladi?","j":"5-oʻrinni","x":["1-oʻrinni","50-oʻrinni","150-oʻrinni"]}]},{"nomi":"Inson taraqqiyoti va boshqa indekslar","qisqa":"Indekslar","savollar":[{"s":"Qaysi biri Inson taraqqiyoti indeksining uch asosiy koʻrsatkichiga KIRMAYDI?","j":"Futbol jamoasining natijalari","x":["Kutilayotgan umr davomiyligi","Taʼlim olish davomiyligi","Aholi jon boshiga daromad"]},{"s":"Mintaqada “juda yuqori” inson taraqqiyoti indeksiga ega yagona davlat qaysi?","j":"Qozogʻiston","x":["Tojikiston","Afgʻoniston","Qirgʻiziston"]},{"s":"Logistika samaradorligi indeksi qaysi sohani baholaydi?","j":"Bojxona, transport va yuk yetkazib berishni","x":["Sanʼat va madaniyatni","Sport musobaqalarini","Ob-havo prognozini"]},{"s":"Qonun ustuvorligi indeksini qaysi tashkilot tuzadi?","j":"World Justice Project","x":["Heritage Foundation","WIPO","BMTTD"]},{"s":"S&P agentligi Oʻzbekistonga qanday reyting bergan?","j":"Kredit reytingi","x":["Futbol reytingi","Kino reytingi","Universitet reytingi"]}]},{"nomi":"Zakovat: reyting mantigʻi","qisqa":"Mantiq","savollar":[{"s":"Reytingda qaysi oʻrin yaxshiroq: 63-oʻrinmi yoki 69-oʻrin?","j":"63-oʻrin","x":["69-oʻrin","Ikkalasi bir xil","Aniqlab boʻlmaydi"]},{"s":"Korrupsiyani qabul qilish indeksida ball qanchalik yuqori boʻlsa…","j":"Korrupsiya shunchalik kam deb qabul qilinadi","x":["Korrupsiya shunchalik koʻp","Aholi shunchalik koʻp","Ball hech narsani bildirmaydi"]},{"s":"Inson taraqqiyoti indeksi qiymati 0,740. Bu indeksning eng yuqori qiymati qancha?","j":"1","x":["10","100","1000"]},{"s":"Mamlakat 103-oʻrindan 3 pogʻona koʻtarilsa, nechanchi oʻringa chiqadi?","j":"100-oʻringa","x":["106-oʻringa","103-oʻringa","3-oʻringa"]},{"s":"Boshqa davlatlarning bali pasaysa, sizning balingiz biroz kamaysa ham reytingda nima boʻlishi mumkin?","j":"Pogʻonangiz koʻtarilishi mumkin","x":["Albatta tushib ketasiz","Reytingdan chiqarilasiz","Hech narsa oʻzgarmaydi"],"izoh":"Demokratiya indeksida shunday boʻlgan: ball 2,12 dan 2,10 ga tushgan, lekin oʻrin 2 pogʻona koʻtarilgan."}]},{"nomi":"Zakovat: inglizcha nomlar","qisqa":"Nomlar","savollar":[{"s":"“Corruption Perceptions Index” qaysi indeks?","j":"Korrupsiyani qabul qilish indeksi","x":["Inson taraqqiyoti indeksi","Global innovatsiyalar indeksi","Logistika indeksi"]},{"s":"“Human Development Index” qaysi indeks?","j":"Inson taraqqiyoti indeksi","x":["Iqtisodiy erkinlik indeksi","Matbuot erkinligi indeksi","Qonun ustuvorligi indeksi"]},{"s":"“E-Government” soʻzidagi “E” harfi nimani bildiradi?","j":"Elektron","x":["Iqtisodiy","Ekologik","Yevropa"]},{"s":"“Rule of Law Index” oʻzbekchada qanday ataladi?","j":"Qonun ustuvorligi indeksi","x":["Sport qoidalari indeksi","Yoʻl harakati indeksi","Soliq indeksi"]},{"s":"“Women, Business and the Law” indeksi qaysi mavzuni baholaydi?","j":"Ayollar huquqlari va gender tengligini","x":["Bolalar sportini","Qishloq xoʻjaligini","Kosmik tadqiqotlarni"]}]},{"nomi":"Zakovat: raqamlar","qisqa":"Raqamlar","savollar":[{"s":"2024-yil hujjatiga koʻra Oʻzbekiston uchun nechta ustuvor reyting va indeks belgilandi?","j":"15 ta","x":["3 ta","50 ta","193 ta"]},{"s":"Elektron hukumat reytingida jami nechta davlat baholanadi?","j":"193 ta — BMTga aʼzo barcha davlatlar","x":["50 ta","27 ta","1000 ta"]},{"s":"Demokratiya indeksida eng yuqori ball necha?","j":"10","x":["1","5","1000"]},{"s":"Iqtisodiy erkinlik indeksida Oʻzbekiston 12 ta koʻrsatkichdan nechtasida yaxshilandi?","j":"8 tasida","x":["1 tasida","12 tasida","Birortasida ham"]},{"s":"Global innovatsiyalar indeksi qaysi yildan beri hisoblanadi?","j":"2007-yildan","x":["1945-yildan","1991-yildan","2024-yildan"]}]},{"nomi":"Zakovat: imij va investitsiya","qisqa":"Imij","savollar":[{"s":"Nega investor biror davlatga pul kiritishdan oldin reytinglarga qaraydi?","j":"Xavf va imkoniyatlarni baholash uchun","x":["Ob-havoni bilish uchun","Davlat madhiyasini oʻrganish uchun","Bu majburiy marosim"]},{"s":"Sayohat xavfsizligi reytingidagi yuqori oʻrin qaysi sohaga eng koʻp foyda beradi?","j":"Turizmga","x":["Neft qazib olishga","Kosmik sanoatga","Baliqchilikka"]},{"s":"Sayohat xavfsizligi reytingida birinchi oʻrinni qaysi davlat egallagan?","j":"Singapur","x":["Oʻzbekiston","Braziliya","Misr"]},{"s":"Davlat organlarining ochiqligi toʻgʻrisidagi qonun (2022) qaysi indeksdagi oʻringa taʼsir qildi?","j":"Ochiq maʼlumotlar indeksi","x":["Futbol reytingi","Iqlim indeksi","Aholi zichligi reytingi"]},{"s":"“Davlat-xususiy sheriklik toʻgʻrisida”gi qonun nimani ragʻbatlantiradi?","j":"Xususiy investitsiyalar va infratuzilma loyihalarini","x":["Faqat davlat korxonalarini","Import taqiqini","Valyuta cheklovlarini"]}]},{"nomi":"Zakovat: davlat siyosati","qisqa":"Siyosat","savollar":[{"s":"Reytinglarni yaxshilash siyosatining birinchi yoʻnalishi nima?","j":"Davlat boshqaruvi tizimini takomillashtirish","x":["Chegaralarni yopish","Internetni cheklash","Statistikani yashirish"]},{"s":"Byurokratiya va korrupsiyani kamaytirishda qaysi vosita eng koʻp yordam beradi?","j":"Raqamli texnologiyalar va shaffof tartiblar","x":["Qogʻoz hujjatlarni koʻpaytirish","Navbatlarni uzaytirish","Maʼlumotlarni yopish"]},{"s":"Reyting tuzuvchilarga ishonchli statistik maʼlumot bermaslik nimaga olib kelgan?","j":"Mamlakat reytinglarga kiritilmagan yoki past oʻrinda boʻlgan","x":["Birinchi oʻringa chiqqan","Hech narsa oʻzgarmagan","Barcha reytinglar bekor qilingan"]},{"s":"Har yili Milliy maʼruzani muhokama qilish tartibi qaysi hujjat bilan joriy etilgan?","j":"2024-yil 19-iyundagi farmon","x":["1992-yilgi Konstitutsiya","2017-yilgi Harakatlar strategiyasi","1996-yilgi qonun"]},{"s":"Islohotlar samarasini toʻgʻri baholash uchun eng muhimi nima?","j":"Koʻrsatkichlarni muntazam kuzatib borish","x":["Natijalarni yashirish","Reytinglarni eʼtiborsiz qoldirish","Faqat bir marta tekshirish"]}]}]};
+const TIME = 30, W = 1000, GY = 330, SPAN = 330;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+// ===== Ovoz =====
+let AC = null, muted = false;
+function tone(f, d = .15, type = "sine", v = .2, when = 0) {
+  if (muted) return; try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); const t = AC.currentTime + when, o = AC.createOscillator(), g = AC.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + d); o.connect(g).connect(AC.destination); o.start(t); o.stop(t + d); } catch (e) {} }
+const SND = { ok: () => { tone(392, .12, "triangle"); tone(523, .12, "triangle", .2, .09); tone(659, .28, "triangle", .2, .18); }, bad: () => { tone(200, .3, "square", .08); tone(150, .35, "square", .07, .12); },
+  tick: () => tone(900, .05, "square", .04), win: () => [392, 523, 659, 784, 1046].forEach((f, i) => tone(f, .3, "triangle", .18, i * .12)) };
+$("#snd").onclick = () => { muted = !muted; $("#snd").textContent = "Ovoz: " + (muted ? "yoʻq" : "bor"); };
+$("#thm").onclick = () => { const h = document.documentElement; h.dataset.theme = h.dataset.theme === "dark" ? "light" : "dark"; $("#thm").textContent = h.dataset.theme === "dark" ? "Kunduzgi" : "Tungi"; };
+$("#rst").onclick = () => { if (!S || confirm("Yangi oʻyin boshlansinmi?")) { stopTimer(); S = null; setup(); } };
+
+// ===== Rasm: choʻl, tepaliklar, arqon tortayotgan odamlar (doʻppili) =====
+const SKIN = ["#e8b48a", "#d29a6c", "#f0c49c"];
+function person(x, d, team, i) {
+  const c = team ? "var(--B)" : "var(--A)", c2 = team ? "var(--B2)" : "var(--A2)", skin = SKIN[(i + team) % 3];
+  return `<g transform="translate(${x} ${GY}) scale(${d} 1)">
+    <g class="dust" fill="var(--gr2)"><circle cx="26" cy="-4" r="6"/><circle cx="16" cy="-2" r="4"/></g>
+    <path d="M-14 -58 L22 0" stroke="#3b2c22" stroke-width="10" stroke-linecap="round"/><path d="M-14 -58 L-2 -30 L-18 0" stroke="#4a382b" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M18 2 h14" stroke="#2a1f18" stroke-width="7" stroke-linecap="round"/><path d="M-22 2 h12" stroke="#2a1f18" stroke-width="7" stroke-linecap="round"/>
+    <g transform="translate(-14 -58) rotate(-20)"><g class="tor">
+      <rect x="-14" y="-58" width="28" height="60" rx="12" fill="${c}"/><path d="M-14 -24 h28" stroke="#e6b94f" stroke-width="5"/>
+      <path d="M-6 -56 L0 -42 L6 -56" fill="${c2}"/>
+      <circle cx="2" cy="-74" r="14" fill="${skin}"/>
+      <path d="M-12 -80 Q2 -98 16 -80 Z" fill="#1d1a1a"/><path d="M-5 -86 l3 3 3 -3 M5 -86 l3 3 3 -3" stroke="#fff" stroke-width="1.5" fill="none"/>
+      <circle cx="10" cy="-74" r="1.8" fill="#2a1f18"/>
+      <path d="M2 -44 L40 -36" stroke="${c2}" stroke-width="9" stroke-linecap="round"/><circle cx="40" cy="-36" r="6" fill="${skin}"/>
+    </g></g></g>`;
+}
+const markFill = (i, pos) => i === 0 ? "#fff" : (i < 0 && pos <= i) ? "var(--A)" : (i > 0 && pos >= i) ? "var(--B)" : "var(--gr)";
+function sceneSVG(pos, target) {
+  const step = SPAN / target, ry = GY - 105;
+  const marks = Array.from({ length: target * 2 + 1 }, (_, k) => { const i = k - target, x = 500 + i * step;
+    return `<ellipse class="mk" data-i="${i}" cx="${x}" cy="${GY + 24}" rx="${i ? 7 : 9}" ry="4" fill="${markFill(i, pos)}" stroke="var(--gr2)" stroke-width="2"/>`; }).join("");
+  const clouds = [[60, 0, 1], [140, -30, 1.3], [95, -55, .8]].map(([y, de, s], k) => `<g class="cloud" style="animation-duration:${70 + k * 25}s;animation-delay:${de}s"><g transform="translate(0 ${y}) scale(${s})" fill="#fff" opacity=".85"><ellipse cx="0" cy="0" rx="46" ry="16"/><ellipse cx="-20" cy="-10" rx="24" ry="18"/><ellipse cx="14" cy="-14" rx="28" ry="22"/></g></g>`).join("");
+  const stars = Array.from({ length: 40 }, (_, k) => `<circle class="tw" cx="${(k * 97) % 1000}" cy="${(k * 53) % 170}" r="${k % 3 ? 1.2 : 2}" fill="#fff" style="animation-delay:${(k % 7) * .4}s"/>`).join("");
+  const bush = (x, s) => `<g transform="translate(${x} ${GY - 2}) scale(${s})"><path d="M0 0 C -6 -14, -18 -16, -22 -8 M0 0 C 2 -18, 12 -24, 20 -14 M0 0 C -2 -22, 4 -30, 6 -26" stroke="var(--d3)" stroke-width="3" fill="none" stroke-linecap="round"/></g>`;
+  const pole = (x, c) => `<g><path d="M${x} ${GY + 30} V ${GY - 150}" stroke="#6b4a2a" stroke-width="5"/><path d="M${x} ${GY - 150} l${x < 500 ? -44 : 44} 14 l${x < 500 ? 44 : -44} 14 z" fill="${c}"/></g>`;
+  return `<svg viewBox="0 0 ${W} 400" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Arqon tortish maydoni">
+    <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--s1)"/><stop offset="1" style="stop-color:var(--s2)"/></linearGradient></defs>
+    <rect width="1000" height="400" fill="url(#sky)"/>
+    <g class="stars">${stars}</g>
+    <g class="rays">${Array.from({ length: 12 }, (_, k) => `<path d="M830 92 L${(830 + Math.cos(k * Math.PI / 6) * 110).toFixed(1)} ${(92 + Math.sin(k * Math.PI / 6) * 110).toFixed(1)}" stroke="var(--sun)" stroke-width="6" stroke-linecap="round"/>`).join("")}</g>
+    <circle cx="830" cy="92" r="44" fill="var(--sun)"/>
+    ${clouds}
+    <g class="bird" fill="none" stroke="#3a3a48" stroke-width="2.4" stroke-linecap="round"><path d="M100 80 q8 -8 16 0 q8 -8 16 0"/><path d="M140 64 q6 -6 12 0 q6 -6 12 0"/></g>
+    <path d="M0 230 L90 180 L170 214 L260 150 L360 205 L450 170 L560 212 L650 160 L760 210 L870 168 L1000 208 V 300 H0 Z" fill="var(--mt)" opacity=".7"/>
+    <path d="M0 260 C 160 210, 300 250, 470 230 S 800 200, 1000 240 V 320 H0 Z" fill="var(--d1)"/>
+    <path d="M0 290 C 200 250, 380 300, 560 270 S 860 250, 1000 280 V 340 H0 Z" fill="var(--d2)"/>
+    <path d="M-10 ${GY - 6} C 300 ${GY - 22}, 700 ${GY - 14}, 1010 ${GY - 8} V 400 H -10 Z" fill="var(--gr)"/>
+    ${bush(60, 1.2)}${bush(940, 1)}${bush(880, .7)}
+    <path d="M500 ${GY - 6} V 400" stroke="#fff" stroke-width="4" stroke-dasharray="8 8" opacity=".75"/>
+    ${pole(500 - SPAN, "var(--A)")}${pole(500 + SPAN, "var(--B)")}
+    ${marks}
+    <g class="grp" id="grp" style="transform:translateX(${pos * step}px)">
+      <path d="M${500 - 400} ${GY} Q ${500 - 360} ${ry}, ${500 - 300} ${ry} H ${500 + 300} Q ${500 + 360} ${ry}, ${500 + 400} ${GY}" fill="none" stroke="#8a5a2b" stroke-width="8" stroke-linecap="round"/>
+      <path d="M${500 - 300} ${ry} H ${500 + 300}" stroke="#d8a86a" stroke-width="3" stroke-dasharray="6 6"/>
+      <g class="flagc"><path d="M500 ${ry} V ${ry + 30}" stroke="#7a1f1a" stroke-width="2"/><path d="M500 ${ry + 4} L530 ${ry + 16} L500 ${ry + 30} L470 ${ry + 16} Z" fill="#c8102e" stroke="#fff" stroke-width="2"/></g>
+      <circle cx="500" cy="${ry}" r="7" fill="#7a1f1a"/>
+      <g class="team" id="tm0">${[0, 1, 2].map(i => person(500 - 100 - i * 68, 1, 0, i)).join("")}</g>
+      <g class="team" id="tm1">${[0, 1, 2].map(i => person(500 + 100 + i * 68, -1, 1, i)).join("")}</g>
+    </g></svg>
+    <div class="sc l" id="sc0" style="--c:var(--A)"><span class="n" id="n0s">0</span><span><b id="b0">1-jamoa</b><small id="w0"></small></span></div>
+    <div class="sc r" id="sc1" style="--c:var(--B)"><span class="n" id="n1s">0</span><span><b id="b1">2-jamoa</b><small id="w1"></small></span></div>
+    <div class="pop" id="pop"></div>`;
+}
+function drawScene(pos, target) { $("#scene").innerHTML = sceneSVG(pos, target); }
+function boards(names, score, who) {
+  [0, 1].forEach(s => { $("#b" + s).textContent = names[s]; $("#n" + s + "s").textContent = score[s]; $("#sc" + s).classList.toggle("turn", s === who); $("#w" + s).textContent = s === who ? "navbat shu jamoada" : "toʻgʻri javoblar"; });
+}
+
+let S = null, T = null, done = false;
+// ===== Sozlash =====
+function setup() {
+  let target = 4;
+  drawScene(0, target); boards(["1-jamoa", "2-jamoa"], [0, 0], -1);
+  $("#app").innerHTML = `<div class="card setup in">
+    <div><h1>Arqon tortish</h1><p class="sub">${esc(DATA.mavzu)}</p>
+      <ul class="rules">
+        <li>Jamoalar navbat bilan javob beradi: avval chap, keyin oʻng jamoa.</li>
+        <li>Har savolga ${TIME} soniya. 4 ta variantdan bittasi toʻgʻri, klaviaturada A, B, C, D ham ishlaydi.</li>
+        <li>Toʻgʻri javob — arqon bir qadam shu jamoa tomonga tortiladi. Xato — joyida qoladi.</li>
+        <li>Qizil bayroqchani oʻz ustunigacha tortib kelgan jamoa yutadi.</li>
+      </ul></div>
+    <div><div class="fld"><label>Jamoalar nomi</label><input id="i0" value="1-jamoa" maxlength="22" style="--c:var(--A)"><input id="i1" value="2-jamoa" maxlength="22" style="--c:var(--B)"></div>
+      <div class="fld"><label>Gʻalaba uchun qadamlar</label><div class="seg" id="tg">${[3, 4, 5, 6].map(n => `<button type="button" data-t="${n}" class="${n === target ? "on" : ""}">${n}</button>`).join("")}</div></div>
+      <div class="foot"><span class="sp"></span><button class="btn" id="go" type="button">Boshlash</button></div></div></div>`;
+  const nm = () => [$("#i0").value.trim() || "1-jamoa", $("#i1").value.trim() || "2-jamoa"];
+  $$("#app input").forEach(i => i.oninput = () => boards(nm(), [0, 0], -1));
+  $$("#tg button").forEach(b => b.onclick = () => { target = +b.dataset.t; $$("#tg button").forEach(x => x.classList.toggle("on", x === b)); drawScene(0, target); boards(nm(), [0, 0], -1); });
+  $("#go").onclick = () => {
+    const order = [0, 1, 2, 3, 4].flatMap(lv => shuffle(DATA.kategoriyalar.map(c => ({ c, lv, q: c.savollar[lv] })))); // osondan qiyinga
+    S = { names: nm(), score: [0, 0], target, pos: 0, order, idx: 0 };
+    drawScene(0, target); render();
+  };
+}
+
+// ===== Oʻyin =====
+const over = () => Math.abs(S.pos) >= S.target || S.idx >= S.order.length;
+const tc = w => w ? "var(--B)" : "var(--A)";
+function render() {
+  if (over()) return finish();
+  done = false;
+  const who = S.idx % 2, it = S.order[S.idx], q = it.q, opts = shuffle([q.j, ...q.x]), right = opts.indexOf(q.j);
+  boards(S.names, S.score, who); $("#grp").classList.add("tense");
+  $("#app").innerHTML = `<div class="card in" style="--c:${tc(who)}">
+    <div class="qhead"><span class="chip who">${esc(S.names[who])}</span><span class="chip">${S.idx + 1}-savol</span><span class="chip">${esc(it.c.nomi)}</span><span class="chip">${it.lv + 1}-daraja</span><span class="sp"></span>
+      <div class="ring" id="ring"><svg width="62" height="62"><circle cx="31" cy="31" r="26" fill="none" stroke="var(--line)" stroke-width="6"/><circle class="rc" cx="31" cy="31" r="26" fill="none" stroke="${tc(who)}" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4"/></svg><em>${TIME}</em></div></div>
+    <div class="qt">${esc(q.s)}</div>
+    <div class="opts">${opts.map((o, k) => `<button class="opt" type="button" data-k="${k}"><span class="k">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="foot" id="ft"></div></div>`;
+  $$(".opt").forEach(b => b.onclick = () => answer(+b.dataset.k, right, who, q));
+  startTimer(() => answer(-1, right, who, q));
+}
+function answer(k, right, who, q) {
+  if (done) return; done = true; stopTimer();
+  const ok = k === right, bs = $$(".opt"); bs.forEach((b, i) => { b.disabled = true; if (i !== right && i !== k) b.classList.add("dim"); });
+  bs[right].classList.add("right"); if (k >= 0 && !ok) bs[k].classList.add("wrong");
+  const grp = $("#grp"); grp.classList.remove("tense");
+  let msg;
+  if (ok) {
+    S.score[who]++; S.pos += who ? 1 : -1; SND.ok();
+    grp.style.transform = `translateX(${S.pos * SPAN / S.target}px)`;
+    const me = $("#tm" + who), oth = $("#tm" + (1 - who)); [me, oth].forEach(t => t.classList.remove("heave", "stumble")); void me.getBBox();
+    me.classList.add("heave"); oth.classList.add("stumble");
+    $$(".mk").forEach(m => m.setAttribute("fill", markFill(+m.dataset.i, S.pos)));
+    const p = $("#pop"); p.textContent = "Tortdi!"; p.style.setProperty("--c", tc(who)); p.style.left = who ? "auto" : "16%"; p.style.right = who ? "16%" : "auto"; p.classList.remove("go"); void p.offsetWidth; p.classList.add("go");
+    msg = `<span class="verdict ok">Toʻgʻri — arqon bir qadam tortildi</span>`;
+  } else { SND.bad(); msg = `<span class="verdict bad">${k < 0 ? "Vaqt tugadi — arqon joyida" : "Notoʻgʻri — arqon joyida qoldi"}</span>`; }
+  S.idx++; boards(S.names, S.score, -1);
+  $("#ft").innerHTML = msg + (q.izoh ? `<span class="izoh">${esc(q.izoh)}</span>` : "") + `<span class="sp"></span><button class="btn" id="nb" type="button">${over() ? "Natija" : "Keyingi savol"}</button>`;
+  $("#nb").disabled = true; setTimeout(() => { const nb = $("#nb"); if (nb) { nb.disabled = false; nb.onclick = render; } }, 350);
+}
+function startTimer(onEnd) {
+  const el = $("#ring"), rc = el.querySelector(".rc"), num = el.querySelector("em"), t0 = performance.now(); let last = TIME;
+  (function f(now) {
+    if (!el.isConnected) return;
+    const left = Math.max(0, TIME - (now - t0) / 1000), w = Math.ceil(left);
+    rc.style.strokeDashoffset = 163.4 * (1 - left / TIME);
+    if (w !== last) { last = w; num.textContent = w; el.classList.toggle("low", w <= 5); if (w <= 5 && w > 0) SND.tick(); }
+    if (left <= 0) return onEnd();
+    T = requestAnimationFrame(f);
+  })(t0);
+}
+function stopTimer() { if (T) cancelAnimationFrame(T); T = null; }
+function finish() {
+  stopTimer(); SND.win();
+  const w = S.pos < 0 ? 0 : S.pos > 0 ? 1 : (S.score[0] === S.score[1] ? -1 : S.score[0] > S.score[1] ? 0 : 1);
+  boards(S.names, S.score, w);
+  if (w >= 0) { const t = $("#tm" + w); t.classList.remove("heave", "stumble"); void t.getBBox(); t.classList.add("heave"); }
+  $("#app").innerHTML = `<div class="card win in" style="--c:${w < 0 ? "var(--ink)" : tc(w)}">
+    <span class="chip">Oʻyin yakuni</span>
+    <div class="big">${w < 0 ? "Durang" : esc(S.names[w]) + " yutdi"}</div>
+    <p>${w < 0 ? "Arqon oʻrtada qoldi" : Math.abs(S.pos) >= S.target ? "Bayroqchani oʻz ustunigacha tortib keldi" : "Savollar tugadi — arqon shu jamoa tomonida"}</p>
+    <div class="rows">${[0, 1].map(s => `<div style="--c:${tc(s)}">${esc(S.names[s])}: ${S.score[s]} ta toʻgʻri</div>`).join("")}</div>
+    <button class="btn" id="again" type="button">Yana oʻynash</button></div>`;
+  $("#again").onclick = () => { S = null; setup(); };
+}
+addEventListener("keydown", e => { if (done || !S || e.target.closest("input")) return; const b = $$(".opt")["ABCD".indexOf(e.key.toUpperCase())]; if (b && !b.disabled) b.click(); });
+setup();
+</script>
+</body>
+</html>
