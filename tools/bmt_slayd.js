@@ -1,12 +1,12 @@
 // Tarix mustaqil ishi himoyasi uchun taqdimot: "Oʻzbekiston va BMT".
 // Morph oʻtishlari (halqa, yorugʻlik, yil, bayroq slayddan slaydga oqib oʻtadi) + har elementga kirish animatsiyasi.
-// Ishlatish: python3 tools/bmt_slayd_rasm.py P && python3 tools/bmt_illyustratsiya.py P && node tools/bmt_svg2png.js P && node tools/bmt_slayd.js P alohida/BMT_himoya.pptx  (qalam varianti: oxiriga "chiz" qoʻshing)
+// Ishlatish: python3 tools/bmt_slayd_rasm.py P && python3 tools/bmt_illyustratsiya.py P && node tools/bmt_svg2png.js P && node tools/bmt_slayd.js P alohida/BMT_himoya.pptx  (qalam varianti: avval bmt_gif.js va bmt_gif.py, keyin oxiriga "chiz")
 const fs = require("fs");
 const pptxgen = require("pptxgenjs");
 const JSZip = require("jszip");
 
 const [IMG, OUT, MODE] = process.argv.slice(2);
-const CHIZ = MODE === "chiz"; // illyustratsiyalar qalam bilan chizilgandek paydo boʻladi, hammasi tezroq
+const CHIZ = MODE === "chiz"; // illyustratsiyalar qalam bilan chiziladi (GIF: bmt_gif.js + bmt_gif.py)
 const img = n => "image/png;base64," + fs.readFileSync(`${IMG}/${n}`).toString("base64");
 
 const K = { night: "0B1638", gold: "E3C27A", gold2: "B8893A", cream: "F5EBD3", muted: "A9B4D0", un: "5B92E5", year: "1A2A5E", card: "132350", line: "3A4C86" };
@@ -18,11 +18,11 @@ pres.theme = { headFontFace: HEAD, bodyFontFace: BODY };
 
 let n = 0; // har slaydda animatsiya tartibi
 const A = (kind) => `a${String(++n).padStart(2, "0")}${kind}_`;
-// illyustratsiya: oddiy rejimda bitta rasm (kattalashib chiqadi); CHIZ rejimida qatlamlar ketma-ket "chiziladi"
+// illyustratsiya: oddiy rejimda bitta rasm (kattalashib chiqadi); CHIZ rejimida qalam bilan chiziladigan GIF
 function ill(s, name, x, y, w, h, transparency = 0) {
   if (!CHIZ) return s.addImage({ data: img(name + ".png"), x, y, w, h, transparency, objectName: (name === "registon" ? "!!regsil" : A("z") + name) });
-  for (let i = 0; fs.existsSync(`${IMG}/${name}_L${i}.png`); i++)
-    s.addImage({ data: img(`${name}_L${i}.png`), x, y, w, h, transparency, objectName: A(name === "registon" || i % 2 === 0 ? "d" : "e") + name + i });
+  // GIF slayd ochilishi bilan oʻzi oʻynaydi va oxirgi kadrda toʻxtaydi — alohida animatsiya kerak emas
+  s.addImage({ data: "image/gif;base64," + fs.readFileSync(`${IMG}/${name}.gif`).toString("base64"), x, y, w, h, objectName: "chiz_" + name });
 }
 function base(s, { ring, glow, year, reg }) {
   n = 0;
@@ -159,7 +159,7 @@ s.addNotes("Xulosa: BMTga aʼzo boʻlish mustaqilligimiz xalqaro miqyosda tan ol
 function timing(xml) {
   const items = [...xml.matchAll(/<p:cNvPr id="(\d+)" name="a(\d+)([fuwzde])_[^"]*"/g)].map(m => ({ id: m[1], ord: +m[2], k: m[3] })).sort((a, b) => a.ord - b.ord);
   if (!items.length) return "";
-  let id = 3; const D = CHIZ ? 380 : 650, STEP = CHIZ ? 110 : 260, PEN = 260;
+  let id = 3; const D = 650, STEP = 260, PEN = 260;
   const fx = items.map((it, i) => {
     const tg = `<p:tgtEl><p:spTgt spid="${it.id}"/></p:tgtEl>`, set = `<p:set><p:cBhvr><p:cTn id="${++id}" dur="1" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst></p:cTn>${tg}<p:attrNameLst><p:attrName>style.visibility</p:attrName></p:attrNameLst></p:cBhvr><p:to><p:strVal val="visible"/></p:to></p:set>`;
     const fade = (f = "fade") => `<p:animEffect transition="in" filter="${f}"><p:cBhvr><p:cTn id="${++id}" dur="${D}"/>${tg}</p:cBhvr></p:animEffect>`;
@@ -173,7 +173,7 @@ function timing(xml) {
   }).join("");
   return `<p:timing><p:tnLst><p:par><p:cTn id="1" dur="indefinite" restart="never" nodeType="tmRoot"><p:childTnLst><p:seq concurrent="1" nextAc="seek"><p:cTn id="2" dur="indefinite" nodeType="mainSeq"><p:childTnLst><p:par><p:cTn id="${++id}" fill="hold"><p:stCondLst><p:cond delay="indefinite"/><p:cond evt="onBegin" delay="0"><p:tn val="2"/></p:cond></p:stCondLst><p:childTnLst><p:par><p:cTn id="${++id}" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst>${fx}</p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn><p:prevCondLst><p:cond evt="onPrev" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:prevCondLst><p:nextCondLst><p:cond evt="onNext" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst></p:seq></p:childTnLst></p:cTn></p:par></p:tnLst></p:timing>`;
 }
-const MORPH = `<mc:AlternateContent><mc:Choice Requires="p159"><p:transition spd="slow" p14:dur="${CHIZ ? 1100 : 1800}"><p159:morph option="byObject"/></p:transition></mc:Choice><mc:Fallback><p:transition spd="slow"><p:fade/></p:transition></mc:Fallback></mc:AlternateContent>`;
+const MORPH = `<mc:AlternateContent><mc:Choice Requires="p159"><p:transition spd="slow" p14:dur="1800"><p159:morph option="byObject"/></p:transition></mc:Choice><mc:Fallback><p:transition spd="slow"><p:fade/></p:transition></mc:Fallback></mc:AlternateContent>`;
 
 (async () => {
   const buf = await pres.write({ outputType: "nodebuffer" });
