@@ -1,12 +1,18 @@
 # Taqdimot uchun oltin chiziqli illyustratsiyalar (SVG). Keyin tools/bmt_svg2png.js PNG ga aylantiradi.
 # Ishlatish: python3 tools/bmt_illyustratsiya.py <papka>
-import math, os, sys
+import math, os, re, sys
+LAYERS = {"registon": 8, "yollar": 7}
 
 out = sys.argv[1]; os.makedirs(out, exist_ok=True)
 G = "#E3C27A"; G2 = "#F3DC9C"; FILL = "rgba(227,194,122,.10)"
 def svg(name, w, h, body, sw=3):
     s = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}"><defs><filter id="gl"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g fill="none" stroke="{G}" stroke-width="{sw}" stroke-linecap="round" stroke-linejoin="round" filter="url(#gl)">{body}</g></svg>'
     open(os.path.join(out, name + ".svg"), "w").write(s)
+    # "chizilish" uchun qatlamlar: elementlar tartib bilan LAYERS boʻlakka boʻlinadi (har biri alohida PNG)
+    els = re.findall(r"<[^>]+/>", body); k = LAYERS.get(name, 6); per = math.ceil(len(els) / k)
+    for i in range(k):
+        part = "".join(els[i * per:(i + 1) * per])
+        if part: open(os.path.join(out, f"{name}_L{i}.svg"), "w").write(s.replace(body, part))
 
 def globe(cx, cy, r, routes=False):
     b = f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{FILL}"/>'

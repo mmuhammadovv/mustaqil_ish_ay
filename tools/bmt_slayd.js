@@ -1,11 +1,12 @@
 // Tarix mustaqil ishi himoyasi uchun taqdimot: "Oʻzbekiston va BMT".
 // Morph oʻtishlari (halqa, yorugʻlik, yil, bayroq slayddan slaydga oqib oʻtadi) + har elementga kirish animatsiyasi.
-// Ishlatish: python3 tools/bmt_slayd_rasm.py P && python3 tools/bmt_illyustratsiya.py P && node tools/bmt_svg2png.js P && node tools/bmt_slayd.js P alohida/BMT_himoya.pptx
+// Ishlatish: python3 tools/bmt_slayd_rasm.py P && python3 tools/bmt_illyustratsiya.py P && node tools/bmt_svg2png.js P && node tools/bmt_slayd.js P alohida/BMT_himoya.pptx  (qalam varianti: oxiriga "chiz" qoʻshing)
 const fs = require("fs");
 const pptxgen = require("pptxgenjs");
 const JSZip = require("jszip");
 
-const [IMG, OUT] = process.argv.slice(2);
+const [IMG, OUT, MODE] = process.argv.slice(2);
+const CHIZ = MODE === "chiz"; // illyustratsiyalar qalam bilan chizilgandek paydo boʻladi, hammasi tezroq
 const img = n => "image/png;base64," + fs.readFileSync(`${IMG}/${n}`).toString("base64");
 
 const K = { night: "0B1638", gold: "E3C27A", gold2: "B8893A", cream: "F5EBD3", muted: "A9B4D0", un: "5B92E5", year: "1A2A5E", card: "132350", line: "3A4C86" };
@@ -17,10 +18,16 @@ pres.theme = { headFontFace: HEAD, bodyFontFace: BODY };
 
 let n = 0; // har slaydda animatsiya tartibi
 const A = (kind) => `a${String(++n).padStart(2, "0")}${kind}_`;
+// illyustratsiya: oddiy rejimda bitta rasm (kattalashib chiqadi); CHIZ rejimida qatlamlar ketma-ket "chiziladi"
+function ill(s, name, x, y, w, h, transparency = 0) {
+  if (!CHIZ) return s.addImage({ data: img(name + ".png"), x, y, w, h, transparency, objectName: (name === "registon" ? "!!regsil" : A("z") + name) });
+  for (let i = 0; fs.existsSync(`${IMG}/${name}_L${i}.png`); i++)
+    s.addImage({ data: img(`${name}_L${i}.png`), x, y, w, h, transparency, objectName: A(name === "registon" || i % 2 === 0 ? "d" : "e") + name + i });
+}
 function base(s, { ring, glow, year, reg }) {
   n = 0;
   s.background = { data: img("fon.png") };
-  if (reg) s.addImage({ data: img("registon.png"), ...reg, h: reg.w * 345 / 1600, transparency: 25, objectName: "!!regsil" });
+  if (reg) ill(s, "registon", reg.x, reg.y, reg.w, reg.w * 345 / 1600, 25);
   s.addShape(pres.shapes.OVAL, { ...glow, fill: { color: K.un, transparency: 86 }, line: { type: "none" }, objectName: "!!glow" });
   s.addShape(pres.shapes.OVAL, { ...ring, fill: { type: "none" }, line: { color: K.gold, width: 1.5, transparency: 35 }, objectName: "!!ring" });
   s.addShape(pres.shapes.OVAL, { x: ring.x + ring.w * .08, y: ring.y + ring.h * .08, w: ring.w * .84, h: ring.h * .84, fill: { type: "none" }, line: { color: K.gold, width: .75, dashType: "dash", transparency: 55 }, objectName: "!!ring2" });
@@ -37,7 +44,7 @@ const pole = (s, flagY) => {
 // ===== 1. Sarlavha =====
 let s = pres.addSlide();
 base(s, { reg: { x: 4.3, y: 5.56, w: 9 }, ring: { x: 7.3, y: -1.6, w: 8.2, h: 8.2 }, glow: { x: 8.5, y: -.6, w: 6, h: 6 } });
-s.addImage({ data: img("globus.png"), x: 9.2, y: .3, w: 4.4, h: 4.4, objectName: A("z") + "globus" });
+ill(s, "globus", 9.2, .3, 4.4, 4.4);
 s.addText("OʻZBEKISTONNING ENG YANGI TARIXI  ·  MUSTAQIL ISH", { x: .8, y: 1.3, w: 9, h: .4, fontFace: BODY, fontSize: 14, bold: true, charSpacing: 4, color: K.gold, margin: 0, isTextBox: true, objectName: A("f") + "over" });
 s.addText([{ text: "Oʻzbekiston", options: { breakLine: true } }, { text: "va BMT", options: { color: K.gold } }], { x: .8, y: 1.75, w: 8, h: 2.2, fontFace: HEAD, fontSize: 66, bold: true, color: K.cream, margin: 0, valign: "top", isTextBox: true, objectName: A("u") + "title" });
 s.addText("BMTga aʼzo boʻlish va jahon hamjamiyatidagi oʻziga xos oʻrin", { x: .8, y: 4.05, w: 7.5, h: .5, fontFace: BODY, fontSize: 20, italic: true, color: K.cream, margin: 0, isTextBox: true, objectName: A("u") + "sub" });
@@ -47,7 +54,7 @@ s.addNotes("Assalomu alaykum. Mening mustaqil ishim mavzusi — Oʻzbekiston Res
 // ===== 2. Mustaqillik =====
 s = pres.addSlide();
 base(s, { ring: { x: 8.3, y: .7, w: 5.4, h: 5.4 }, glow: { x: 8.9, y: 1.4, w: 4.2, h: 4.2 }, year: { t: "1991", x: -.3, y: 4.6 } });
-s.addImage({ data: img("monument.png"), x: 9.93, y: .85, w: 2.15, h: 4.19, objectName: A("z") + "monument" });
+ill(s, "monument", 9.93, .85, 2.15, 4.19);
 over(s, "BIRINCHI QADAM"); title(s, "Mustaqillikdan xalqaro maydonga");
 s.addText("31.08.1991", { x: .7, y: 2.3, w: 7.5, h: 1.3, fontFace: HEAD, fontSize: 72, bold: true, color: K.gold, margin: 0, isTextBox: true, objectName: A("w") + "date" });
 s.addText("Oʻzbekiston Respublikasining davlat mustaqilligi eʼlon qilindi", { x: .7, y: 3.65, w: 7, h: .9, fontFace: BODY, fontSize: 22, color: K.cream, margin: 0, valign: "top", isTextBox: true, objectName: A("u") + "t1" });
@@ -87,7 +94,7 @@ s.addNotes("1992-yil 2-martda BMT Bosh Assambleyasining 46-sessiyasida Oʻzbekis
 s = pres.addSlide();
 base(s, { ring: { x: 10.2, y: -1.8, w: 4.6, h: 4.6 }, glow: { x: 10.6, y: -1.2, w: 3.6, h: 3.6 }, year: { t: "1993", x: 5.6, y: 5.0, align: "right" } });
 over(s, "BIRINCHI QADAMLAR"); title(s, "BMT minbarida");
-s.addImage({ data: img("kaptar.png"), x: 9.7, y: .3, w: 3.1, h: 1.77, objectName: A("z") + "kaptar" });
+ill(s, "kaptar", 9.7, .3, 3.1, 1.77);
 s.addShape(pres.shapes.LINE, { x: .9, y: 3.35, w: 11.5, h: 0, line: { color: K.gold, width: 2 }, objectName: A("w") + "axis" });
 [["1993", "Toshkentda BMT vakolatxonasi ochildi. YuNESKOga aʼzolik"], ["28.09.1993", "Islom Karimov — 48-sessiya: Markaziy Osiyoni yadro qurolidan xoli hudud qilish taklifi"], ["08.09.2006", "Semipalatinskda shartnoma imzolandi"], ["2009", "Shartnoma kuchga kirdi"]].forEach(([d, t], i) => {
   const x = .9 + i * 2.95;
@@ -101,7 +108,7 @@ s.addNotes("1993-yilda Toshkentda BMT vakolatxonasi ochildi, Oʻzbekiston YuNESK
 s = pres.addSlide();
 base(s, { ring: { x: 9.4, y: 3.6, w: 5.4, h: 5.4 }, glow: { x: 10, y: 4.2, w: 4.2, h: 4.2 }, year: { t: "2012", x: 5.6, y: -.6, align: "right" } });
 over(s, "KONSTITUTSIYA VA BMT NIZOMI"); title(s, "Tashqi siyosat tamoyillari");
-s.addImage({ data: img("tarozi.png"), x: 10.55, y: 5.35, w: 1.95, h: 1.95, objectName: A("z") + "tarozi" });
+ill(s, "tarozi", 10.55, 5.35, 1.95, 1.95);
 ["Davlatlarning suveren tengligi", "Kuch ishlatmaslik va kuch bilan tahdid qilmaslik", "Chegaralarning daxlsizligi", "Nizolarni tinch yoʻl bilan hal etish", "Ichki ishlarga aralashmaslik", "Xalqaro huquq qoidalariga rioya"].forEach((t, i) => {
   const x = .7 + (i % 3) * 3.95, y = 2.2 + Math.floor(i / 3) * 1.65;
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y, w: 3.7, h: 1.4, rectRadius: .12, fill: { color: K.card, transparency: 10 }, line: { color: K.line, width: 1 }, objectName: A("z") + "c" + i });
@@ -116,7 +123,7 @@ s.addNotes("Tashqi siyosat tamoyillari Konstitutsiyada belgilangan va BMT Nizomi
 s = pres.addSlide();
 base(s, { ring: { x: -1.9, y: 1.1, w: 6.2, h: 6.2 }, glow: { x: -1, y: 2, w: 4.4, h: 4.4 }, year: { t: "2017", x: -.4, y: 5.0 } });
 over(s, "YANGI OʻZBEKISTON VA BMT"); title(s, "Tashabbuslardan rezolyutsiyalarga");
-s.addImage({ data: img("minbar.png"), x: 1.2, y: 4.95, w: 2.6, h: 2.34, objectName: A("z") + "minbar" });
+ill(s, "minbar", 1.2, 4.95, 2.6, 2.34);
 s.addText([{ text: "19.09.2017", options: { fontFace: HEAD, fontSize: 40, bold: true, color: K.gold, breakLine: true } }, { text: "Shavkat Mirziyoyev BMT Bosh Assambleyasining 72-sessiyasida ilk bor nutq soʻzladi", options: { fontSize: 18, color: K.cream } }],
   { x: .7, y: 2.3, w: 4.2, h: 2.6, fontFace: BODY, margin: 0, valign: "top", isTextBox: true, objectName: A("w") + "big" });
 [["2018, iyun", "Markaziy Osiyoda tinchlik va barqaror rivojlanish boʻyicha hamkorlik rezolyutsiyasi"], ["12.12.2018", "“Maʼrifat va diniy bagʻrikenglik” rezolyutsiyasi"], ["2018", "Orolboʻyi uchun BMT trast fondi tashkil etildi"], ["2020", "BMT Inson huquqlari kengashiga ilk bor saylandi"], ["18.05.2021", "Orolboʻyi — ekologik innovatsiyalar va texnologiyalar hududi"]].forEach(([d, t], i) => {
@@ -129,7 +136,7 @@ s.addNotes("2017-yil 19-sentyabrda Prezident Shavkat Mirziyoyev BMT Bosh Assambl
 // ===== 8. Jahon hamjamiyatida =====
 s = pres.addSlide();
 base(s, { ring: { x: 9.2, y: -2.2, w: 5.2, h: 5.2 }, glow: { x: 9.7, y: -1.6, w: 4, h: 4 }, year: { t: "2001", x: 5.6, y: 4.95, align: "right" } });
-s.addImage({ data: img("yollar.png"), x: 9.2, y: 3.7, w: 3.5, h: 3.5, objectName: A("z") + "yollar" });
+ill(s, "yollar", 9.2, 3.7, 3.5, 3.5);
 over(s, "JAHON HAMJAMIYATIDA"); title(s, "Oʻzbekistonning oʻrni");
 [["2001", "Shanxay hamkorlik tashkiloti aʼzosi"], ["2019", "Turkiy davlatlar tashkilotiga qoʻshildi"], ["4", "shahar markazi YuNESKO merosida: Xiva, Buxoro, Shahrisabz, Samarqand"], ["1-oʻrin", "Markaziy Osiyoda aholi soni boʻyicha"]].forEach(([b, t], i) => {
   const x = .7 + (i % 2) * 4.05, y = 2.2 + Math.floor(i / 2) * 2.05;
@@ -150,22 +157,23 @@ s.addNotes("Xulosa: BMTga aʼzo boʻlish mustaqilligimiz xalqaro miqyosda tan ol
 
 // ===== Morph oʻtishlari va animatsiyalar (XML) =====
 function timing(xml) {
-  const items = [...xml.matchAll(/<p:cNvPr id="(\d+)" name="a(\d+)([fuwz])_[^"]*"/g)].map(m => ({ id: m[1], ord: +m[2], k: m[3] })).sort((a, b) => a.ord - b.ord);
+  const items = [...xml.matchAll(/<p:cNvPr id="(\d+)" name="a(\d+)([fuwzde])_[^"]*"/g)].map(m => ({ id: m[1], ord: +m[2], k: m[3] })).sort((a, b) => a.ord - b.ord);
   if (!items.length) return "";
-  let id = 3; const D = 650, STEP = 260;
+  let id = 3; const D = CHIZ ? 380 : 650, STEP = CHIZ ? 110 : 260, PEN = 260;
   const fx = items.map((it, i) => {
     const tg = `<p:tgtEl><p:spTgt spid="${it.id}"/></p:tgtEl>`, set = `<p:set><p:cBhvr><p:cTn id="${++id}" dur="1" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst></p:cTn>${tg}<p:attrNameLst><p:attrName>style.visibility</p:attrName></p:attrNameLst></p:cBhvr><p:to><p:strVal val="visible"/></p:to></p:set>`;
     const fade = (f = "fade") => `<p:animEffect transition="in" filter="${f}"><p:cBhvr><p:cTn id="${++id}" dur="${D}"/>${tg}</p:cBhvr></p:animEffect>`;
     const move = `<p:anim calcmode="lin" valueType="num"><p:cBhvr additive="base"><p:cTn id="${++id}" dur="${D}" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst></p:cTn>${tg}<p:attrNameLst><p:attrName>ppt_y</p:attrName></p:attrNameLst></p:cBhvr><p:tavLst><p:tav tm="0"><p:val><p:strVal val="#ppt_y+0.04"/></p:val></p:tav><p:tav tm="100000"><p:val><p:strVal val="#ppt_y"/></p:val></p:tav></p:tavLst></p:anim>`;
     const zoom = `<p:animScale><p:cBhvr><p:cTn id="${++id}" dur="${D}" fill="hold"/>${tg}</p:cBhvr><p:from><p:pt x="70000" y="70000"/></p:from><p:to><p:pt x="100000" y="100000"/></p:to></p:animScale>`;
-    const body = it.k === "w" ? set + fade("wipe(left)") : it.k === "u" ? set + fade() + move : it.k === "z" ? set + fade() + zoom : set + fade();
-    const preset = { f: [10, 0], u: [42, 0], w: [22, 8], z: [53, 16] }[it.k];
+    const pen = f => `<p:animEffect transition="in" filter="${f}"><p:cBhvr><p:cTn id="${++id}" dur="${PEN}"/>${tg}</p:cBhvr></p:animEffect>`;
+    const body = it.k === "d" ? set + pen("wipe(left)") : it.k === "e" ? set + pen("wipe(down)") : it.k === "w" ? set + fade("wipe(left)") : it.k === "u" ? set + fade() + move : it.k === "z" ? set + fade() + zoom : set + fade();
+    const preset = { f: [10, 0], u: [42, 0], w: [22, 8], z: [53, 16], d: [22, 8], e: [22, 1] }[it.k];
     const outer = ++id;
     return `<p:par><p:cTn id="${outer}" presetID="${preset[0]}" presetClass="entr" presetSubtype="${preset[1]}" fill="hold" nodeType="${i ? "withEffect" : "afterEffect"}"><p:stCondLst><p:cond delay="${i * STEP}"/></p:stCondLst><p:childTnLst>${body}</p:childTnLst></p:cTn></p:par>`;
   }).join("");
   return `<p:timing><p:tnLst><p:par><p:cTn id="1" dur="indefinite" restart="never" nodeType="tmRoot"><p:childTnLst><p:seq concurrent="1" nextAc="seek"><p:cTn id="2" dur="indefinite" nodeType="mainSeq"><p:childTnLst><p:par><p:cTn id="${++id}" fill="hold"><p:stCondLst><p:cond delay="indefinite"/><p:cond evt="onBegin" delay="0"><p:tn val="2"/></p:cond></p:stCondLst><p:childTnLst><p:par><p:cTn id="${++id}" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst>${fx}</p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn><p:prevCondLst><p:cond evt="onPrev" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:prevCondLst><p:nextCondLst><p:cond evt="onNext" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst></p:seq></p:childTnLst></p:cTn></p:par></p:tnLst></p:timing>`;
 }
-const MORPH = `<mc:AlternateContent><mc:Choice Requires="p159"><p:transition spd="slow" p14:dur="1800"><p159:morph option="byObject"/></p:transition></mc:Choice><mc:Fallback><p:transition spd="slow"><p:fade/></p:transition></mc:Fallback></mc:AlternateContent>`;
+const MORPH = `<mc:AlternateContent><mc:Choice Requires="p159"><p:transition spd="slow" p14:dur="${CHIZ ? 1100 : 1800}"><p159:morph option="byObject"/></p:transition></mc:Choice><mc:Fallback><p:transition spd="slow"><p:fade/></p:transition></mc:Fallback></mc:AlternateContent>`;
 
 (async () => {
   const buf = await pres.write({ outputType: "nodebuffer" });
