@@ -134,3 +134,9 @@ docs/suhbat-tarixi.md              Barcha soʻrovlar va qarorlar tarixi
 
 - Titul varagʻida universitet/fakultet nomi va guruh raqami boʻsh qoldirilgan — foydalanuvchi aytsa toʻldirish.
 - Tarix fani oʻqituvchisining ismi nomaʼlum (hozircha kerak emas, chunki tarix uchun matn yoʻq).
+
+## Alohida fayllar (alohida/) — bitta HTML/PPTX, internetsiz
+
+- Arqon_tortish_11-mavzu.html (tools/build_arqon_alohida.mjs), Tergov_doskasi_11-mavzu.html (muammo ↔ hujjat ip bilan bogʻlash), Reyting_birjasi_11-mavzu.html (split-flap tablo, koʻtarildi/tushdi tikish) — 11-mavzu maʼruzasi faktlari.
+- Tarix_mustaqil_ish.html — daftarga yozish uchun qisqa mustaqil ish (BMT mavzusi, titul + nazariya).
+- BMT_himoya.pptx (lojuvard-oltin, Morph, oltin illyustratsiyalar) va BMT_himoya_chizilgan.pptx (illyustratsiyalar qalamdek chiziladigan GIF). Generator: tools/bmt_slayd.js (+ bmt_slayd_rasm.py, bmt_illyustratsiya.py, bmt_svg2png.js, bmt_gif.js, bmt_gif.py). Foydalanuvchi: paper-cut uslub va oʻz miniatyura rasmlari YOQMAGAN; animatsiya vaqtlarini tezlashtirish ham yoqmagan (avvalgi vaqtlar qoldi).
